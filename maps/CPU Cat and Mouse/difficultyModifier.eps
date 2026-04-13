@@ -55,7 +55,8 @@ function afterTriggerExec() {
 	f_wwrite(0x006576c6, 1000);        // Needle Spines Hunter Killer (39) Damage Bonus (upper 16: addr+2)
 
 	// Place hero units
-	CreateUnitWithProperties(1, "Devouring One (Zergling)",  "TopLeftLing",     P8, UnitProperty(invincible = true));
+	const unitID = $U("Devouring One (Zergling)");
+	CreateUnitWithProperties(1, unitID,  "TopLeftLing",     P8, UnitProperty(invincible = true));
 	CreateUnitWithProperties(1, "Hyperion (Battlecruiser)",  "TopLeftCruiser",  P8, UnitProperty(invincible = true));
 	CreateUnitWithProperties(1, "Protoss Corsair",           "TopLeftCorsair",  P8, UnitProperty(invincible = true));
 	CreateUnitWithProperties(1, "Hunter Killer (Hydralisk)", "TopLeftHydra",    P8, UnitProperty(invincible = true));
