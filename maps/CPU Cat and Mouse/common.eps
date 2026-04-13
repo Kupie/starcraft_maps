@@ -1,0 +1,19 @@
+const numActivePlayers = EUDVariable(0);
+
+function beforeTriggerExec() {
+	numActivePlayers = 0;
+	foreach(player : py_range(1, 7)) {
+		numActivePlayers += 1;
+	}
+}
+
+function beforeTriggerExec() {
+	// TEMPORARY DEBUG TESTING
+    
+	DoActions(
+		// setInvincibility(allPlayers, $U("Protoss Probe"), everywhere, enable);
+		// setMemory(0x00656f2c, setTo, 51711); //Set probe attack to max
+	);
+	// Pause Setter
+	dwwrite(0x0058d718, 200);
+}

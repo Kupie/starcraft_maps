@@ -1,0 +1,54 @@
+function afterTriggerExec() {
+    foreach(player : py_range(1, 7)) {
+        const kill_addr_Scantid   = 0x005878A4 + (93  * 12 + (player - 1)) * 4;
+        const kill_addr_Kakaru    = 0x005878A4 + (94  * 12 + (player - 1)) * 4;
+        const kill_addr_Duran     = 0x005878A4 + (99  * 12 + (player - 1)) * 4;
+        const kill_addr_Ursadon   = 0x005878A4 + (96  * 12 + (player - 1)) * 4;
+        const kill_addr_Ragnasaur = 0x005878A4 + (95  * 12 + (player - 1)) * 4;
+        const kill_addr_Rhynadon  = 0x005878A4 + (89  * 12 + (player - 1)) * 4;
+        const kill_addr_Bengalaas = 0x005878A4 + (90  * 12 + (player - 1)) * 4;
+
+        if (Kills(player, AtLeast, 1, 93)) {  // Scantid (Desert), "Scantid [Bonus X2]" - X2
+            DoActions(
+                CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true)),
+                SetMemory(kill_addr_Scantid, Subtract, 1),
+            );
+        }
+        if (Kills(player, AtLeast, 1, 94)) {  // Kakaru (Twilight), "Kakaru [Bonus X1]" - X1
+            DoActions(
+                CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true)),
+                SetMemory(kill_addr_Kakaru, Subtract, 1),
+            );
+        }
+        if (Kills(player, AtLeast, 1, 99)) {  // Samir Duran (Ghost), "Mankey [Bonus X1]" - X1
+            DoActions(
+                CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true)),
+                SetMemory(kill_addr_Duran, Subtract, 1),
+            );
+        }
+        if (Kills(player, AtLeast, 1, 96)) {  // Ursadon (Ice World), "Ursadon [Bonus X3]" - X3
+            DoActions(
+                CreateUnitWithProperties(3, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true)),
+                SetMemory(kill_addr_Ursadon, Subtract, 1),
+            );
+        }
+        if (Kills(player, AtLeast, 1, 95)) {  // Ragnasaur (Ash World), "Ragnasaur [Bonus X2]" - X2
+            DoActions(
+                CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true)),
+                SetMemory(kill_addr_Ragnasaur, Subtract, 1),
+            );
+        }
+        if (Kills(player, AtLeast, 1, 89)) {  // Rhynadon (Badlands), "Rhynadon [Bonus X2]" - X2
+            DoActions(
+                CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true)),
+                SetMemory(kill_addr_Rhynadon, Subtract, 1),
+            );
+        }
+        if (Kills(player, AtLeast, 1, 90)) {  // Bengalaas (Jungle), "Bengalaas [Bonus X1]" - X1
+            DoActions(
+                CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true)),
+                SetMemory(kill_addr_Bengalaas, Subtract, 1),
+            );
+        }
+    }
+}
