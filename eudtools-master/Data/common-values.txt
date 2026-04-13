@@ -1,0 +1,79 @@
+Upgrades:
+FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF
+
+Explosion Type:
+0 = None
+1 = Normal Hit
+2 = Splash (Radial)
+3 = Splash (Enemy)
+4 = Lockdown
+5 = Nuclear Missile
+6 = Parasite
+7 = Broodlings
+8 = EMP Shockwave
+9 = Irradiate
+10 = Ensnare
+11 = Plague
+12 = Stasis Field
+13 = Dark Swarm
+14 = Consume
+15 = Yamato Gun
+16 = Restoration
+17 = Disruption Web
+18 = Corrosive Acid
+19 = Mind Control
+20 = Feedback
+21 = Optical Flare
+22 = Maelstrom
+23 = Unused (Crash)
+24 = Splash (Air)
+
+Behavior:
+1 = Fly & Don't Follow Target
+2 = Fly & Follow Target
+3 = Appear on Target Unit
+4 = Persist on Target Site
+5 = Appear on Target Site
+6 = Appear on Attacker
+7 = Attack & Self-Destruct
+8 = Bounce
+9 = Attack Target 3x3 Area
+10 = Go to Max. Range
+
+Group Flags:
+0x01 - Zerg (Uses underlings, can build on creep)
+0x02 - Terran (Uses Supply, has sublabel, buildings will burn)
+0x04 - Protoss (Uses Psi)
+0x08 - Men
+0x10 - Building
+0x20 - Factory
+0x40 - Independant
+0x80 - Neutral
+
+Target Flags:
+0x001 Air
+0x002 Ground
+0x004 Mechanical
+0x008 Organic
+0x010 non-Building
+0x020 non-Robotic
+0x040 Terrain
+0x080 Organic or Mechanical
+0x100 Own
+
+Staredit Avail Flags:
+0x0001 - Non-Neutral
+0x0002 - Unit Listing & Palette
+0x0004 - Mission Briefing
+0x0008 - Player Settings
+0x0010 - All Races
+0x0020 - Set Doodad State
+0x0040 - Non-Location Triggers
+0x0080 - Unit&&Hero Settings
+0x0100 - Location Triggers
+0x0200 - BroodWar Only
+
+Light:
+Default 31
+Values over 31 will create interference patterns (?)
+Values over 256 will be reset to 0
