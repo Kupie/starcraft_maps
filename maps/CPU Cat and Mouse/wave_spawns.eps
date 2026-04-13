@@ -1,23 +1,27 @@
-import PluginVariables as msqcvar;
+function afterTriggerExec() {
+	if (	!Command(P11, Exactly, 1, "Kakaru (Twilight)") ||
+			!Command(P9, Exactly, 1, "Terran Civilian")) 
+	{
+		return;
+	}
+	DoActions(Wait(3000));
+	DoActions(KillUnitAt(All,"(buildings)","spawner",Force1));
+	if (Switch("ReduceSpawnsForNumPlayers", Set)) {
+		foreach(player : py_range(1, 7)) {
+			DoActions(CreateUnit(4, "Zerg Ultralisk", "spawner", P8));
+		}
+		DoActions(Wait(3000));
+		foreach(player : py_range(1, 7)) {
+			DoActions(CreateUnit(3, "Terran Firebat", "spawner", P8));
+		}
+	} else {
+		DoActions(CreateUnit(30, "Zerg Ultralisk", "spawner",P8));
+		DoActions(Wait(3000));
+		DoActions(CreateUnit(20, "Terran Firebat", "spawner", P8));
+	}
 
-Trigger("Player 8"){
-Conditions:
-	Command("Player 11", "Kakaru (Twilight)", Exactly, 1);
-	Command("Player 9", "Terran Civilian", Exactly, 1);
-	Switch("ReduceSpawnsForNumPlayers", Not Set);
-
-Actions:
-	Comment("Full-spawn 1 civilian: 30xZerg Ultralisk, 20xTerran Firebat");
-	Wait(3000);
-	Kill Unit At Location("Mices - By \x006Hrufnarwa\x006", "Buildings", All, "spawner");
-	Create Unit("Current Player", "Zerg Ultralisk", 30, "spawner");
-	Wait(3000);
-	Create Unit("Current Player", "Terran Firebat", 20, "spawner");
-	Wait(1500);
-	Set Switch("SpawnExtra", set);
-}
-
-	
-	
-	
+	DoActions(
+		Wait(1500),
+		SetSwitch("SpawnExtra", Set),
+	);
 }
