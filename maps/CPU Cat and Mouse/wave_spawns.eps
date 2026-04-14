@@ -1,27 +1,235 @@
-function afterTriggerExec() {
-	if (	!Command(P11, Exactly, 1, "Kakaru (Twilight)") ||
-			!Command(P9, Exactly, 1, "Terran Civilian")) 
-	{
-		return;
+// Wave spawning system
+// -At countdown 6 seconds: increment currentRound, reset currentSpawnIndex, transition to step 1
+// -At countdown 5 seconds: randomize spawner locations, reduce spawns if needed, transition to step 2
+// -At countdown 0: kill buildings at spawners that have units, reset countdown to 59, transition to step 3
+// -Step 3: loop through unit indices, spawn non-zero units at spawner1/2 with 3 second gaps between groups
+// -Step 4: hard mode bonus spawns using same logic as step 3 (only if HardModeEnabled)
+// -Step 99: waiting for next round reset
+
+import wave_spawns_indexes;    // wave_spawns_indexes.NUM_UNITS, wave_spawns_indexes.waveSpawnsUnitIndex
+import WaveSpawnsFull;         // WaveSpawnsFull.waveSpawnsFull1, WaveSpawnsFull.waveSpawnsFull2
+import WaveSpawnsSplit;        // WaveSpawnsSplit.WaveSpawnsSplit1, WaveSpawnsSplit.WaveSpawnsSplit2
+import HardModeSpawnsFull;     // HardModeSpawnsFull.waveSpawnsFullHard1..4
+
+var currentRound       = EUDVariable(0);
+var currentSpawnIndex  = EUDVariable(0);
+var roundStep          = EUDVariable(99);
+var spawnTimeCounter   = EUDVariable(0);
+var hardRoll           = EUDVariable(0);
+
+
+
+// ── Helper: check if spawner1 has any units this round ────────────────────────
+function hasSpawner1Units(roundNumber) {
+	foreach(i : py_range(0, wave_spawns_indexes.NUM_UNITS)) {
+		if (WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] > 0) {
+			return 1;
+		}
 	}
-	DoActions(Wait(3000));
-	DoActions(KillUnitAt(All,"(buildings)","spawner",Force1));
-	if (Switch("ReduceSpawnsForNumPlayers", Set)) {
-		foreach(player : py_range(1, 7)) {
-			DoActions(CreateUnit(4, "Zerg Ultralisk", "spawner", P8));
+	return 0;
+}
+
+// ── Helper: check if spawner2 has any units this round ────────────────────────
+function hasSpawner2Units(roundNumber) {
+	foreach(i : py_range(0, wave_spawns_indexes.NUM_UNITS)) {
+		if (WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] > 0) {
+			return 1;
 		}
-		DoActions(Wait(3000));
-		foreach(player : py_range(1, 7)) {
-			DoActions(CreateUnit(3, "Terran Firebat", "spawner", P8));
-		}
-	} else {
-		DoActions(CreateUnit(30, "Zerg Ultralisk", "spawner",P8));
-		DoActions(Wait(3000));
-		DoActions(CreateUnit(20, "Terran Firebat", "spawner", P8));
+	}
+	return 0;
+}
+
+// ── Reduce spawns: multiply split counts by active player count ───────────────
+function reduceSpawnsForNumPlayers(roundNumber) {
+	var localPlayerCount = 0;
+	foreach(player : py_range(1, 7)) {
+		localPlayerCount += 1;
+	}
+	foreach(i : py_range(0, wave_spawns_indexes.NUM_UNITS)) {
+		WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] = WaveSpawnsSplit.WaveSpawnsSplit1[roundNumber][i] * localPlayerCount;
+		WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] = WaveSpawnsSplit.WaveSpawnsSplit2[roundNumber][i] * localPlayerCount;
+	}
+}
+
+function afterTriggerExec() {
+
+	// ── Step 0: Increment round, reset for next wave ──────────────────────────
+	if (CountdownTimer(Exactly, 6) && roundStep == 99) {
+		currentRound += 1;
+		currentSpawnIndex = 0;
+		roundStep = 1;
 	}
 
-	DoActions(
-		Wait(1500),
-		SetSwitch("SpawnExtra", Set),
-	);
+	// ── Step 1: Randomize spawner locations, reduce spawns if needed ──────────
+	if (CountdownTimer(Exactly, 5) && roundStep == 1) {
+		// Randomize spawner location
+		var s1left   = f_rand() % 3776;
+		var s1top    = 160 + f_rand() % (3776 - 160);
+		var s1right  = s1left + 320;
+		var s1bottom = s1top  + 320;
+		setloc($L("spawner"),  s1left, s1top, s1right, s1bottom);
+
+		// Randomize spawner2 location
+		var s2left   = f_rand() % 3776;
+		var s2top    = 160 + f_rand() % (3776 - 160);
+		var s2right  = s2left + 320;
+		var s2bottom = s2top  + 320;
+		setloc($L("spawner2"), s2left, s2top, s2right, s2bottom);
+
+		if (Switch("ReduceSpawnsForNumPlayers", Set)) {
+			reduceSpawnsForNumPlayers(currentRound);
+		}
+
+		// Roll which hard mode option to use this round
+		hardRoll = f_rand() % 4 + 1;
+
+		roundStep = 2;
+	}
+
+	// ── Step 2: Kill buildings, start spawning ────────────────────────────────
+	if (CountdownTimer(Exactly, 0) && roundStep == 2) {
+		if (hasSpawner1Units(currentRound)) {
+			KillUnitAt(All, "(buildings)", "spawner",  Force1);
+		}
+		if (hasSpawner2Units(currentRound)) {
+			KillUnitAt(All, "(buildings)", "spawner2", Force1);
+		}
+		SetCountdownTimer(SetTo, 59);
+		roundStep = 3;
+		spawnTimeCounter = 0;
+	}
+
+	// ── Step 3: Normal spawning loop ──────────────────────────────────────────
+	if (roundStep == 3 && spawnTimeCounter == 0) {
+		var count  = WaveSpawnsFull.waveSpawnsFull1[currentRound][currentSpawnIndex];
+		var count2 = WaveSpawnsFull.waveSpawnsFull2[currentRound][currentSpawnIndex];
+
+		// Advance past zeros
+		if (count == 0 && count2 == 0 && currentSpawnIndex < wave_spawns_indexes.NUM_UNITS) {
+			currentSpawnIndex += 1;
+		}
+
+		var spawnIdx = currentSpawnIndex;  // save before incrementing so both spawners use same unit
+
+		if (count > 0 || count2 > 0) {
+			if (count > 0) {
+				CreateUnitWithProperties(count, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner", P8, UnitProperty(
+					hitpoint = 100,
+					shield = 100,
+					energy = 100,
+					hanger = 8,
+					resource = 0,
+					cloaked = False,
+					burrowed = False,
+					intransit = False,
+					hallucinated = False,
+					invincible = False)
+				);
+				WaveSpawnsFull.waveSpawnsFull1[currentRound][currentSpawnIndex] = 0;
+			}
+			if (count2 > 0) {
+				CreateUnitWithProperties(count2, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner2", P8, UnitProperty(
+					hitpoint = 100,
+					shield = 100,
+					energy = 100,
+					hanger = 8,
+					resource = 0,
+					cloaked = False,
+					burrowed = False,
+					intransit = False,
+					hallucinated = False,
+					invincible = False)
+				);
+				WaveSpawnsFull.waveSpawnsFull2[currentRound][currentSpawnIndex] = 0;
+			}
+			currentSpawnIndex += 1;
+			spawnTimeCounter = 48;  // 3 seconds (16 frames/sec * 3)
+		}
+	}
+
+	if (roundStep == 3 && spawnTimeCounter > 0) {
+		spawnTimeCounter--;
+	}
+
+	if (roundStep == 3 && currentSpawnIndex >= wave_spawns_indexes.NUM_UNITS) {
+		if (Switch("HardModeEnabled", Set)) {
+			currentSpawnIndex = 0;   // reset index for hard mode pass
+			spawnTimeCounter = 0;
+			roundStep = 4;
+		} else {
+			roundStep = 99;
+		}
+	}
+
+	// ── Step 4: Hard mode spawning loop ──────────────────────────────────────
+	if (roundStep == 4 && spawnTimeCounter == 0) {
+		// Select which hard mode array to use based on hardRoll
+		var hardCount  = 0;
+		var hardCount2 = 0;
+		if (hardRoll == 1) {
+			hardCount  = HardModeSpawnsFull.waveSpawnsFullHard1[currentRound][currentSpawnIndex];
+			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard1[currentRound][currentSpawnIndex];
+		}
+		if (hardRoll == 2) {
+			hardCount  = HardModeSpawnsFull.waveSpawnsFullHard2[currentRound][currentSpawnIndex];
+			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard2[currentRound][currentSpawnIndex];
+		}
+		if (hardRoll == 3) {
+			hardCount  = HardModeSpawnsFull.waveSpawnsFullHard3[currentRound][currentSpawnIndex];
+			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard3[currentRound][currentSpawnIndex];
+		}
+		if (hardRoll == 4) {
+			hardCount  = HardModeSpawnsFull.waveSpawnsFullHard4[currentRound][currentSpawnIndex];
+			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard4[currentRound][currentSpawnIndex];
+		}
+
+		// Advance past zeros
+		if (hardCount == 0 && hardCount2 == 0 && currentSpawnIndex < wave_spawns_indexes.NUM_UNITS) {
+			currentSpawnIndex += 1;
+		}
+
+		var hardSpawnIdx = currentSpawnIndex;
+
+		if (hardCount > 0 || hardCount2 > 0) {
+			if (hardCount > 0) {
+				CreateUnitWithProperties(hardCount, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner", P8, UnitProperty(
+					hitpoint = 100,
+					shield = 100,
+					energy = 100,
+					hanger = 8,
+					resource = 0,
+					cloaked = False,
+					burrowed = False,
+					intransit = False,
+					hallucinated = False,
+					invincible = False)
+				);
+			}
+			if (hardCount2 > 0) {
+				CreateUnitWithProperties(hardCount2, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner2", P8, UnitProperty(
+					hitpoint = 100,
+					shield = 100,
+					energy = 100,
+					hanger = 8,
+					resource = 0,
+					cloaked = False,
+					burrowed = False,
+					intransit = False,
+					hallucinated = False,
+					invincible = False)
+				);
+			}
+			currentSpawnIndex += 1;
+			spawnTimeCounter = 48;
+		}
+	}
+
+	if (roundStep == 4 && spawnTimeCounter > 0) {
+		spawnTimeCounter--;
+	}
+
+	if (roundStep == 4 && currentSpawnIndex >= wave_spawns_indexes.NUM_UNITS) {
+		roundStep = 99;
+	}
+
 }
