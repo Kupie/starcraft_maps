@@ -1,0 +1,16 @@
+import common_vars; // common_vars.currentRound
+import WaveSpawnsFull;
+
+var totalRounds;
+var roundsNotified;
+
+function onPluginStart() {
+	totalRounds = length(WaveSpawnsFull.waveSpawnsFull1);
+}
+
+function beforeTriggerExec() {
+	if common_vars.currentRound > roundsNotified {
+		printAll("");
+	}
+	
+}

@@ -90,18 +90,6 @@ Actions:
 
 //-----------------------------------------------------------------//
 
-Trigger("Player 8"){
-Conditions:
-	Command("Player 11", "Ragnasaur (Ash World)", At least, 1);
-
-Actions:
-	Comment("Ragnasaur: track spawner2 location to unit position");
-	Move Location("Player 11", "Ragnasaur (Ash World)", "playground", "spawner2");
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
 Trigger("Mices - By \x006Hrufnarwa\x006"){
 Conditions:
 	Switch("GameStarted", Set);
@@ -724,646 +712,6 @@ Actions:
 	Center View("Start");
 	Display Text Message(Always Display, "\x013\x006- You have been saved -\x006\r\n\x013\x004PERMANENT Invincibility!\x004\r\n\r\n\x013\x018+20 gas for everyone\x018\r\n");
 	Set Resources("Mices - By \x006Hrufnarwa\x006", Add, 20, gas);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Set);
-	Switch("Switch2", Set);
-	Switch("Switch3", Set);
-	Switch("Switch4", Set);
-
-Actions:
-	Comment("Kakaru spawn location 1 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "1");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "1", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "1");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Set);
-	Switch("Switch2", Not Set);
-	Switch("Switch3", Set);
-	Switch("Switch4", Set);
-
-Actions:
-	Comment("Kakaru spawn location 2 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "2");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "2", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "2");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Set);
-	Switch("Switch2", Not Set);
-	Switch("Switch3", Not Set);
-	Switch("Switch4", Set);
-
-Actions:
-	Comment("Kakaru spawn location 3 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "3");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "3", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "3");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Set);
-	Switch("Switch2", Not Set);
-	Switch("Switch3", Not Set);
-	Switch("Switch4", Not Set);
-
-Actions:
-	Comment("Kakaru spawn location 4 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "4");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "4", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "4");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Not Set);
-	Switch("Switch2", Not Set);
-	Switch("Switch3", Not Set);
-	Switch("Switch4", Not Set);
-
-Actions:
-	Comment("Kakaru spawn location 5 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "5");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "5", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "5");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Not Set);
-	Switch("Switch2", Set);
-	Switch("Switch3", Not Set);
-	Switch("Switch4", Not Set);
-
-Actions:
-	Comment("Kakaru spawn location 6 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "6");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "6", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "6");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Not Set);
-	Switch("Switch2", Set);
-	Switch("Switch3", Set);
-	Switch("Switch4", Not Set);
-
-Actions:
-	Comment("Kakaru spawn location 7 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "7");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "7", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "7");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Not Set);
-	Switch("Switch2", Set);
-	Switch("Switch3", Set);
-	Switch("Switch4", Set);
-
-Actions:
-	Comment("Kakaru spawn location 8 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "8");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "8", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "8");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Not Set);
-	Switch("Switch2", Not Set);
-	Switch("Switch3", Set);
-	Switch("Switch4", Set);
-
-Actions:
-	Comment("Kakaru spawn location 9 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "9");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "9", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "9");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Not Set);
-	Switch("Switch2", Not Set);
-	Switch("Switch3", Set);
-	Switch("Switch4", Not Set);
-
-Actions:
-	Comment("Kakaru spawn location 10 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "10");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "10", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "10");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Not Set);
-	Switch("Switch2", Not Set);
-	Switch("Switch3", Not Set);
-	Switch("Switch4", Set);
-
-Actions:
-	Comment("Kakaru spawn location 11 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "11");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "11", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "11");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Not Set);
-	Switch("Switch2", Set);
-	Switch("Switch3", Not Set);
-	Switch("Switch4", Set);
-
-Actions:
-	Comment("Kakaru spawn location 12 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "12");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "12", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "12");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Set);
-	Switch("Switch2", Not Set);
-	Switch("Switch3", Set);
-	Switch("Switch4", Not Set);
-
-Actions:
-	Comment("Kakaru spawn location 13 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "13");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "13", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "13");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Set);
-	Switch("Switch2", Set);
-	Switch("Switch3", Not Set);
-	Switch("Switch4", Not Set);
-
-Actions:
-	Comment("Kakaru spawn location 14 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "14");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "14", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "14");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Set);
-	Switch("Switch2", Set);
-	Switch("Switch3", Not Set);
-	Switch("Switch4", Set);
-
-Actions:
-	Comment("Kakaru spawn location 15 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "15");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "15", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "15");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Kak", Not Set);
-	Switch("Switch1", Set);
-	Switch("Switch2", Set);
-	Switch("Switch3", Set);
-	Switch("Switch4", Not Set);
-
-Actions:
-	Comment("Kakaru spawn location 16 selection");
-	Create Unit("Player 8", "Kakaru (Twilight)", 1, "16");
-	Set Invincibility("Current Player", "Kakaru (Twilight)", "16", enabled);
-	Give Units to Player("Current Player", "Player 11", "Kakaru (Twilight)", 1, "16");
-	Set Switch("Spawned Kak", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Set);
-	Switch("Switch6", Set);
-	Switch("Switch7", Set);
-	Switch("Switch8", Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 1 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "1");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "1", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "1");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Set);
-	Switch("Switch6", Not Set);
-	Switch("Switch7", Set);
-	Switch("Switch8", Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 2 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "2");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "2", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "2");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Set);
-	Switch("Switch6", Not Set);
-	Switch("Switch7", Not Set);
-	Switch("Switch8", Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 3 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "3");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "3", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "3");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Set);
-	Switch("Switch6", Not Set);
-	Switch("Switch7", Not Set);
-	Switch("Switch8", Not Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 4 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "4");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "4", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "4");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Not Set);
-	Switch("Switch6", Not Set);
-	Switch("Switch7", Not Set);
-	Switch("Switch8", Not Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 5 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "5");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "5", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "5");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Not Set);
-	Switch("Switch6", Set);
-	Switch("Switch7", Not Set);
-	Switch("Switch8", Not Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 6 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "6");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "6", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "6");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Not Set);
-	Switch("Switch6", Set);
-	Switch("Switch7", Set);
-	Switch("Switch8", Not Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 7 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "7");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "7", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "7");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Not Set);
-	Switch("Switch6", Set);
-	Switch("Switch7", Set);
-	Switch("Switch8", Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 8 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "8");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "8", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "8");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Not Set);
-	Switch("Switch6", Not Set);
-	Switch("Switch7", Set);
-	Switch("Switch8", Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 9 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "9");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "9", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "9");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Not Set);
-	Switch("Switch6", Not Set);
-	Switch("Switch7", Set);
-	Switch("Switch8", Not Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 10 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "10");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "10", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "10");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Not Set);
-	Switch("Switch6", Not Set);
-	Switch("Switch7", Not Set);
-	Switch("Switch8", Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 11 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "11");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "11", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "11");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Not Set);
-	Switch("Switch6", Set);
-	Switch("Switch7", Not Set);
-	Switch("Switch8", Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 12 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "12");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "12", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "12");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Set);
-	Switch("Switch6", Not Set);
-	Switch("Switch7", Set);
-	Switch("Switch8", Not Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 13 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "13");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "13", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "13");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Set);
-	Switch("Switch6", Set);
-	Switch("Switch7", Not Set);
-	Switch("Switch8", Not Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 14 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "14");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "14", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "14");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Set);
-	Switch("Switch6", Set);
-	Switch("Switch7", Not Set);
-	Switch("Switch8", Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 15 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "15");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "15", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "15");
-	Set Switch("Spawned Rag", set);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Cats - Revamp by Kupie"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("Spawned Rag", Not Set);
-	Switch("Switch5", Set);
-	Switch("Switch6", Set);
-	Switch("Switch7", Set);
-	Switch("Switch8", Not Set);
-
-Actions:
-	Comment("Ragnasaur spawn location 16 selection");
-	Create Unit("Player 8", "Ragnasaur (Ash World)", 1, "16");
-	Set Invincibility("Current Player", "Ragnasaur (Ash World)", "16", enabled);
-	Give Units to Player("Current Player", "Player 11", "Ragnasaur (Ash World)", 1, "16");
-	Set Switch("Spawned Rag", set);
 	Preserve Trigger();
 }
 
@@ -3655,34 +3003,6 @@ Actions:
 
 Trigger("Player 8"){
 Conditions:
-	Command("Player 11", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Kakaru spawn location ? selection");
-	Wait(5000);
-	Kill Unit("Player 11", "Kakaru (Twilight)");
-	Kill Unit("Player 11", "Ragnasaur (Ash World)");
-	Set Switch("Spawned Kak", clear);
-	Set Switch("Spawned Rag", clear);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 8"){
-Conditions:
-	Command("Player 11", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Ongoing: persistent state check");
-	Move Location("Player 11", "Kakaru (Twilight)", "playground", "spawner");
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 8"){
-Conditions:
 	Always();
 
 Actions:
@@ -3725,57 +3045,6 @@ Actions:
 	Set Switch("BonusSwitch14", randomize);
 	Set Switch("ExtraSpawn1", randomize);
 	Set Switch("ExtraSpawn2", randomize);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 8"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("dt counter", Set);
-	Switch("dtSpawn2", Not Set);
-
-Actions:
-	Comment("DT mechanic: spawn wave civilian counter");
-	Set Switch("SpawnExtra", clear);
-	Create Unit with Properties("Current Player", "Terran Civilian", 1, "createDT1", 1);
-	Give Units to Player("Current Player", "Player 9", "Terran Civilian", 1, "createDT1");
-	Wait(1000);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 8"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("dt counter", Set);
-	Switch("dtSpawn2", Set);
-
-Actions:
-	Comment("DT mechanic: spawn wave civilian counter");
-	Set Switch("SpawnExtra", clear);
-	Create Unit with Properties("Current Player", "Terran Civilian", 1, "createDT2", 1);
-	Give Units to Player("Current Player", "Player 9", "Terran Civilian", 1, "createDT2");
-	Wait(1000);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 8"){
-Conditions:
-	Countdown Timer(At most, 5);
-	Switch("dt counter", Not Set);
-	Switch("GameStarted", Set);
-
-Actions:
-	Comment("DT mechanic: countdown/timer logic");
-	Set Switch("SpawnExtra", clear);
-	Create Unit with Properties("Current Player", "Devouring One (Zergling)", 1, "DT", 1);
-	Give Units to Player("Current Player", "Player 9", "Devouring One (Zergling)", 1, "DT");
-	Wait(1000);
 	Preserve Trigger();
 }
 
@@ -4341,7 +3610,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 6);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 6);
 
 Actions:
 	Comment("Misc game logic");
@@ -4353,7 +3623,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 11);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 11);
 
 Actions:
 	Comment("Misc game logic");
@@ -4365,7 +3636,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 16);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 16);
 
 Actions:
 	Comment("Misc game logic");
@@ -4377,7 +3649,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 19);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 19);
 
 Actions:
 	Comment("Misc game logic");
@@ -4389,7 +3662,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 22);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 22);
 
 Actions:
 	Comment("Misc game logic");
@@ -4401,7 +3675,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 25);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 25);
 
 Actions:
 	Comment("Misc game logic");
@@ -4413,7 +3688,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 28);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 28);
 
 Actions:
 	Comment("Misc game logic");
@@ -4425,7 +3701,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 31);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 31);
 
 Actions:
 	Comment("Misc game logic");
@@ -4437,7 +3714,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 34);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 34);
 
 Actions:
 	Comment("Misc game logic");
@@ -4449,7 +3727,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 37);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 37);
 
 Actions:
 	Comment("Misc game logic");
@@ -4461,7 +3740,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 40);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 40);
 
 Actions:
 	Comment("Misc game logic");
@@ -4473,7 +3753,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 43);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 43);
 
 Actions:
 	Comment("Misc game logic");
@@ -4485,7 +3766,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 46);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 46);
 
 Actions:
 	Comment("Misc game logic");
@@ -4497,7 +3779,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 49);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 49);
 
 Actions:
 	Comment("Misc game logic");
@@ -4509,7 +3792,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 52);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 52);
 
 Actions:
 	Comment("Misc game logic");
@@ -4521,7 +3805,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 55);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 55);
 
 Actions:
 	Comment("Misc game logic");
@@ -4533,7 +3818,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Terran Civilian", Exactly, 58);
+	Never();
+;	Command("Player 9", "Terran Civilian", Exactly, 58);
 
 Actions:
 	Comment("Misc game logic");
@@ -4545,7 +3831,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Devouring One (Zergling)", Exactly, 1);
+	Never();
+;	Command("Player 9", "Devouring One (Zergling)", Exactly, 1);
 
 Actions:
 	Comment("Misc game logic");
@@ -4557,7 +3844,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Devouring One (Zergling)", Exactly, 4);
+	Never();
+;	Command("Player 9", "Devouring One (Zergling)", Exactly, 4);
 
 Actions:
 	Comment("Misc game logic");
@@ -4569,7 +3857,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Devouring One (Zergling)", Exactly, 7);
+	Never();
+;	Command("Player 9", "Devouring One (Zergling)", Exactly, 7);
 
 Actions:
 	Comment("Misc game logic");
@@ -4581,7 +3870,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Devouring One (Zergling)", Exactly, 10);
+	Never();
+;	Command("Player 9", "Devouring One (Zergling)", Exactly, 10);
 
 Actions:
 	Comment("Misc game logic");
@@ -4593,7 +3883,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Devouring One (Zergling)", Exactly, 13);
+	Never();
+;	Command("Player 9", "Devouring One (Zergling)", Exactly, 13);
 
 Actions:
 	Comment("Misc game logic");
@@ -4605,7 +3896,8 @@ Actions:
 
 Trigger("All players"){
 Conditions:
-	Command("Player 9", "Devouring One (Zergling)", Exactly, 16);
+	Never();
+;	Command("Player 9", "Devouring One (Zergling)", Exactly, 16);
 
 Actions:
 	Comment("Misc game logic");
@@ -4720,643 +4012,6 @@ Actions:
 	Kill Unit At Location("Player 9", "Protoss Probe", All, "playground");
 	Kill Unit At Location("Player 9", "Buildings", All, "playground");
 	Kill Unit At Location("Player 9", "Flag", All, "playground");
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 1"){
-Conditions:
-	Kill("Player 1", "Scantid (Desert)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 1 for killing Scantid and reset kill counter");
-	Create Unit with Properties("Player 1", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a14, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 2"){
-Conditions:
-	Kill("Player 2", "Scantid (Desert)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 2 for killing Scantid and reset kill counter");
-	Create Unit with Properties("Player 2", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a18, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 3"){
-Conditions:
-	Kill("Player 3", "Scantid (Desert)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 3 for killing Scantid and reset kill counter");
-	Create Unit with Properties("Player 3", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a1c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 4"){
-Conditions:
-	Kill("Player 4", "Scantid (Desert)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 4 for killing Scantid and reset kill counter");
-	Create Unit with Properties("Player 4", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a20, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 5"){
-Conditions:
-	Kill("Player 5", "Scantid (Desert)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 5 for killing Scantid and reset kill counter");
-	Create Unit with Properties("Player 5", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a24, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 6"){
-Conditions:
-	Kill("Player 6", "Scantid (Desert)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 6 for killing Scantid and reset kill counter");
-	Create Unit with Properties("Player 6", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a28, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 7"){
-Conditions:
-	Kill("Player 7", "Scantid (Desert)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 7 for killing Scantid and reset kill counter");
-	Create Unit with Properties("Player 7", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a2c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 1"){
-Conditions:
-	Kill("Player 1", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 1 for killing Kakaru and reset kill counter");
-	Create Unit with Properties("Player 1", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588a44, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 2"){
-Conditions:
-	Kill("Player 2", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 2 for killing Kakaru and reset kill counter");
-	Create Unit with Properties("Player 2", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588a48, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 3"){
-Conditions:
-	Kill("Player 3", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 3 for killing Kakaru and reset kill counter");
-	Create Unit with Properties("Player 3", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588a4c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 4"){
-Conditions:
-	Kill("Player 4", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 4 for killing Kakaru and reset kill counter");
-	Create Unit with Properties("Player 4", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588a50, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 5"){
-Conditions:
-	Kill("Player 5", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 5 for killing Kakaru and reset kill counter");
-	Create Unit with Properties("Player 5", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588a54, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 6"){
-Conditions:
-	Kill("Player 6", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 6 for killing Kakaru and reset kill counter");
-	Create Unit with Properties("Player 6", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588a58, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 7"){
-Conditions:
-	Kill("Player 7", "Kakaru (Twilight)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 7 for killing Kakaru and reset kill counter");
-	Create Unit with Properties("Player 7", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588a5c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 1"){
-Conditions:
-	Kill("Player 1", "Samir Duran (Ghost)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 1 for killing Samir Duran and reset kill counter");
-	Create Unit with Properties("Player 1", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588b34, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 2"){
-Conditions:
-	Kill("Player 2", "Samir Duran (Ghost)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 2 for killing Samir Duran and reset kill counter");
-	Create Unit with Properties("Player 2", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588b38, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 3"){
-Conditions:
-	Kill("Player 3", "Samir Duran (Ghost)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 3 for killing Samir Duran and reset kill counter");
-	Create Unit with Properties("Player 3", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588b3c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 4"){
-Conditions:
-	Kill("Player 4", "Samir Duran (Ghost)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 4 for killing Samir Duran and reset kill counter");
-	Create Unit with Properties("Player 4", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588b40, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 5"){
-Conditions:
-	Kill("Player 5", "Samir Duran (Ghost)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 5 for killing Samir Duran and reset kill counter");
-	Create Unit with Properties("Player 5", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588b44, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 6"){
-Conditions:
-	Kill("Player 6", "Samir Duran (Ghost)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 6 for killing Samir Duran and reset kill counter");
-	Create Unit with Properties("Player 6", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588b48, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 7"){
-Conditions:
-	Kill("Player 7", "Samir Duran (Ghost)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 7 for killing Samir Duran and reset kill counter");
-	Create Unit with Properties("Player 7", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588b4c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 1"){
-Conditions:
-	Kill("Player 1", "Ursadon (Ice World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 1 for killing Ursadon and reset kill counter");
-	Create Unit with Properties("Player 1", "Terran Civilian", 3, "getbonus", 1);
-	MemoryAddr(0x00588aa4, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 2"){
-Conditions:
-	Kill("Player 2", "Ursadon (Ice World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 2 for killing Ursadon and reset kill counter");
-	Create Unit with Properties("Player 2", "Terran Civilian", 3, "getbonus", 1);
-	MemoryAddr(0x00588aa8, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 3"){
-Conditions:
-	Kill("Player 3", "Ursadon (Ice World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 3 for killing Ursadon and reset kill counter");
-	Create Unit with Properties("Player 3", "Terran Civilian", 3, "getbonus", 1);
-	MemoryAddr(0x00588aac, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 4"){
-Conditions:
-	Kill("Player 4", "Ursadon (Ice World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 4 for killing Ursadon and reset kill counter");
-	Create Unit with Properties("Player 4", "Terran Civilian", 3, "getbonus", 1);
-	MemoryAddr(0x00588ab0, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 5"){
-Conditions:
-	Kill("Player 5", "Ursadon (Ice World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 5 for killing Ursadon and reset kill counter");
-	Create Unit with Properties("Player 5", "Terran Civilian", 3, "getbonus", 1);
-	MemoryAddr(0x00588ab4, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 6"){
-Conditions:
-	Kill("Player 6", "Ursadon (Ice World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 6 for killing Ursadon and reset kill counter");
-	Create Unit with Properties("Player 6", "Terran Civilian", 3, "getbonus", 1);
-	MemoryAddr(0x00588ab8, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 7"){
-Conditions:
-	Kill("Player 7", "Ursadon (Ice World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 7 for killing Ursadon and reset kill counter");
-	Create Unit with Properties("Player 7", "Terran Civilian", 3, "getbonus", 1);
-	MemoryAddr(0x00588abc, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 1"){
-Conditions:
-	Kill("Player 1", "Ragnasaur (Ash World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 1 for killing Ragnasaur and reset kill counter");
-	Create Unit with Properties("Player 1", "Terran Civilian", 3, "getbonus", 1);
-	MemoryAddr(0x00588a74, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 2"){
-Conditions:
-	Kill("Player 2", "Ragnasaur (Ash World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 2 for killing Ragnasaur and reset kill counter");
-	Create Unit with Properties("Player 2", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a78, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 3"){
-Conditions:
-	Kill("Player 3", "Ragnasaur (Ash World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 3 for killing Ragnasaur and reset kill counter");
-	Create Unit with Properties("Player 3", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a7c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 4"){
-Conditions:
-	Kill("Player 4", "Ragnasaur (Ash World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 4 for killing Ragnasaur and reset kill counter");
-	Create Unit with Properties("Player 4", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a80, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 5"){
-Conditions:
-	Kill("Player 5", "Ragnasaur (Ash World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 5 for killing Ragnasaur and reset kill counter");
-	Create Unit with Properties("Player 5", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a84, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 6"){
-Conditions:
-	Kill("Player 6", "Ragnasaur (Ash World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 6 for killing Ragnasaur and reset kill counter");
-	Create Unit with Properties("Player 6", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a88, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 7"){
-Conditions:
-	Kill("Player 7", "Ragnasaur (Ash World)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 7 for killing Ragnasaur and reset kill counter");
-	Create Unit with Properties("Player 7", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588a8c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 1"){
-Conditions:
-	Kill("Player 1", "Rhynadon (Badlands)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 1 for killing Rhynadon and reset kill counter");
-	Create Unit with Properties("Player 1", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588954, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 2"){
-Conditions:
-	Kill("Player 2", "Rhynadon (Badlands)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 2 for killing Rhynadon and reset kill counter");
-	Create Unit with Properties("Player 2", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588958, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 3"){
-Conditions:
-	Kill("Player 3", "Rhynadon (Badlands)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 3 for killing Rhynadon and reset kill counter");
-	Create Unit with Properties("Player 3", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x0058895c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 4"){
-Conditions:
-	Kill("Player 4", "Rhynadon (Badlands)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 4 for killing Rhynadon and reset kill counter");
-	Create Unit with Properties("Player 4", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588960, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 5"){
-Conditions:
-	Kill("Player 5", "Rhynadon (Badlands)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 5 for killing Rhynadon and reset kill counter");
-	Create Unit with Properties("Player 5", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588964, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 6"){
-Conditions:
-	Kill("Player 6", "Rhynadon (Badlands)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 6 for killing Rhynadon and reset kill counter");
-	Create Unit with Properties("Player 6", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x00588968, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 7"){
-Conditions:
-	Kill("Player 7", "Rhynadon (Badlands)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 7 for killing Rhynadon and reset kill counter");
-	Create Unit with Properties("Player 7", "Terran Civilian", 2, "getbonus", 1);
-	MemoryAddr(0x0058896c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 1"){
-Conditions:
-	Kill("Player 1", "Bengalaas (Jungle)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 1 for killing Bengalaas and reset kill counter");
-	Create Unit with Properties("Player 1", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588984, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 2"){
-Conditions:
-	Kill("Player 2", "Bengalaas (Jungle)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 2 for killing Bengalaas and reset kill counter");
-	Create Unit with Properties("Player 2", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588988, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 3"){
-Conditions:
-	Kill("Player 3", "Bengalaas (Jungle)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 3 for killing Bengalaas and reset kill counter");
-	Create Unit with Properties("Player 3", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x0058898c, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 4"){
-Conditions:
-	Kill("Player 4", "Bengalaas (Jungle)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 4 for killing Bengalaas and reset kill counter");
-	Create Unit with Properties("Player 4", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588990, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 5"){
-Conditions:
-	Kill("Player 5", "Bengalaas (Jungle)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 5 for killing Bengalaas and reset kill counter");
-	Create Unit with Properties("Player 5", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588994, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 6"){
-Conditions:
-	Kill("Player 6", "Bengalaas (Jungle)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 6 for killing Bengalaas and reset kill counter");
-	Create Unit with Properties("Player 6", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x00588998, Subtract, 1);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 7"){
-Conditions:
-	Kill("Player 7", "Bengalaas (Jungle)", At least, 1);
-
-Actions:
-	Comment("Bonus pickup: reward Player 7 for killing Bengalaas and reset kill counter");
-	Create Unit with Properties("Player 7", "Terran Civilian", 1, "getbonus", 1);
-	MemoryAddr(0x0058899c, Subtract, 1);
 	Preserve Trigger();
 }
 
@@ -5677,7 +4332,8 @@ Actions:
 Trigger("Player 8"){
 Conditions:
 	Bring("Current Player", "Any unit", "playground", Exactly, 0);
-	Command("Player 9", "Devouring One (Zergling)", At least, 1);
+	Never();
+;	Command("Player 9", "Devouring One (Zergling)", At least, 1);
 	Switch("dt counter", Not Set);
 	Switch("DifficultyChosen", Set);
 	Switch("GameStarted", Set);
@@ -5706,7 +4362,8 @@ Actions:
 Trigger("Mices - By \x006Hrufnarwa\x006"){
 Conditions:
 	Bring("Player 8", "Any unit", "playground", Exactly, 0);
-	Command("Player 9", "Devouring One (Zergling)", At least, 1);
+	Never();
+;	Command("Player 9", "Devouring One (Zergling)", At least, 1);
 	Switch("DifficultyChosen", Set);
 	Switch("GameStarted", Set);
 
