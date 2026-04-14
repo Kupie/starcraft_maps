@@ -42,22 +42,34 @@ function hasSpawner2Units(roundNumber) {
 // ── Reduce spawns: multiply split counts by active player count ───────────────
 function reduceSpawnsForNumPlayers(roundNumber) {
 	var localPlayerCount = 0;
-	foreach(player : py_range(1, 7)) {
+	foreach(player : EUDLoopPlayer()) {
 		localPlayerCount += 1;
 	}
+	printAll("Number of Players: {}", localPlayerCount);
+	printAll("Number of Players: {}", localPlayerCount);
+	printAll("Number of Players: {}", localPlayerCount);
 	foreach(i : py_range(0, wave_spawns_indexes.NUM_UNITS)) {
 		WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] = WaveSpawnsSplit.WaveSpawnsSplit1[roundNumber][i] * localPlayerCount;
 		WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] = WaveSpawnsSplit.WaveSpawnsSplit2[roundNumber][i] * localPlayerCount;
 	}
 }
 
-function afterTriggerExec() {
+function onPluginStart() {
+	printAll("Current Round: {}", currentRound);
+}
 
+function afterTriggerExec() {
+	if (CountdownTimer(AtLeast, 30) && roundStep == 99) {
+		printAll("Reducing timer to debug");
+		SetCountdownTimer(SetTo,20);
+	}
 	// ── Step 0: Increment round, reset for next wave ──────────────────────────
 	if (CountdownTimer(Exactly, 6) && roundStep == 99) {
 		currentRound += 1;
 		currentSpawnIndex = 0;
 		roundStep = 1;
+		printAll("Reset for round, roundStep now 1");
+		printAll("Current Round: {}", currentRound);
 	}
 
 	// ── Step 1: Randomize spawner locations, reduce spawns if needed ──────────
@@ -77,24 +89,58 @@ function afterTriggerExec() {
 		setloc($L("spawner2"), s2left, s2top, s2right, s2bottom);
 
 		if (Switch("ReduceSpawnsForNumPlayers", Set)) {
+			printAll("ReduceSpawnsForNumPlayers is set, reducing round");
+			printAll("ReduceSpawnsForNumPlayers is set, reducing round");
+			printAll("ReduceSpawnsForNumPlayers is set, reducing round");
+			printAll("ReduceSpawnsForNumPlayers is set, reducing round");
 			reduceSpawnsForNumPlayers(currentRound);
 		}
 
 		// Roll which hard mode option to use this round
 		hardRoll = f_rand() % 4 + 1;
-
 		roundStep = 2;
+		printAll("roundStep now 2");
+		printAll("roundStep now 2");
+		printAll("roundStep now 2");
+		printAll("roundStep now 2");
 	}
 
 	// ── Step 2: Kill buildings, start spawning ────────────────────────────────
 	if (CountdownTimer(Exactly, 0) && roundStep == 2) {
+		printAll("Performing Step 2");
+		printAll("Performing Step 2");
+		printAll("Performing Step 2");
+		printAll("Performing Step 2");
 		if (hasSpawner1Units(currentRound)) {
+			printAll("hasSpawner1Units returned true");
+			printAll("hasSpawner1Units returned true");
+			printAll("hasSpawner1Units returned true");
+			DisplayTextAll("Killing in spawner 1");
+			//KillUnitAt(All, "Terran Science Vessel", "spawner",  P8);
 			KillUnitAt(All, "(buildings)", "spawner",  Force1);
+			CreateUnitWithProperties(5, "Terran Science Vessel", "spawner", P8, UnitProperty(
+					hitpoint = 100,
+					shield = 100,
+					energy = 100,
+					hanger = 8,
+					resource = 0,
+					cloaked = False,
+					burrowed = False,
+					intransit = False,
+					hallucinated = False,
+					invincible = True)
+				);
+			KillUnitAt(All, "Terran Science Vessel", "spawner",  P8);
+		} else {
+			printAll("hasSpawner1Units returned false");
+			printAll("hasSpawner1Units returned false");
+			printAll("hasSpawner1Units returned false");
+			printAll("hasSpawner1Units returned false");
 		}
 		if (hasSpawner2Units(currentRound)) {
 			KillUnitAt(All, "(buildings)", "spawner2", Force1);
 		}
-		SetCountdownTimer(SetTo, 59);
+		SetCountdownTimer(SetTo, 60);
 		roundStep = 3;
 		spawnTimeCounter = 0;
 	}

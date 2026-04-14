@@ -3681,19 +3681,6 @@ Actions:
 
 //-----------------------------------------------------------------//
 
-Trigger("All players"){
-Conditions:
-	Countdown Timer(At most, 1);
-	Switch("GameStarted", Set);
-
-Actions:
-	Comment("Ongoing: persistent state check");
-	Set Countdown Timer(Set To, 60);
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
 Trigger("Player 8"){
 Conditions:
 	Always();
@@ -10362,7 +10349,7 @@ Conditions:
 
 Actions:
 	Comment("DT mechanic: countdown/timer logic");
-	Defeat();
+;	Defeat();
 }
 
 //-----------------------------------------------------------------//
@@ -10377,7 +10364,7 @@ Conditions:
 
 Actions:
 	Comment("DT mechanic: countdown/timer logic");
-	Defeat();
+;	Defeat();
 }
 
 //-----------------------------------------------------------------//
@@ -10391,7 +10378,7 @@ Conditions:
 
 Actions:
 	Comment("Difficulty selection logic");
-	Victory();
+;	Victory();
 }
 
 //-----------------------------------------------------------------//
@@ -10405,7 +10392,7 @@ Conditions:
 
 Actions:
 	Comment("Difficulty selection logic");
-	Victory();
+;	Victory();
 }
 
 //-----------------------------------------------------------------//
@@ -11874,7 +11861,7 @@ Conditions:
 
 Actions:
 	Comment("Difficulty selection logic");
-	Defeat();
+;	Defeat();
 	Preserve Trigger();
 }
 

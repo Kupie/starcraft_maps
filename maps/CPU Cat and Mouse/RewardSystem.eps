@@ -1,5 +1,5 @@
 function afterTriggerExec() {
-    foreach(player : py_range(1, 7)) {
+    foreach(player : EUDLoopPlayer()) {
         const kill_addr_Scantid   = 0x005878A4 + (93  * 12 + (player - 1)) * 4;
         const kill_addr_Kakaru    = 0x005878A4 + (94  * 12 + (player - 1)) * 4;
         const kill_addr_Duran     = 0x005878A4 + (99  * 12 + (player - 1)) * 4;
