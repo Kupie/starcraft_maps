@@ -16,7 +16,6 @@ import common_vars;
 var currentSpawnIndex  = 0;
 var roundStep          = 99;
 var spawnTimeCounter   = 0;
-var hardRoll           = 0;
 var s1left             = 0;
 var s1top              = 0;
 var s2left             = 0;
@@ -89,6 +88,7 @@ function afterTriggerExec() {
 		common_vars.currentRound += 1;
 		if (common_vars.currentRound == 70) { SetSwitch($S("pylon invuln"), Clear); }
 		currentSpawnIndex  = 0;
+		common_vars.hardRoll = 0;  // reset so notifications wait for the new roll
 		beaconVisible      = 0;
 		beaconFlashCounter = 0;
 		roundStep = 1;
@@ -113,7 +113,7 @@ function afterTriggerExec() {
 			reduceSpawnsForNumPlayers(common_vars.currentRound);
 		}
 
-		hardRoll = f_rand() % 4 + 1;
+		common_vars.hardRoll = f_rand() % 4 + 1;
 		dbstr_print(beaconString, "Enemy Spawn Warning\0");
 
 		if (hasSpawner1Units(common_vars.currentRound)) {
@@ -225,19 +225,19 @@ function afterTriggerExec() {
 	if (roundStep == 4 && spawnTimeCounter == 0) {
 		var hardCount  = 0;
 		var hardCount2 = 0;
-		if (hardRoll == 1) {
+		if (common_vars.hardRoll == 1) {
 			hardCount  = HardModeSpawnsFull.waveSpawnsFullHard1[common_vars.currentRound][currentSpawnIndex];
 			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard1[common_vars.currentRound][currentSpawnIndex];
 		}
-		if (hardRoll == 2) {
+		if (common_vars.hardRoll == 2) {
 			hardCount  = HardModeSpawnsFull.waveSpawnsFullHard2[common_vars.currentRound][currentSpawnIndex];
 			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard2[common_vars.currentRound][currentSpawnIndex];
 		}
-		if (hardRoll == 3) {
+		if (common_vars.hardRoll == 3) {
 			hardCount  = HardModeSpawnsFull.waveSpawnsFullHard3[common_vars.currentRound][currentSpawnIndex];
 			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard3[common_vars.currentRound][currentSpawnIndex];
 		}
-		if (hardRoll == 4) {
+		if (common_vars.hardRoll == 4) {
 			hardCount  = HardModeSpawnsFull.waveSpawnsFullHard4[common_vars.currentRound][currentSpawnIndex];
 			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard4[common_vars.currentRound][currentSpawnIndex];
 		}

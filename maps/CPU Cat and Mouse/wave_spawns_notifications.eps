@@ -2,21 +2,98 @@ import wave_spawns_indexes;
 import WaveSpawnsFull;
 import common_vars;
 
-var roundsNotified = 0;
+var roundsNotified   = 0;
+var hardRollNotified = 0;
 
+// Notify normal wave spawns.
+// Uses split strings (per-player header) when ReduceSpawnsForNumPlayers is set.
 function notifyWave(round) {
-	foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS)) {
-		var strIdx = wave_spawns_indexes.waveNotifyStrings[round][row];
-		if (strIdx != 0) {
-			DisplayText(strIdx);
+	if (Switch("ReduceSpawnsForNumPlayers", Set)) {
+		foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_SPLIT)) {
+			var splitStrIdx = wave_spawns_indexes.waveNotifyStringsSplit[round][row];
+			if (splitStrIdx != 0) {
+				DisplayText(splitStrIdx);
+			}
+		}
+	} else {
+		foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS)) {
+			var fullStrIdx = wave_spawns_indexes.waveNotifyStrings[round][row];
+			if (fullStrIdx != 0) {
+				DisplayText(fullStrIdx);
+			}
 		}
 	}
-}		
+}
+
+// Notify hard mode extra spawns for the rolled option.
+// Uses split strings when ReduceSpawnsForNumPlayers is set.
+function notifyHardExtras(round) {
+	var roll = common_vars.hardRoll;
+	if (Switch("ReduceSpawnsForNumPlayers", Set)) {
+		if (roll == 1) {
+			foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_HARD_SPLIT)) {
+				var hs1strIdx = wave_spawns_indexes.waveNotifyStringsHardSplit1[round][row];
+				if (hs1strIdx != 0) { DisplayText(hs1strIdx); }
+			}
+		}
+		if (roll == 2) {
+			foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_HARD_SPLIT)) {
+				var hs2strIdx = wave_spawns_indexes.waveNotifyStringsHardSplit2[round][row];
+				if (hs2strIdx != 0) { DisplayText(hs2strIdx); }
+			}
+		}
+		if (roll == 3) {
+			foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_HARD_SPLIT)) {
+				var hs3strIdx = wave_spawns_indexes.waveNotifyStringsHardSplit3[round][row];
+				if (hs3strIdx != 0) { DisplayText(hs3strIdx); }
+			}
+		}
+		if (roll == 4) {
+			foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_HARD_SPLIT)) {
+				var hs4strIdx = wave_spawns_indexes.waveNotifyStringsHardSplit4[round][row];
+				if (hs4strIdx != 0) { DisplayText(hs4strIdx); }
+			}
+		}
+	} else {
+		if (roll == 1) {
+			foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_HARD)) {
+				var hf1strIdx = wave_spawns_indexes.waveNotifyStringsHard1[round][row];
+				if (hf1strIdx != 0) { DisplayText(hf1strIdx); }
+			}
+		}
+		if (roll == 2) {
+			foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_HARD)) {
+				var hf2strIdx = wave_spawns_indexes.waveNotifyStringsHard2[round][row];
+				if (hf2strIdx != 0) { DisplayText(hf2strIdx); }
+			}
+		}
+		if (roll == 3) {
+			foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_HARD)) {
+				var hf3strIdx = wave_spawns_indexes.waveNotifyStringsHard3[round][row];
+				if (hf3strIdx != 0) { DisplayText(hf3strIdx); }
+			}
+		}
+		if (roll == 4) {
+			foreach(row : py_range(0, wave_spawns_indexes.WAVE_NOTIFY_ROWS_HARD)) {
+				var hf4strIdx = wave_spawns_indexes.waveNotifyStringsHard4[round][row];
+				if (hf4strIdx != 0) { DisplayText(hf4strIdx); }
+			}
+		}
+	}
+}
 
 function beforeTriggerExec() {
+	// Normal wave notification fires as soon as currentRound increments (step 0).
 	if (roundsNotified < common_vars.currentRound) {
 		printAll("notifying round {}, was notified {}", common_vars.currentRound, roundsNotified);
 		roundsNotified = common_vars.currentRound;
 		notifyWave(common_vars.currentRound - 1);
+	}
+	// Hard mode extra notification fires once hardRoll is set for this round (step 1).
+	if (Switch("HardModeEnabled", Set)) {
+		if (hardRollNotified < common_vars.currentRound && common_vars.hardRoll > 0) {
+			hardRollNotified = common_vars.currentRound;
+			notifyHardExtras(common_vars.currentRound - 1);
+		}
 	}
 }

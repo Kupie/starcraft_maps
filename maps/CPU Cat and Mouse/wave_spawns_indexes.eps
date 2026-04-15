@@ -36,7 +36,7 @@ const waveSpawnsUnitIndex = EUDVArray(27)(list(
 	$U("Gantrithor (Carrier)")  // [26] Gantrithor (Carrier)
 ));
 
-// Pre-built wave notification strings
+// Pre-built wave notification strings (full counts)
 // waveNotifyStrings[round][row] — use WAVE_NOTIFY_ROWS for row count
 const WAVE_NOTIFY_ROWS = 6;
 
@@ -119,4 +119,745 @@ const waveNotifyStrings = EUDVArray(78, EUDVArray(6))(list(
 	VArray($T("Wave 76: 30x Torrasque (Ultralisk), 30x Artanis (Scout),"), $T("  30x Zerg Devourer, 2x Yggdrasill (Overlord),"), $T("  30x Alan Schezar (Goliath), 30x Kukulza (Guardian),"), $T("  20x Norad II (Battlecruiser), 30x Sarah Kerrigan (Ghost),"), $T("  30x Danimoth (Arbiter), 2x Protoss Observer,"), $T("  30x Kukulza (Mutalisk), 10x Gantrithor (Carrier)")),  // Round 76
 	VArray($T("Wave 77: 30x Torrasque (Ultralisk), 30x Artanis (Scout),"), $T("  30x Zerg Devourer, 2x Yggdrasill (Overlord),"), $T("  30x Alan Schezar (Goliath), 30x Kukulza (Guardian),"), $T("  20x Norad II (Battlecruiser), 30x Sarah Kerrigan (Ghost),"), $T("  30x Danimoth (Arbiter), 2x Protoss Observer,"), $T("  30x Kukulza (Mutalisk), 10x Gantrithor (Carrier)")),  // Round 77
 	VArray($T("Wave 78: 30x Torrasque (Ultralisk), 30x Artanis (Scout),"), $T("  30x Zerg Devourer, 2x Yggdrasill (Overlord),"), $T("  30x Alan Schezar (Goliath), 30x Kukulza (Guardian),"), $T("  20x Norad II (Battlecruiser), 30x Sarah Kerrigan (Ghost),"), $T("  30x Danimoth (Arbiter), 2x Protoss Observer,"), $T("  30x Kukulza (Mutalisk), 10x Gantrithor (Carrier)"))  // Round 78
+));
+
+// Pre-built split (per-player) wave notification strings
+// waveNotifyStringsSplit[round][row] — use WAVE_NOTIFY_ROWS_SPLIT for row count
+const WAVE_NOTIFY_ROWS_SPLIT = 7;
+
+const waveNotifyStringsSplit = EUDVArray(78, EUDVArray(7))(list(
+	VArray($T("Wave 1 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat"), 0, 0, 0, 0, 0, 0),  // Round 1
+	VArray($T("Wave 2 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat"), 0, 0, 0, 0, 0, 0),  // Round 2
+	VArray($T("Wave 3 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat"), 0, 0, 0, 0, 0, 0),  // Round 3
+	VArray($T("Wave 4 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat"), 0, 0, 0, 0, 0, 0),  // Round 4
+	VArray($T("Wave 5 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat"), 0, 0, 0, 0, 0, 0),  // Round 5
+	VArray($T("Wave 6 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat,"), $T("  2x Protoss Reaver"), 0, 0, 0, 0, 0),  // Round 6
+	VArray($T("Wave 7 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat,"), $T("  2x Protoss Reaver"), 0, 0, 0, 0, 0),  // Round 7
+	VArray($T("Wave 8 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat,"), $T("  2x Protoss Reaver"), 0, 0, 0, 0, 0),  // Round 8
+	VArray($T("Wave 9 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat,"), $T("  2x Protoss Reaver"), 0, 0, 0, 0, 0),  // Round 9
+	VArray($T("Wave 10 [per player]: 4x Zerg Ultralisk, 3x Terran Firebat,"), $T("  2x Protoss Reaver"), 0, 0, 0, 0, 0),  // Round 10
+	VArray($T("Wave 11 [per player]: 6x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran)"), 0, 0, 0, 0, 0),  // Round 11
+	VArray($T("Wave 12 [per player]: 6x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran)"), 0, 0, 0, 0, 0),  // Round 12
+	VArray($T("Wave 13 [per player]: 6x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran)"), 0, 0, 0, 0, 0),  // Round 13
+	VArray($T("Wave 14 [per player]: 6x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran)"), 0, 0, 0, 0, 0),  // Round 14
+	VArray($T("Wave 15 [per player]: 6x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran)"), 0, 0, 0, 0, 0),  // Round 15
+	VArray($T("Wave 16 [per player]: 8x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran),"), $T("  2x Edmund Duke (Tank Mode)"), 0, 0, 0, 0),  // Round 16
+	VArray($T("Wave 17 [per player]: 8x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran),"), $T("  2x Edmund Duke (Tank Mode)"), 0, 0, 0, 0),  // Round 17
+	VArray($T("Wave 18 [per player]: 8x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran),"), $T("  2x Edmund Duke (Tank Mode)"), 0, 0, 0, 0),  // Round 18
+	VArray($T("Wave 19 [per player]: 8x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran),"), $T("  2x Edmund Duke (Tank Mode), 2x Tassadar (Templar)"), 0, 0, 0, 0),  // Round 19
+	VArray($T("Wave 20 [per player]: 8x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran),"), $T("  2x Edmund Duke (Tank Mode), 2x Tassadar (Templar)"), 0, 0, 0, 0),  // Round 20
+	VArray($T("Wave 21 [per player]: 8x Zerg Ultralisk, 2x Terran Firebat,"), $T("  2x Protoss Reaver, 2x Infested Kerrigan (Infested Terran),"), $T("  2x Edmund Duke (Tank Mode), 2x Tassadar (Templar)"), 0, 0, 0, 0),  // Round 21
+	VArray($T("Wave 22 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk)"), 0, 0, 0),  // Round 22
+	VArray($T("Wave 23 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk)"), 0, 0, 0),  // Round 23
+	VArray($T("Wave 24 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk)"), 0, 0, 0),  // Round 24
+	VArray($T("Wave 25 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar)"), 0, 0),  // Round 25
+	VArray($T("Wave 26 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar)"), 0, 0),  // Round 26
+	VArray($T("Wave 27 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar)"), 0, 0),  // Round 27
+	VArray($T("Wave 28 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith)"), 0, 0),  // Round 28
+	VArray($T("Wave 29 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith)"), 0, 0),  // Round 29
+	VArray($T("Wave 30 [per player]: 6x Zerg Ultralisk, 4x Terran Firebat,"), $T("  2x Protoss Reaver, 4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith)"), 0, 0),  // Round 30
+	VArray($T("Wave 31 [per player]: 6x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine)"), 0),  // Round 31
+	VArray($T("Wave 32 [per player]: 6x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine)"), 0),  // Round 32
+	VArray($T("Wave 33 [per player]: 6x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Infested Kerrigan (Infested Terran),"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine)"), 0),  // Round 33
+	VArray($T("Wave 34 [per player]: 6x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon)"), 0, 0),  // Round 34
+	VArray($T("Wave 35 [per player]: 6x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon)"), 0, 0),  // Round 35
+	VArray($T("Wave 36 [per player]: 6x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Edmund Duke (Tank Mode), 4x Tassadar (Templar),"), $T("  4x Hunter Killer (Hydralisk), 2x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon)"), 0, 0),  // Round 36
+	VArray($T("Wave 37 [per player]: 4x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Tassadar (Templar), 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling"), 0, 0),  // Round 37
+	VArray($T("Wave 38 [per player]: 4x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Tassadar (Templar), 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling"), 0, 0),  // Round 38
+	VArray($T("Wave 39 [per player]: 4x Zerg Ultralisk, 2x Protoss Reaver,"), $T("  4x Tassadar (Templar), 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling"), 0, 0),  // Round 39
+	VArray($T("Wave 40 [per player]: 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost)"), 0, 0),  // Round 40
+	VArray($T("Wave 41 [per player]: 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost)"), 0, 0),  // Round 41
+	VArray($T("Wave 42 [per player]: 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost)"), 0, 0),  // Round 42
+	VArray($T("Wave 43 [per player]: 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout)"), 0, 0),  // Round 43
+	VArray($T("Wave 44 [per player]: 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout)"), 0, 0),  // Round 44
+	VArray($T("Wave 45 [per player]: 4x Hunter Killer (Hydralisk),"), $T("  2x Torrasque (Ultralisk), 4x Zeratul (Dark Templar),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout)"), 0, 0),  // Round 45
+	VArray($T("Wave 46 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer"), 0, 0),  // Round 46
+	VArray($T("Wave 47 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer"), 0, 0),  // Round 47
+	VArray($T("Wave 48 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Zeratul (Dark Templar), 4x Tom Kazansky (Wraith),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer"), 0, 0),  // Round 48
+	VArray($T("Wave 49 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot)"), 0, 0),  // Round 49
+	VArray($T("Wave 50 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot)"), 0, 0),  // Round 50
+	VArray($T("Wave 51 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Tom Kazansky (Wraith), 4x Jim Raynor (Marine),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot)"), 0, 0),  // Round 51
+	VArray($T("Wave 52 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord)"), 0, 0),  // Round 52
+	VArray($T("Wave 53 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord)"), 0, 0),  // Round 53
+	VArray($T("Wave 54 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Jim Raynor (Marine), 4x Fenix (Dragoon),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord)"), 0, 0),  // Round 54
+	VArray($T("Wave 55 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath)"), 0, 0),  // Round 55
+	VArray($T("Wave 56 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath)"), 0, 0),  // Round 56
+	VArray($T("Wave 57 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Fenix (Dragoon), 4x Zerg Zergling,"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath)"), 0, 0),  // Round 57
+	VArray($T("Wave 58 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian)"), 0, 0),  // Round 58
+	VArray($T("Wave 59 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian)"), 0, 0),  // Round 59
+	VArray($T("Wave 60 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Zerg Zergling, 4x Alexei Stukov (Ghost),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian)"), 0, 0),  // Round 60
+	VArray($T("Wave 61 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  2x Protoss Observer"), 0),  // Round 61
+	VArray($T("Wave 62 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  2x Protoss Observer"), 0),  // Round 62
+	VArray($T("Wave 63 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Alexei Stukov (Ghost), 4x Artanis (Scout),"), $T("  4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  2x Protoss Observer"), 0),  // Round 63
+	VArray($T("Wave 64 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 2x Protoss Observer"), 0, 0),  // Round 64
+	VArray($T("Wave 65 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 2x Protoss Observer"), 0, 0),  // Round 65
+	VArray($T("Wave 66 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 2x Protoss Observer"), 0, 0),  // Round 66
+	VArray($T("Wave 67 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 4x Sarah Kerrigan (Ghost),"), $T("  2x Protoss Observer"), 0),  // Round 67
+	VArray($T("Wave 68 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 4x Sarah Kerrigan (Ghost),"), $T("  2x Protoss Observer"), 0),  // Round 68
+	VArray($T("Wave 69 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer, 4x Fenix (Zealot),"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 4x Sarah Kerrigan (Ghost),"), $T("  2x Protoss Observer"), 0),  // Round 69
+	VArray($T("Wave 70 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 4x Sarah Kerrigan (Ghost),"), $T("  4x Danimoth (Arbiter), 2x Protoss Observer"), 0),  // Round 70
+	VArray($T("Wave 71 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 4x Sarah Kerrigan (Ghost),"), $T("  4x Danimoth (Arbiter), 2x Protoss Observer"), 0),  // Round 71
+	VArray($T("Wave 72 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Dark Templar (Hero), 4x Sarah Kerrigan (Ghost),"), $T("  4x Danimoth (Arbiter), 2x Protoss Observer"), 0),  // Round 72
+	VArray($T("Wave 73 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Sarah Kerrigan (Ghost), 4x Danimoth (Arbiter),"), $T("  2x Protoss Observer, 4x Kukulza (Mutalisk)"), 0),  // Round 73
+	VArray($T("Wave 74 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Sarah Kerrigan (Ghost), 4x Danimoth (Arbiter),"), $T("  2x Protoss Observer, 4x Kukulza (Mutalisk)"), 0),  // Round 74
+	VArray($T("Wave 75 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Sarah Kerrigan (Ghost), 4x Danimoth (Arbiter),"), $T("  2x Protoss Observer, 4x Kukulza (Mutalisk)"), 0),  // Round 75
+	VArray($T("Wave 76 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Sarah Kerrigan (Ghost), 4x Danimoth (Arbiter),"), $T("  2x Protoss Observer, 4x Kukulza (Mutalisk),"), $T("  2x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Wave 77 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Sarah Kerrigan (Ghost), 4x Danimoth (Arbiter),"), $T("  2x Protoss Observer, 4x Kukulza (Mutalisk),"), $T("  2x Gantrithor (Carrier)")),  // Round 77
+	VArray($T("Wave 78 [per player]: 4x Torrasque (Ultralisk),"), $T("  4x Artanis (Scout), 4x Zerg Devourer,"), $T("  2x Yggdrasill (Overlord), 4x Alan Schezar (Goliath),"), $T("  4x Kukulza (Guardian), 2x Norad II (Battlecruiser),"), $T("  4x Sarah Kerrigan (Ghost), 4x Danimoth (Arbiter),"), $T("  2x Protoss Observer, 4x Kukulza (Mutalisk),"), $T("  2x Gantrithor (Carrier)"))  // Round 78
+));
+
+// Hard mode extra spawn notification strings (full counts, both spawners)
+// waveNotifyStringsHard1..4[round][row] — use WAVE_NOTIFY_ROWS_HARD for row count
+const WAVE_NOTIFY_ROWS_HARD = 1;
+
+const waveNotifyStringsHard1 = EUDVArray(78, EUDVArray(1))(list(
+	VArray($T("Hard extras: 4x Zerg Ultralisk")),  // Round 1
+	VArray($T("Hard extras: 4x Zerg Ultralisk")),  // Round 2
+	VArray($T("Hard extras: 4x Zerg Ultralisk")),  // Round 3
+	VArray($T("Hard extras: 4x Zerg Ultralisk")),  // Round 4
+	VArray($T("Hard extras: 4x Zerg Ultralisk")),  // Round 5
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 6
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 7
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 8
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 9
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 10
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 11
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 12
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 13
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 14
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 15
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 16
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 17
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 18
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 19
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 20
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 21
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 22
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 23
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 24
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 25
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 26
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 27
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 28
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 29
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 30
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 31
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 32
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 33
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 34
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 35
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 36
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 37
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 38
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 39
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 40
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 41
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 42
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 43
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 44
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 45
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 46
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 47
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 48
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 49
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 50
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 51
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 52
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 53
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 54
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 55
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 56
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 57
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 58
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 59
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 60
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 61
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 62
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 63
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 64
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 65
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 66
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 67
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 68
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 69
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 70
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 71
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 72
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 73
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 74
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 75
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 77
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)"))  // Round 78
+));
+
+const waveNotifyStringsHard2 = EUDVArray(78, EUDVArray(1))(list(
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 1
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 2
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 3
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 4
+	VArray($T("Hard extras: 4x Protoss Reaver")),  // Round 5
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 6
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 7
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 8
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 9
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 10
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 11
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 12
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 13
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 14
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 15
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 16
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 17
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 18
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 19
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 20
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 21
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 22
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 23
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 24
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 25
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 26
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 27
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 28
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 29
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 30
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 31
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 32
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 33
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 34
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 35
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 36
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 37
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 38
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 39
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 40
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 41
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 42
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 43
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 44
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 45
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 46
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 47
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 48
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 49
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 50
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 51
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 52
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 53
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 54
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 55
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 56
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 57
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 58
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 59
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 60
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 61
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 62
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 63
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 64
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 65
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 66
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 67
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 68
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 69
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 70
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 71
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 72
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 73
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 74
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 75
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 77
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)"))  // Round 78
+));
+
+const waveNotifyStringsHard3 = EUDVArray(78, EUDVArray(1))(list(
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 1
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 2
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 3
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 4
+	VArray($T("Hard extras: 4x Infested Kerrigan (Infested Terran)")),  // Round 5
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 6
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 7
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 8
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 9
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 10
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 11
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 12
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 13
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 14
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 15
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 16
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 17
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 18
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 19
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 20
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 21
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 22
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 23
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 24
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 25
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 26
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 27
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 28
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 29
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 30
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 31
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 32
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 33
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 34
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 35
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 36
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 37
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 38
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 39
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 40
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 41
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 42
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 43
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 44
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 45
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 46
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 47
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 48
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 49
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 50
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 51
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 52
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 53
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 54
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 55
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 56
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 57
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 58
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 59
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 60
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 61
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 62
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 63
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 64
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 65
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 66
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 67
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 68
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 69
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 70
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 71
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 72
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 73
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 74
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 75
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 77
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)"))  // Round 78
+));
+
+const waveNotifyStringsHard4 = EUDVArray(78, EUDVArray(1))(list(
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 1
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 2
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 3
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 4
+	VArray($T("Hard extras: 4x Edmund Duke (Tank Mode)")),  // Round 5
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 6
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 7
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 8
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 9
+	VArray($T("Hard extras: 4x Tassadar (Templar)")),  // Round 10
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 11
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 12
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 13
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 14
+	VArray($T("Hard extras: 4x Hunter Killer (Hydralisk)")),  // Round 15
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 16
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 17
+	VArray($T("Hard extras: 4x Zeratul (Dark Templar)")),  // Round 18
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 19
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 20
+	VArray($T("Hard extras: 4x Tom Kazansky (Wraith)")),  // Round 21
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 22
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 23
+	VArray($T("Hard extras: 4x Jim Raynor (Marine)")),  // Round 24
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 25
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 26
+	VArray($T("Hard extras: 4x Fenix (Dragoon)")),  // Round 27
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 28
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 29
+	VArray($T("Hard extras: 4x Zerg Zergling")),  // Round 30
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 31
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 32
+	VArray($T("Hard extras: 4x Alexei Stukov (Ghost)")),  // Round 33
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 34
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 35
+	VArray($T("Hard extras: 4x Artanis (Scout)")),  // Round 36
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 37
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 38
+	VArray($T("Hard extras: 4x Zerg Devourer")),  // Round 39
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 40
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 41
+	VArray($T("Hard extras: 4x Fenix (Zealot)")),  // Round 42
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 43
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 44
+	VArray($T("Hard extras: 2x Yggdrasill (Overlord)")),  // Round 45
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 46
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 47
+	VArray($T("Hard extras: 4x Alan Schezar (Goliath)")),  // Round 48
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 49
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 50
+	VArray($T("Hard extras: 4x Kukulza (Guardian)")),  // Round 51
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 52
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 53
+	VArray($T("Hard extras: 4x Norad II (Battlecruiser)")),  // Round 54
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 55
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 56
+	VArray($T("Hard extras: 4x Dark Templar (Hero)")),  // Round 57
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 58
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 59
+	VArray($T("Hard extras: 4x Sarah Kerrigan (Ghost)")),  // Round 60
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 61
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 62
+	VArray($T("Hard extras: 4x Danimoth (Arbiter)")),  // Round 63
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 64
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 65
+	VArray($T("Hard extras: 4x Kukulza (Mutalisk)")),  // Round 66
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 67
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 68
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 69
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 70
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 71
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 72
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 73
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 74
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 75
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)")),  // Round 77
+	VArray($T("Hard extras: 2x Gantrithor (Carrier)"))  // Round 78
+));
+
+// Hard mode extra spawn notification strings (per-player split counts)
+// waveNotifyStringsHardSplit1..4[round][row] — use WAVE_NOTIFY_ROWS_HARD_SPLIT
+const WAVE_NOTIFY_ROWS_HARD_SPLIT = 1;
+
+const waveNotifyStringsHardSplit1 = EUDVArray(78, EUDVArray(1))(list(
+	VArray($T("Hard [per player]: 2x Zerg Ultralisk")),  // Round 1
+	VArray($T("Hard [per player]: 2x Zerg Ultralisk")),  // Round 2
+	VArray($T("Hard [per player]: 2x Zerg Ultralisk")),  // Round 3
+	VArray($T("Hard [per player]: 2x Zerg Ultralisk")),  // Round 4
+	VArray($T("Hard [per player]: 2x Zerg Ultralisk")),  // Round 5
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 6
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 7
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 8
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 9
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 10
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 11
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 12
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 13
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 14
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 15
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 16
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 17
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 18
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 19
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 20
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 21
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 22
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 23
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 24
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 25
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 26
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 27
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 28
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 29
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 30
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 31
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 32
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 33
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 34
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 35
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 36
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 37
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 38
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 39
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 40
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 41
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 42
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 43
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 44
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 45
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 46
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 47
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 48
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 49
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 50
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 51
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 52
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 53
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 54
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 55
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 56
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 57
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 58
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 59
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 60
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 61
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 62
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 63
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 64
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 65
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 66
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 67
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 68
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 69
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 70
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 71
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 72
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 73
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 74
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 75
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 77
+	VArray(0)  // Round 78
+));
+
+const waveNotifyStringsHardSplit2 = EUDVArray(78, EUDVArray(1))(list(
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 1
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 2
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 3
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 4
+	VArray($T("Hard [per player]: 2x Protoss Reaver")),  // Round 5
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 6
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 7
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 8
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 9
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 10
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 11
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 12
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 13
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 14
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 15
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 16
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 17
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 18
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 19
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 20
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 21
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 22
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 23
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 24
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 25
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 26
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 27
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 28
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 29
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 30
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 31
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 32
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 33
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 34
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 35
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 36
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 37
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 38
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 39
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 40
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 41
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 42
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 43
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 44
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 45
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 46
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 47
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 48
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 49
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 50
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 51
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 52
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 53
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 54
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 55
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 56
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 57
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 58
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 59
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 60
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 61
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 62
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 63
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 64
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 65
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 66
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 67
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 68
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 69
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 70
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 71
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 72
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 73
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 74
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 75
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 77
+	VArray(0)  // Round 78
+));
+
+const waveNotifyStringsHardSplit3 = EUDVArray(78, EUDVArray(1))(list(
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 1
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 2
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 3
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 4
+	VArray($T("Hard [per player]: 2x Infested Kerrigan (Infested Terran)")),  // Round 5
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 6
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 7
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 8
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 9
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 10
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 11
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 12
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 13
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 14
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 15
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 16
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 17
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 18
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 19
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 20
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 21
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 22
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 23
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 24
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 25
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 26
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 27
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 28
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 29
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 30
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 31
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 32
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 33
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 34
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 35
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 36
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 37
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 38
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 39
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 40
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 41
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 42
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 43
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 44
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 45
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 46
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 47
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 48
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 49
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 50
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 51
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 52
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 53
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 54
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 55
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 56
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 57
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 58
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 59
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 60
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 61
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 62
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 63
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 64
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 65
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 66
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 67
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 68
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 69
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 70
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 71
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 72
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 73
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 74
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 75
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 77
+	VArray(0)  // Round 78
+));
+
+const waveNotifyStringsHardSplit4 = EUDVArray(78, EUDVArray(1))(list(
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 1
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 2
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 3
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 4
+	VArray($T("Hard [per player]: 2x Edmund Duke (Tank Mode)")),  // Round 5
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 6
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 7
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 8
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 9
+	VArray($T("Hard [per player]: 2x Tassadar (Templar)")),  // Round 10
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 11
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 12
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 13
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 14
+	VArray($T("Hard [per player]: 2x Hunter Killer (Hydralisk)")),  // Round 15
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 16
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 17
+	VArray($T("Hard [per player]: 2x Zeratul (Dark Templar)")),  // Round 18
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 19
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 20
+	VArray($T("Hard [per player]: 2x Tom Kazansky (Wraith)")),  // Round 21
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 22
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 23
+	VArray($T("Hard [per player]: 2x Jim Raynor (Marine)")),  // Round 24
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 25
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 26
+	VArray($T("Hard [per player]: 2x Fenix (Dragoon)")),  // Round 27
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 28
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 29
+	VArray($T("Hard [per player]: 2x Zerg Zergling")),  // Round 30
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 31
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 32
+	VArray($T("Hard [per player]: 2x Alexei Stukov (Ghost)")),  // Round 33
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 34
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 35
+	VArray($T("Hard [per player]: 2x Artanis (Scout)")),  // Round 36
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 37
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 38
+	VArray($T("Hard [per player]: 2x Zerg Devourer")),  // Round 39
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 40
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 41
+	VArray($T("Hard [per player]: 2x Fenix (Zealot)")),  // Round 42
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 43
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 44
+	VArray($T("Hard [per player]: 1x Yggdrasill (Overlord)")),  // Round 45
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 46
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 47
+	VArray($T("Hard [per player]: 2x Alan Schezar (Goliath)")),  // Round 48
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 49
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 50
+	VArray($T("Hard [per player]: 2x Kukulza (Guardian)")),  // Round 51
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 52
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 53
+	VArray($T("Hard [per player]: 2x Norad II (Battlecruiser)")),  // Round 54
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 55
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 56
+	VArray($T("Hard [per player]: 2x Dark Templar (Hero)")),  // Round 57
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 58
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 59
+	VArray($T("Hard [per player]: 2x Sarah Kerrigan (Ghost)")),  // Round 60
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 61
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 62
+	VArray($T("Hard [per player]: 2x Danimoth (Arbiter)")),  // Round 63
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 64
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 65
+	VArray($T("Hard [per player]: 2x Kukulza (Mutalisk)")),  // Round 66
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 67
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 68
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 69
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 70
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 71
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 72
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 73
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 74
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 75
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 76
+	VArray($T("Hard [per player]: 1x Gantrithor (Carrier)")),  // Round 77
+	VArray(0)  // Round 78
 ));
