@@ -1,0 +1,24 @@
+import common_vars;
+
+var lastTick      = 0;
+var realCountdown = 0;
+
+function onPluginStart() {
+	PauseTimer();
+	// multiply by 4/3 using integer math to approximate 1.3333
+	realCountdown = common_vars.realTimeSecondsPerRound * 4 / 3;
+}
+
+function afterTriggerExec() {
+	if (Switch("GameStarted", Set)) {
+		var currentTick = getgametick();
+		if (currentTick - lastTick >= 24) {
+			lastTick = currentTick;
+			realCountdown--;
+			SetCountdownTimer(SetTo, realCountdown);
+		}
+		if (realCountdown == 0) {
+			realCountdown = common_vars.realTimeSecondsPerRound * 4 / 3;
+		}
+	}
+}

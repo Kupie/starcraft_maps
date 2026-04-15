@@ -1,5 +1,5 @@
-var beaconFlashTimer = 0;
-var CurrentOwner = 8;
+
+var aiNudgeTimer = 5;
 
 function beforeTriggerExec() {
 
@@ -10,14 +10,16 @@ function beforeTriggerExec() {
 	// Set pauses to 200
 	dwwrite(0x0058d718, 200);
 	
-	// Beacon flasher to make things more clear on minimap
-	if (beaconFlashTimer == 0) {
-		if (CurrentOwner != 8) {
-			GiveUnits(All,"Terran Beacon",AllPlayers,"playground",P8);
-		} else {
-			GiveUnits(All,"Terran Beacon",AllPlayers,"playground",P11);
-		}
-		beaconFlashTimer = 48; // 36 frames
+	// AI nudging
+	aiNudgeTimer--;
+	if (aiNudgeTimer == 0) {
+		aiNudgeTimer = 72;  // every 5 seconds
+		var savedCp = getcurpl();
+		setcurpl(P8);
+		RunAIScriptAt("SuiR","playground");
+		setcurpl(savedCp);
 	}
-
+	
+	
 }
+

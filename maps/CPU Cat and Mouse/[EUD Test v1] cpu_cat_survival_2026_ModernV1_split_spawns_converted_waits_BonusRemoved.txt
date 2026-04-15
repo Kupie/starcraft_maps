@@ -2994,18 +2994,6 @@ Conditions:
 	Always();
 
 Actions:
-	Comment("Ongoing: persistent state check");
-	Run AI Script At Location("SuiR", "playground");
-	Preserve Trigger();
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 8"){
-Conditions:
-	Always();
-
-Actions:
 	Comment("Ongoing Switch Randomizer");
 	Set Switch("Switch1", randomize);
 	Set Switch("Switch2", randomize);
