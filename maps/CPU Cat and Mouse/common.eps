@@ -1,3 +1,6 @@
+var beaconFlashTimer = 0;
+var CurrentOwner = 8;
+
 function beforeTriggerExec() {
 
 	DoActions(
@@ -6,4 +9,15 @@ function beforeTriggerExec() {
 	);
 	// Set pauses to 200
 	dwwrite(0x0058d718, 200);
+	
+	// Beacon flasher to make things more clear on minimap
+	if (beaconFlashTimer == 0) {
+		if (CurrentOwner != 8) {
+			GiveUnits(All,"Terran Beacon",AllPlayers,"playground",P8);
+		} else {
+			GiveUnits(All,"Terran Beacon",AllPlayers,"playground",P11);
+		}
+		beaconFlashTimer = 48; // 36 frames
+	}
+
 }

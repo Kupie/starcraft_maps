@@ -1,58 +1,73 @@
+import common_vars;
+
 function afterTriggerExec() {
-	if (!Switch("DifficultyChosen", Set)) { return; }
 	if (Switch("EUDUnitsPlaced", Set)) { return; }
-	if (Switch("HardModeEnabled", Set)) { return; }
-
-	// Shields
-	f_wwrite(0x00660e78, 9000);        // Protoss Corsair (60) Shield
-	f_wwrite(0x00660e94, 12000);       // Dark Templar Hero (74) Shield
-	f_wwrite(0x00660e9a, 20000);       // Fenix Zealot (77) Shield (upper 16: addr+2)
-	f_wwrite(0x00660e9e, 1000);        // Tassadar Templar (79) Shield (upper 16: addr+2)
-	f_wwrite(0x00660ea4, 3392);        // Gantrithor Carrier (82) Shield
-	f_wwrite(0x00660eb0, 8000);        // Artanis Scout (88) Shield
-
-	// Hit Points (actual HP * 256)
-	f_dwwrite(0x00662390, 50000  * 256);   // Sarah Kerrigan Ghost (16)
-	f_dwwrite(0x006623a0, 12000  * 256);   // Jim Raynor Marine (20)
-	f_dwwrite(0x006623a4, 6999   * 256);   // Tom Kazansky Wraith (21)
-	f_dwwrite(0x006623ac, 2000   * 256);   // Edmund Duke Tank Mode (23)
-	f_dwwrite(0x006623e4, 1500   * 256);   // Zerg Zergling (37)
-	f_dwwrite(0x0066241c, 1200   * 256);   // Infested Kerrigan (51)
-	f_dwwrite(0x00662440, 9000   * 256);   // Protoss Corsair (60)
-	f_dwwrite(0x00662478, 12000  * 256);   // Dark Templar Hero (74)
-	f_dwwrite(0x0066247c, 4000   * 256);   // Zeratul Dark Templar (75)
-	f_dwwrite(0x00662480, 200000 * 256);   // Tassadar/Zeratul Archon (76)
-	f_dwwrite(0x00662484, 20000  * 256);   // Fenix Zealot (77)
-	f_dwwrite(0x00662488, 32000  * 256);   // Fenix Dragoon (78)
-	f_dwwrite(0x0066248c, 1000   * 256);   // Tassadar Templar (79)
-	f_dwwrite(0x00662498, 200000 * 256);   // Gantrithor Carrier (82)
-	f_dwwrite(0x006624b0, 8000   * 256);   // Artanis Scout (88)
-	f_dwwrite(0x006624e0, 24000  * 256);   // Alexei Stukov Ghost (100)
-
-	// Armor
-	f_bwrite(0x0065ff04, 10);          // Protoss Corsair (60)
-	f_bwrite(0x0065ff10, 40);          // Protoss Carrier (72)
-
-	// Costs
-	f_wwrite(0x0065fd80, 250);         // Protoss Probe (64) Vespene
-	f_wwrite(0x0065fd84, 22);          // Protoss Dragoon (66) Vespene
-
-	// Weapon Damage
-	f_wwrite(0x00656eb6, 200);         // C-10 Sarah Kerrigan (3)
-	f_wwrite(0x00656ec4, 250);         // Hellfire Alan Schezar (10)
-	// f_wwrite(0x00656ee2, 700);      // Flame Thrower (25) - disabled
-	f_wwrite(0x00656f5c, 300);         // Warp Blades Dark Templar Hero (86)
-	f_wwrite(0x00656f98, 100);         // C-10 Alexei Stukov (116)
-	f_wwrite(0x00656f2c, 2000);         // Probe Particle Beam (62)
+	if (Switch("DifficultyChosen", Cleared))  { return; }
 	
+	if (Switch("EasyModeEnabled", Set)) { 
+		
+		// Shields
+		f_wwrite(0x00660e78, 9000);        // Protoss Corsair (60) Shield
+		f_wwrite(0x00660e94, 12000);       // Dark Templar Hero (74) Shield
+		f_wwrite(0x00660e9a, 20000);       // Fenix Zealot (77) Shield (upper 16: addr+2)
+		f_wwrite(0x00660e9e, 1000);        // Tassadar Templar (79) Shield (upper 16: addr+2)
+		f_wwrite(0x00660ea4, 3392);        // Gantrithor Carrier (82) Shield
+		f_wwrite(0x00660eb0, 8000);        // Artanis Scout (88) Shield
+	
+		// Hit Points (actual HP * 256)
+		f_dwwrite(0x00662390, 50000  * 256);   // Sarah Kerrigan Ghost (16)
+		f_dwwrite(0x006623a0, 12000  * 256);   // Jim Raynor Marine (20)
+		f_dwwrite(0x006623a4, 6999   * 256);   // Tom Kazansky Wraith (21)
+		f_dwwrite(0x006623ac, 2000   * 256);   // Edmund Duke Tank Mode (23)
+		f_dwwrite(0x006623e4, 1500   * 256);   // Zerg Zergling (37)
+		f_dwwrite(0x0066241c, 1200   * 256);   // Infested Kerrigan (51)
+		f_dwwrite(0x00662440, 9000   * 256);   // Protoss Corsair (60)
+		f_dwwrite(0x00662478, 12000  * 256);   // Dark Templar Hero (74)
+		f_dwwrite(0x0066247c, 4000   * 256);   // Zeratul Dark Templar (75)
+		f_dwwrite(0x00662480, 200000 * 256);   // Tassadar/Zeratul Archon (76)
+		f_dwwrite(0x00662484, 20000  * 256);   // Fenix Zealot (77)
+		f_dwwrite(0x00662488, 32000  * 256);   // Fenix Dragoon (78)
+		f_dwwrite(0x0066248c, 1000   * 256);   // Tassadar Templar (79)
+		f_dwwrite(0x00662498, 200000 * 256);   // Gantrithor Carrier (82)
+		f_dwwrite(0x006624b0, 8000   * 256);   // Artanis Scout (88)
+		f_dwwrite(0x006624e0, 24000  * 256);   // Alexei Stukov Ghost (100)
+	
+		// Armor
+		f_bwrite(0x0065ff04, 10);          // Protoss Corsair (60)
+		f_bwrite(0x0065ff10, 40);          // Protoss Carrier (72)
+	
+		// Costs
+		f_wwrite(0x0065fd80, 250);         // Protoss Probe (64) Vespene
+		f_wwrite(0x0065fd84, 22);          // Protoss Dragoon (66) Vespene
+	
+		// Weapon Damage
+		f_wwrite(0x00656eb6, 200);         // C-10 Sarah Kerrigan (3)
+		f_wwrite(0x00656ec4, 250);         // Hellfire Alan Schezar (10)
+		// f_wwrite(0x00656ee2, 700);      // Flame Thrower (25) - disabled
+		f_wwrite(0x00656f5c, 300);         // Warp Blades Dark Templar Hero (86)
+		f_wwrite(0x00656f98, 100);         // C-10 Alexei Stukov (116)
+		f_wwrite(0x00656f2c, 2000);         // Probe Particle Beam (62)
+		
+	
+		// Weapon Bonuses
+		f_wwrite(0x0065767c, 3000);        // C-10 Normal (2) Damage Bonus
+		f_wwrite(0x006576a2, 2000);        // ATS Laser Norad II (21) Damage Bonus (upper 16: addr+2)
+		f_wwrite(0x006576a4, 2000);        // ATA Laser Norad II (22) Damage Bonus
+		f_wwrite(0x006576aa, 200);         // Flame Thrower Normal (25) Damage Bonus (upper 16: addr+2)
+		f_wwrite(0x006576c0, 300);         // Claws Devouring One (36) Damage Bonus
+		f_wwrite(0x006576c6, 1000);        // Needle Spines Hunter Killer (39) Damage Bonus (upper 16: addr+2)
+	
+		// Set outer geysers to have a bit more gas than default 35
+		DoActions(
+			ModifyUnitResourceAmount(All,P12,"playground",75),
+			ModifyUnitResourceAmount(All,P12,"HigherGeysers",50000),
+		);
+		
+		// Up the delay between spawns a tiny bit
+		common_vars.delayBetweenSpawns = 80;
+	}
 
-	// Weapon Bonuses
-	f_wwrite(0x0065767c, 3000);        // C-10 Normal (2) Damage Bonus
-	f_wwrite(0x006576a2, 2000);        // ATS Laser Norad II (21) Damage Bonus (upper 16: addr+2)
-	f_wwrite(0x006576a4, 2000);        // ATA Laser Norad II (22) Damage Bonus
-	f_wwrite(0x006576aa, 200);         // Flame Thrower Normal (25) Damage Bonus (upper 16: addr+2)
-	f_wwrite(0x006576c0, 300);         // Claws Devouring One (36) Damage Bonus
-	f_wwrite(0x006576c6, 1000);        // Needle Spines Hunter Killer (39) Damage Bonus (upper 16: addr+2)
+
 
 	// Place hero units
 	CreateUnitWithProperties(1, "Devouring One (Zergling)",  "TopLeftLing",     P8, UnitProperty(invincible = true));

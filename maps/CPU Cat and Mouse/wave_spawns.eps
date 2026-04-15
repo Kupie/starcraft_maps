@@ -1,22 +1,28 @@
 // Wave spawning system
-// -At countdown 6 seconds: increment common_vars.currentRound, reset currentSpawnIndex, transition to step 1
-// -At countdown 5 seconds: randomize spawner locations, reduce spawns if needed, transition to step 2
-// -At countdown 0: kill buildings at spawners that have units, reset countdown to 59, transition to step 3
-// -Step 3: loop through unit indices, spawn non-zero units at spawner1/2 with 3 second gaps between groups
-// -Step 4: hard mode bonus spawns using same logic as step 3 (only if HardModeEnabled)
-// -Step 99: waiting for next round reset
+// Step 0 (99→1): at countdown 8 — increment round, reset
+// Step 1:        at countdown 7 — randomize locations, place beacons, reduce spawns
+// Step 2:        at countdown 7→0 — beacon flash loop using frame counter
+// Step 3:        at countdown 0 — kill buildings, kill beacons, start spawning
+// Step 4:        normal spawning loop
+// Step 5:        hard mode spawning loop
+// Step 99:       idle
 
-import wave_spawns_indexes;    // wave_spawns_indexes.NUM_UNITS, wave_spawns_indexes.waveSpawnsUnitIndex
-import WaveSpawnsFull;         // WaveSpawnsFull.waveSpawnsFull1, WaveSpawnsFull.waveSpawnsFull2
-import WaveSpawnsSplit;        // WaveSpawnsSplit.WaveSpawnsSplit1, WaveSpawnsSplit.WaveSpawnsSplit2
-import HardModeSpawnsFull;     // HardModeSpawnsFull.waveSpawnsFullHard1..4
-import common_vars; // common_vars.currentRound, 
+import wave_spawns_indexes;
+import WaveSpawnsFull;
+import WaveSpawnsSplit;
+import HardModeSpawnsFull;
+import common_vars;
 
-var currentSpawnIndex  = EUDVariable(0);
-var roundStep          = EUDVariable(99);
-var spawnTimeCounter   = EUDVariable(0);
-var hardRoll           = EUDVariable(0);
-
+var currentSpawnIndex  = 0;
+var roundStep          = 99;
+var spawnTimeCounter   = 0;
+var hardRoll           = 0;
+var s1left             = 0;
+var s1top              = 0;
+var s2left             = 0;
+var s2top              = 0;
+var beaconVisible      = 0;
+var beaconFlashCounter = 0;
 
 
 // ── Helper: check if spawner1 has any units this round ────────────────────────
@@ -49,17 +55,14 @@ function reduceSpawnsForNumPlayers(roundNumber) {
 	foreach(i : py_range(0, wave_spawns_indexes.NUM_UNITS)) {
 		WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] = WaveSpawnsSplit.WaveSpawnsSplit1[roundNumber][i] * localPlayerCount;
 		WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] = WaveSpawnsSplit.WaveSpawnsSplit2[roundNumber][i] * localPlayerCount;
-		
-		// Reduce it to spawn only 1 if it's observer/overlord, as more than 1 should never be active
-		if (wave_spawns_indexes.waveSpawnsUnitIndex[i] == $U("Protoss Observer") || wave_spawns_indexes.waveSpawnsUnitIndex[i] == $U("Yggdrasill (Overlord)") ) {
-			if (WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] > 1) {WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] = 1;}
-			if (WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] > 1) {WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] = 1;}
+
+		if (wave_spawns_indexes.waveSpawnsUnitIndex[i] == $U("Protoss Observer") || wave_spawns_indexes.waveSpawnsUnitIndex[i] == $U("Yggdrasill (Overlord)")) {
+			if (WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] > 1) { WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] = 1; }
+			if (WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] > 1) { WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] = 1; }
 		}
 	}
 }
 
-// Beacon placement offsets relative to spawner top-left
-// right = left+1, bottom = top+1 so only need left/top
 const beaconOffsetX = [48,  48,  48,  48,  48,  112, 112, 208, 208, 272, 272, 272, 272, 272];
 const beaconOffsetY = [32,  96,  160, 224, 288, 32,  288, 32,  288, 32,  96,  160, 224, 288];
 
@@ -74,85 +77,103 @@ function placeSpawnerBeacons(left, top) {
 	}
 }
 
-var beaconString = 0; // Get name of beacon
+var beaconString = 0;
 function onPluginStart() {
 	beaconString = GetMapStringAddr($T("2 = Ban"));
-	//printAll("Current Round: {}", common_vars.currentRound);
-	
 }
 
 function afterTriggerExec() {
-//	if (CountdownTimer(AtLeast, 30) && roundStep == 99) {
-//		printAll("Reducing timer to debug");
-//		SetCountdownTimer(SetTo,20);
-//	}
-	// ── Step 0: Increment round, reset for next wave ──────────────────────────
+
+	// ── Step 0: Increment round, reset ───────────────────────────────────────
 	if (CountdownTimer(Exactly, 8) && roundStep == 99) {
 		common_vars.currentRound += 1;
-		if (common_vars.currentRound == 70) {SetSwitch($S("pylon invuln"), Clear);} //Pylons stop being invuln at round 70+
-		currentSpawnIndex = 0;
+		if (common_vars.currentRound == 70) { SetSwitch($S("pylon invuln"), Clear); }
+		currentSpawnIndex  = 0;
+		beaconVisible      = 0;
+		beaconFlashCounter = 0;
 		roundStep = 1;
-//		printAll("Reset for round, roundStep now 1");
 		printAll("Current Round: {}", common_vars.currentRound);
 	}
 
-	// ── Step 1: Randomize spawner locations, reduce spawns if needed ──────────
+	// ── Step 1: Randomize locations, place beacons, reduce spawns ────────────
 	if (CountdownTimer(Exactly, 7) && roundStep == 1) {
-		// Randomize spawner location
-		var s1left   = f_rand() % 3776;
-		var s1top    = 160 + f_rand() % (3776 - 160);
+		s1left   = f_rand() % 3776;
+		s1top    = 160 + f_rand() % (3776 - 160);
 		var s1right  = s1left + 320;
 		var s1bottom = s1top  + 320;
-		setloc($L("spawner"),  s1left, s1top, s1right, s1bottom);
+		setloc($L("spawner"), s1left, s1top, s1right, s1bottom);
 
-		// Randomize spawner2 location
-		var s2left   = f_rand() % 3776;
-		var s2top    = 160 + f_rand() % (3776 - 160);
+		s2left   = f_rand() % 3776;
+		s2top    = 160 + f_rand() % (3776 - 160);
 		var s2right  = s2left + 320;
 		var s2bottom = s2top  + 320;
 		setloc($L("spawner2"), s2left, s2top, s2right, s2bottom);
 
 		if (Switch("ReduceSpawnsForNumPlayers", Set)) {
-//			printAll("ReduceSpawnsForNumPlayers is set, reducing round");
 			reduceSpawnsForNumPlayers(common_vars.currentRound);
 		}
 
-		// Roll which hard mode option to use this round
 		hardRoll = f_rand() % 4 + 1;
-		roundStep = 2;
-		dbstr_print(beaconString, "Enemy Spawn Warning\0"); // Set beacon name to spawn warning
+		dbstr_print(beaconString, "Enemy Spawn Warning\0");
+
 		if (hasSpawner1Units(common_vars.currentRound)) {
 			placeSpawnerBeacons(s1left, s1top);
-			MinimapPing($L("spawner"));
 			MinimapPing($L("spawner"));
 		}
 		if (hasSpawner2Units(common_vars.currentRound)) {
 			placeSpawnerBeacons(s2left, s2top);
-			MinimapPing($L("spawner"));
-			MinimapPing($L("spawner"));
+			MinimapPing($L("spawner2"));
 		}
-		
+		beaconVisible      = 1;
+		beaconFlashCounter = 24;
+		roundStep = 2;
 	}
 
-	// ── Step 2: Kill buildings, start spawning ────────────────────────────────
+	// ── Step 2: Beacon flash loop ─────────────────────────────────────────────
+	if (roundStep == 2) {
+		if (beaconFlashCounter == 0) {
+			beaconFlashCounter = 24;  // flash every 1.5 seconds
+			if (beaconVisible == 1) {
+				if (hasSpawner1Units(common_vars.currentRound)) {
+					KillUnitAt(All, "Terran Beacon", "spawner",  P8);
+				//	MinimapPing($L("spawner"));
+				}
+				if (hasSpawner2Units(common_vars.currentRound)) {
+					KillUnitAt(All, "Terran Beacon", "spawner2", P8);
+				//	MinimapPing($L("spawner2"));
+				}
+				beaconVisible = 0;
+			} else {
+				if (hasSpawner1Units(common_vars.currentRound)) {
+					placeSpawnerBeacons(s1left, s1top);
+				//	MinimapPing($L("spawner"));
+				}
+				if (hasSpawner2Units(common_vars.currentRound)) {
+					placeSpawnerBeacons(s2left, s2top);
+				//	MinimapPing($L("spawner2"));
+				}
+				beaconVisible = 1;
+			}
+		}
+		beaconFlashCounter--;
+	}
+
+	// ── Step 2 -> 3: Kill buildings, start spawning ────────────────────────────────
 	if (CountdownTimer(Exactly, 0) && roundStep == 2) {
 		if (hasSpawner1Units(common_vars.currentRound)) {
-			MinimapPing($L("spawner"));
-			MinimapPing($L("spawner"));
-		//	DisplayTextAll("Killing in spawner 1");
 			KillUnitAt(All, "Terran Beacon", "spawner",  P8);
-			KillUnitAt(All, "(buildings)", "spawner",  Force1);
+			KillUnitAt(All, "(buildings)",   "spawner",  Force1);
+			MinimapPing($L("spawner"));
 		}
 		if (hasSpawner2Units(common_vars.currentRound)) {
+			KillUnitAt(All, "Terran Beacon", "spawner2", P8);
+			KillUnitAt(All, "(buildings)",   "spawner2", Force1);
 			MinimapPing($L("spawner2"));
-			MinimapPing($L("spawner2"));
-			KillUnitAt(All, "Terran Beacon", "spawner",  P8);
-			KillUnitAt(All, "(buildings)", "spawner2", Force1);
 		}
-		dbstr_print(beaconString, "2 = Ban\0"); // Set beacon name to spawn warning
+		dbstr_print(beaconString, "2 = Ban\0");
 		SetCountdownTimer(SetTo, 60);
+		spawnTimeCounter = 16;
 		roundStep = 3;
-		spawnTimeCounter = 0;
 	}
 
 	// ── Step 3: Normal spawning loop ──────────────────────────────────────────
@@ -160,46 +181,29 @@ function afterTriggerExec() {
 		var count  = WaveSpawnsFull.waveSpawnsFull1[common_vars.currentRound][currentSpawnIndex];
 		var count2 = WaveSpawnsFull.waveSpawnsFull2[common_vars.currentRound][currentSpawnIndex];
 
-		// Advance past zeros
 		if (count == 0 && count2 == 0 && currentSpawnIndex < wave_spawns_indexes.NUM_UNITS) {
 			currentSpawnIndex += 1;
 		}
 
-		var spawnIdx = currentSpawnIndex;  // save before incrementing so both spawners use same unit
+		var spawnIdx = currentSpawnIndex;
 
 		if (count > 0 || count2 > 0) {
 			if (count > 0) {
 				CreateUnitWithProperties(count, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner", P8, UnitProperty(
-					hitpoint = 100,
-					shield = 100,
-					energy = 100,
-					hanger = 8,
-					resource = 0,
-					cloaked = False,
-					burrowed = False,
-					intransit = False,
-					hallucinated = False,
-					invincible = False)
+					hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
+					cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
 				);
 				WaveSpawnsFull.waveSpawnsFull1[common_vars.currentRound][currentSpawnIndex] = 0;
 			}
 			if (count2 > 0) {
 				CreateUnitWithProperties(count2, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner2", P8, UnitProperty(
-					hitpoint = 100,
-					shield = 100,
-					energy = 100,
-					hanger = 8,
-					resource = 0,
-					cloaked = False,
-					burrowed = False,
-					intransit = False,
-					hallucinated = False,
-					invincible = False)
+					hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
+					cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
 				);
 				WaveSpawnsFull.waveSpawnsFull2[common_vars.currentRound][currentSpawnIndex] = 0;
 			}
 			currentSpawnIndex += 1;
-			spawnTimeCounter = 64;  // 3 seconds (16 frames/sec * 3)
+			spawnTimeCounter = common_vars.delayBetweenSpawns;
 		}
 	}
 
@@ -209,8 +213,8 @@ function afterTriggerExec() {
 
 	if (roundStep == 3 && currentSpawnIndex >= wave_spawns_indexes.NUM_UNITS) {
 		if (Switch("HardModeEnabled", Set)) {
-			currentSpawnIndex = 0;   // reset index for hard mode pass
-			spawnTimeCounter = 0;
+			currentSpawnIndex = 0;
+			spawnTimeCounter  = 0;
 			roundStep = 4;
 		} else {
 			roundStep = 99;
@@ -219,7 +223,6 @@ function afterTriggerExec() {
 
 	// ── Step 4: Hard mode spawning loop ──────────────────────────────────────
 	if (roundStep == 4 && spawnTimeCounter == 0) {
-		// Select which hard mode array to use based on hardRoll
 		var hardCount  = 0;
 		var hardCount2 = 0;
 		if (hardRoll == 1) {
@@ -239,7 +242,6 @@ function afterTriggerExec() {
 			hardCount2 = HardModeSpawnsFull.waveSpawnsFullHard4[common_vars.currentRound][currentSpawnIndex];
 		}
 
-		// Advance past zeros
 		if (hardCount == 0 && hardCount2 == 0 && currentSpawnIndex < wave_spawns_indexes.NUM_UNITS) {
 			currentSpawnIndex += 1;
 		}
@@ -249,34 +251,18 @@ function afterTriggerExec() {
 		if (hardCount > 0 || hardCount2 > 0) {
 			if (hardCount > 0) {
 				CreateUnitWithProperties(hardCount, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner", P8, UnitProperty(
-					hitpoint = 100,
-					shield = 100,
-					energy = 100,
-					hanger = 8,
-					resource = 0,
-					cloaked = False,
-					burrowed = False,
-					intransit = False,
-					hallucinated = False,
-					invincible = False)
+					hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
+					cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
 				);
 			}
 			if (hardCount2 > 0) {
 				CreateUnitWithProperties(hardCount2, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner2", P8, UnitProperty(
-					hitpoint = 100,
-					shield = 100,
-					energy = 100,
-					hanger = 8,
-					resource = 0,
-					cloaked = False,
-					burrowed = False,
-					intransit = False,
-					hallucinated = False,
-					invincible = False)
+					hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
+					cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
 				);
 			}
 			currentSpawnIndex += 1;
-			spawnTimeCounter = 48;
+			spawnTimeCounter = common_vars.delayBetweenSpawns;
 		}
 	}
 
