@@ -84,7 +84,7 @@ function onPluginStart() {
 function afterTriggerExec() {
 
 	// ── Step 0: Increment round, reset ───────────────────────────────────────
-	if (CountdownTimer(Exactly, 8) && roundStep == 99) {
+	if (CountdownTimer(Exactly, 8) && roundStep == 99 && common_vars.currentRound < wave_spawns_indexes.NUM_ROUNDS) {
 		common_vars.currentRound += 1;
 		if (common_vars.currentRound == 70) { SetSwitch($S("pylon invuln"), Clear); }
 		currentSpawnIndex  = 0;
