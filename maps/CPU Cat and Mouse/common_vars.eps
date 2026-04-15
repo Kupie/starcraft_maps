@@ -4,6 +4,8 @@ var delayBetweenSpawns = EUDVariable(64); // How many frames between spawning un
 
 var realTimeSecondsPerRound = 38; // How many seconds should each round last, when running on "fastest" speed
 
+var hardRoll = 0; // Set by wave_spawns.eps at step 1; read by wave_spawns_notifications.eps
+
 function beforeTriggerExec() {
 
 	
