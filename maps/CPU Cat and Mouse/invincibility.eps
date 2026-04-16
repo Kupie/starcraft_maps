@@ -1,7 +1,8 @@
 import common_vars;
 
 var tempInvincibilityDurationFrames = 2400;
-var roundPylonsBecomeVulnerable = 0;
+var roundPylonsBecomeVulnerable = 70;
+var roundProbesBecomePermInvuln = 22;
 
 var tempInvulP1 = 0;
 var tempInvulP2 = 0;
@@ -28,15 +29,13 @@ function _rescuePlayer(player, spawnLocation) {
 		isTemp = 1;
 	}
 
-	DoActions(
-		KillUnitAt(1, "Flag", "Start", player),
-		CreateUnit(1, "Protoss Probe", spawnLocation, player),
-		CenterView("Start"),
-		SetResources(Force1, Add, 20, Gas),
-		SetInvincibility(Enable, "Protoss Probe", player, "playground")
-	);
+	KillUnitAt(1, "Flag", "Start", player);
+	CreateUnit(1, "Protoss Probe", spawnLocation, player);
+	CenterView("Start");
+	SetResources(Force1, Add, 20, Gas);
+	SetInvincibility(Enable, "Protoss Probe", player, "spawnLocation");
 
-	if (isTemp == 1) {
+	if (Switch("Long Invulnerability", Cleared)) {
 		DisplayText("\x013\x006- You have been saved -\x006\r\n\x013\x004Temporary Invincibility!\x004\r\n\r\n\x013\x018+20 gas for everyone\x018\r\n");
 
 		if (player == P1) tempInvulP1 = tempInvincibilityDurationFrames;
@@ -146,11 +145,13 @@ function onPluginStart() {
 
 function afterTriggerExec() {
 	if (common_vars.currentRound >= roundPylonsBecomeVulnerable && Switch("pylon invuln", Set)) {
-		DoActions(
-			SetSwitch("pylon invuln", Clear),
-			DisplayTextAll("Pylons no longer invincible!"),
-			PlayWAVAll("staredit/wav/Industrial Alarm-SoundBible.com-1012301296.wav")
-		);
+		SetSwitch("pylon invuln", Clear);
+		DisplayTextAll("Pylons no longer invincible!");
+		PlayWAVAll("staredit/wav/Industrial Alarm-SoundBible.com-1012301296.wav");
+	}
+
+	if (common_vars.currentRound >= roundProbesBecomePermInvuln && Switch("Long Invulnerability", Cleared)) {
+		SetSwitch("Long Invulnerability", Set);
 	}
 
 	if (!Switch("GameStarted", Set)) {
@@ -158,29 +159,25 @@ function afterTriggerExec() {
 	}
 
 	foreach (player : EUDLoopPlayer()) {
-		if (player >= P1 && player <= P7) {
-			setcurpl(player);
-
-			if (
-				Command(CurrentPlayer, Exactly, 0, "Protoss Probe") &&
-				Command(CurrentPlayer, Exactly, 0, "Protoss Shield Battery") &&
-				Command(CurrentPlayer, Exactly, 1, "Flag") &&
-				Switch("Rescue", Set) &&
-				(
-					Bring(Force1, AtLeast, 1, "Protoss Probe", "Start") ||
-					Bring(Force1, AtLeast, 1, "Terran SCV", "Start")
-				)
-			) {
-				if (player == P1) _rescuePlayer(player, "p1");
-				if (player == P2) _rescuePlayer(player, "p2");
-				if (player == P3) _rescuePlayer(player, "p3");
-				if (player == P4) _rescuePlayer(player, "p4");
-				if (player == P5) _rescuePlayer(player, "p5");
-				if (player == P6) _rescuePlayer(player, "p6");
-				if (player == P7) _rescuePlayer(player, "p7");
-			}
-
-			_tickTempInvul(player);
+		if (
+			Command(player, Exactly, 0, "Protoss Probe") &&
+			Command(player, Exactly, 0, "Protoss Shield Battery") &&
+			Command(player, Exactly, 1, "Flag") &&
+			Switch("Rescue", Set) &&
+			(
+				Bring(Force1, AtLeast, 1, "Protoss Probe", "Start") ||
+				Bring(Force1, AtLeast, 1, "Terran SCV", "Start")
+			)
+		) {
+			if (player == P1) _rescuePlayer(player, $L("p1"));
+			if (player == P2) _rescuePlayer(player, $L("p2"));
+			if (player == P3) _rescuePlayer(player, $L("p3"));
+			if (player == P4) _rescuePlayer(player, $L("p4"));
+			if (player == P5) _rescuePlayer(player, $L("p5"));
+			if (player == P6) _rescuePlayer(player, $L("p6"));
+			if (player == P7) _rescuePlayer(player, $L("p7"));
 		}
+
+		_tickTempInvul(player);
 	}
 }
