@@ -1,8 +1,7 @@
 import common_vars;
 
-var tempInvincibilityDurationFrames = 2400;
-var roundPylonsBecomeVulnerable = 0;
-
+// Per-player temp invincibility countdown (frames; 0 = not active).
+// 2400 frames ≈ 2 minutes at fastest speed.
 var tempInvulP1 = 0;
 var tempInvulP2 = 0;
 var tempInvulP3 = 0;
@@ -11,6 +10,7 @@ var tempInvulP5 = 0;
 var tempInvulP6 = 0;
 var tempInvulP7 = 0;
 
+// Per-player permanent invincibility flag (1 = permanently invincible, never expires).
 var permInvulP1 = 0;
 var permInvulP2 = 0;
 var permInvulP3 = 0;
@@ -19,110 +19,121 @@ var permInvulP5 = 0;
 var permInvulP6 = 0;
 var permInvulP7 = 0;
 
-function _rescuePlayer(player, spawnLocation) {
-	var isTemp = 0;
+// Round at which Pylon invincibility is removed (set externally to control timing).
+var roundPylonsBecomeVulnerable = 0;
 
-	if (Switch("Long Invulnerability", Set)) {
-		isTemp = 0;
-	} else {
-		isTemp = 1;
+// ---------------------------------------------------------------------------
+// _rescueTemp: kill flag, create probe at dedicated per-player spawn location,
+//              enable invincibility there, set 2400-frame countdown.
+// Probe is then moved to Start each frame in afterTriggerExec.
+// All trigger actions use compile-time player/location constants — runtime vars
+// are NOT valid as trigger action parameters (causes Invalid initval errors).
+// ---------------------------------------------------------------------------
+function _rescueTemp(player) {
+	if (player == P1) {
+		KillUnitAt(1, "Flag", "Start", P1);
+		CreateUnit(1, "Protoss Probe", "p1", P1);
+		SetInvincibility(Enable, "Protoss Probe", P1, "p1");
+		tempInvulP1 = 2400;
+		permInvulP1 = 0;
 	}
-
-	DoActions(
-		KillUnitAt(1, "Flag", "Start", player),
-		CreateUnit(1, "Protoss Probe", spawnLocation, player),
-		CenterView("Start"),
-		SetResources(Force1, Add, 20, Gas),
-		SetInvincibility(Enable, "Protoss Probe", player, "playground")
-	);
-
-	if (isTemp == 1) {
-		DisplayText("\x013\x006- You have been saved -\x006\r\n\x013\x004Temporary Invincibility!\x004\r\n\r\n\x013\x018+20 gas for everyone\x018\r\n");
-
-		if (player == P1) tempInvulP1 = tempInvincibilityDurationFrames;
-		if (player == P2) tempInvulP2 = tempInvincibilityDurationFrames;
-		if (player == P3) tempInvulP3 = tempInvincibilityDurationFrames;
-		if (player == P4) tempInvulP4 = tempInvincibilityDurationFrames;
-		if (player == P5) tempInvulP5 = tempInvincibilityDurationFrames;
-		if (player == P6) tempInvulP6 = tempInvincibilityDurationFrames;
-		if (player == P7) tempInvulP7 = tempInvincibilityDurationFrames;
-
-		if (player == P1) permInvulP1 = 0;
-		if (player == P2) permInvulP2 = 0;
-		if (player == P3) permInvulP3 = 0;
-		if (player == P4) permInvulP4 = 0;
-		if (player == P5) permInvulP5 = 0;
-		if (player == P6) permInvulP6 = 0;
-		if (player == P7) permInvulP7 = 0;
-	} else {
-		DisplayText("\x013\x006- You have been saved -\x006\r\n\x013\x004PERMANENT Invincibility!\x004\r\n\r\n\x013\x018+20 gas for everyone\x018\r\n");
-
-		if (player == P1) permInvulP1 = 1;
-		if (player == P2) permInvulP2 = 1;
-		if (player == P3) permInvulP3 = 1;
-		if (player == P4) permInvulP4 = 1;
-		if (player == P5) permInvulP5 = 1;
-		if (player == P6) permInvulP6 = 1;
-		if (player == P7) permInvulP7 = 1;
-
-		if (player == P1) tempInvulP1 = 0;
-		if (player == P2) tempInvulP2 = 0;
-		if (player == P3) tempInvulP3 = 0;
-		if (player == P4) tempInvulP4 = 0;
-		if (player == P5) tempInvulP5 = 0;
-		if (player == P6) tempInvulP6 = 0;
-		if (player == P7) tempInvulP7 = 0;
+	if (player == P2) {
+		KillUnitAt(1, "Flag", "Start", P2);
+		CreateUnit(1, "Protoss Probe", "p2", P2);
+		SetInvincibility(Enable, "Protoss Probe", P2, "p2");
+		tempInvulP2 = 2400;
+		permInvulP2 = 0;
+	}
+	if (player == P3) {
+		KillUnitAt(1, "Flag", "Start", P3);
+		CreateUnit(1, "Protoss Probe", "p3", P3);
+		SetInvincibility(Enable, "Protoss Probe", P3, "p3");
+		tempInvulP3 = 2400;
+		permInvulP3 = 0;
+	}
+	if (player == P4) {
+		KillUnitAt(1, "Flag", "Start", P4);
+		CreateUnit(1, "Protoss Probe", "p4", P4);
+		SetInvincibility(Enable, "Protoss Probe", P4, "p4");
+		tempInvulP4 = 2400;
+		permInvulP4 = 0;
+	}
+	if (player == P5) {
+		KillUnitAt(1, "Flag", "Start", P5);
+		CreateUnit(1, "Protoss Probe", "p5", P5);
+		SetInvincibility(Enable, "Protoss Probe", P5, "p5");
+		tempInvulP5 = 2400;
+		permInvulP5 = 0;
+	}
+	if (player == P6) {
+		KillUnitAt(1, "Flag", "Start", P6);
+		CreateUnit(1, "Protoss Probe", "p6", P6);
+		SetInvincibility(Enable, "Protoss Probe", P6, "p6");
+		tempInvulP6 = 2400;
+		permInvulP6 = 0;
+	}
+	if (player == P7) {
+		KillUnitAt(1, "Flag", "Start", P7);
+		CreateUnit(1, "Protoss Probe", "p7", P7);
+		SetInvincibility(Enable, "Protoss Probe", P7, "p7");
+		tempInvulP7 = 2400;
+		permInvulP7 = 0;
 	}
 }
 
-function _tickTempInvul(player) {
-	if (player == P1 && permInvulP1 == 0 && tempInvulP1 > 0) {
-		tempInvulP1 -= 1;
-		if (tempInvulP1 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
+// ---------------------------------------------------------------------------
+// _rescuePerm: same as _rescueTemp but sets permanent invincibility flag
+//              instead of a countdown (probe never becomes vulnerable again).
+// ---------------------------------------------------------------------------
+function _rescuePerm(player) {
+	if (player == P1) {
+		KillUnitAt(1, "Flag", "Start", P1);
+		CreateUnit(1, "Protoss Probe", "p1", P1);
+		SetInvincibility(Enable, "Protoss Probe", P1, "p1");
+		permInvulP1 = 1;
+		tempInvulP1 = 0;
 	}
-
-	if (player == P2 && permInvulP2 == 0 && tempInvulP2 > 0) {
-		tempInvulP2 -= 1;
-		if (tempInvulP2 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
+	if (player == P2) {
+		KillUnitAt(1, "Flag", "Start", P2);
+		CreateUnit(1, "Protoss Probe", "p2", P2);
+		SetInvincibility(Enable, "Protoss Probe", P2, "p2");
+		permInvulP2 = 1;
+		tempInvulP2 = 0;
 	}
-
-	if (player == P3 && permInvulP3 == 0 && tempInvulP3 > 0) {
-		tempInvulP3 -= 1;
-		if (tempInvulP3 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
+	if (player == P3) {
+		KillUnitAt(1, "Flag", "Start", P3);
+		CreateUnit(1, "Protoss Probe", "p3", P3);
+		SetInvincibility(Enable, "Protoss Probe", P3, "p3");
+		permInvulP3 = 1;
+		tempInvulP3 = 0;
 	}
-
-	if (player == P4 && permInvulP4 == 0 && tempInvulP4 > 0) {
-		tempInvulP4 -= 1;
-		if (tempInvulP4 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
+	if (player == P4) {
+		KillUnitAt(1, "Flag", "Start", P4);
+		CreateUnit(1, "Protoss Probe", "p4", P4);
+		SetInvincibility(Enable, "Protoss Probe", P4, "p4");
+		permInvulP4 = 1;
+		tempInvulP4 = 0;
 	}
-
-	if (player == P5 && permInvulP5 == 0 && tempInvulP5 > 0) {
-		tempInvulP5 -= 1;
-		if (tempInvulP5 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
+	if (player == P5) {
+		KillUnitAt(1, "Flag", "Start", P5);
+		CreateUnit(1, "Protoss Probe", "p5", P5);
+		SetInvincibility(Enable, "Protoss Probe", P5, "p5");
+		permInvulP5 = 1;
+		tempInvulP5 = 0;
 	}
-
-	if (player == P6 && permInvulP6 == 0 && tempInvulP6 > 0) {
-		tempInvulP6 -= 1;
-		if (tempInvulP6 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
+	if (player == P6) {
+		KillUnitAt(1, "Flag", "Start", P6);
+		CreateUnit(1, "Protoss Probe", "p6", P6);
+		SetInvincibility(Enable, "Protoss Probe", P6, "p6");
+		permInvulP6 = 1;
+		tempInvulP6 = 0;
 	}
-
-	if (player == P7 && permInvulP7 == 0 && tempInvulP7 > 0) {
-		tempInvulP7 -= 1;
-		if (tempInvulP7 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
+	if (player == P7) {
+		KillUnitAt(1, "Flag", "Start", P7);
+		CreateUnit(1, "Protoss Probe", "p7", P7);
+		SetInvincibility(Enable, "Protoss Probe", P7, "p7");
+		permInvulP7 = 1;
+		tempInvulP7 = 0;
 	}
 }
 
@@ -145,6 +156,8 @@ function onPluginStart() {
 }
 
 function afterTriggerExec() {
+	// Pylon invuln: when the configured round is reached, clear the switch.
+	// Classic triggers maintain actual SetInvincibility for pylons via the switch.
 	if (common_vars.currentRound >= roundPylonsBecomeVulnerable && Switch("pylon invuln", Set)) {
 		DoActions(
 			SetSwitch("pylon invuln", Clear),
@@ -161,6 +174,10 @@ function afterTriggerExec() {
 		if (player >= P1 && player <= P7) {
 			setcurpl(player);
 
+			// ------------------------------------------------------------------
+			// Rescue detection: this player is dead (no probe, no shield battery,
+			// has a flag) and another Force1 player brought a Probe or SCV to Start.
+			// ------------------------------------------------------------------
 			if (
 				Command(CurrentPlayer, Exactly, 0, "Protoss Probe") &&
 				Command(CurrentPlayer, Exactly, 0, "Protoss Shield Battery") &&
@@ -171,16 +188,92 @@ function afterTriggerExec() {
 					Bring(Force1, AtLeast, 1, "Terran SCV", "Start")
 				)
 			) {
-				if (player == P1) _rescuePlayer(player, "p1");
-				if (player == P2) _rescuePlayer(player, "p2");
-				if (player == P3) _rescuePlayer(player, "p3");
-				if (player == P4) _rescuePlayer(player, "p4");
-				if (player == P5) _rescuePlayer(player, "p5");
-				if (player == P6) _rescuePlayer(player, "p6");
-				if (player == P7) _rescuePlayer(player, "p7");
+				if (Switch("Long Invulnerability", Cleared)) {
+					// Temporary invincibility (2400 frames ≈ 2 min at fastest)
+					_rescueTemp(player);
+					DoActions(
+						DisplayText("\x013\x006- You have been saved -\x006\r\n\x013\x004Temporary Invincibility!\x004\r\n\r\n\x013\x018+20 gas for everyone\x018\r\n"),
+						CenterView("Start"),
+						SetResources(Force1, Add, 20, Gas)
+					);
+				} else {
+					// Permanent invincibility
+					_rescuePerm(player);
+					DoActions(
+						DisplayText("\x013\x006- You have been saved -\x006\r\n\x013\x004PERMANENT Invincibility!\x004\r\n\r\n\x013\x018+20 gas for everyone\x018\r\n"),
+						CenterView("Start"),
+						SetResources(Force1, Add, 20, Gas)
+					);
+				}
 			}
 
-			_tickTempInvul(player);
+			// ------------------------------------------------------------------
+			// Move probe from per-player spawn location → Start each frame.
+			// Creates no-op when the probe is already gone from pX.
+			// Keeps retrying until Start has room (e.g. cat is blocking).
+			// ------------------------------------------------------------------
+			if (player == P1) { MoveUnit(1, "Protoss Probe", P1, "p1", "Start"); }
+			if (player == P2) { MoveUnit(1, "Protoss Probe", P2, "p2", "Start"); }
+			if (player == P3) { MoveUnit(1, "Protoss Probe", P3, "p3", "Start"); }
+			if (player == P4) { MoveUnit(1, "Protoss Probe", P4, "p4", "Start"); }
+			if (player == P5) { MoveUnit(1, "Protoss Probe", P5, "p5", "Start"); }
+			if (player == P6) { MoveUnit(1, "Protoss Probe", P6, "p6", "Start"); }
+			if (player == P7) { MoveUnit(1, "Protoss Probe", P7, "p7", "Start"); }
+
+			// ------------------------------------------------------------------
+			// Temp invul countdown: decrement each frame; disable when it hits 0.
+			// Disable at both Start (normal case) and pX (if move hasn't fired yet).
+			// Perm invul players are skipped entirely.
+			// ------------------------------------------------------------------
+			if (player == P1 && permInvulP1 == 0 && tempInvulP1 > 0) {
+				tempInvulP1 -= 1;
+				if (tempInvulP1 == 0) {
+					SetInvincibility(Disable, "Protoss Probe", P1, "Start");
+					SetInvincibility(Disable, "Protoss Probe", P1, "p1");
+				}
+			}
+			if (player == P2 && permInvulP2 == 0 && tempInvulP2 > 0) {
+				tempInvulP2 -= 1;
+				if (tempInvulP2 == 0) {
+					SetInvincibility(Disable, "Protoss Probe", P2, "Start");
+					SetInvincibility(Disable, "Protoss Probe", P2, "p2");
+				}
+			}
+			if (player == P3 && permInvulP3 == 0 && tempInvulP3 > 0) {
+				tempInvulP3 -= 1;
+				if (tempInvulP3 == 0) {
+					SetInvincibility(Disable, "Protoss Probe", P3, "Start");
+					SetInvincibility(Disable, "Protoss Probe", P3, "p3");
+				}
+			}
+			if (player == P4 && permInvulP4 == 0 && tempInvulP4 > 0) {
+				tempInvulP4 -= 1;
+				if (tempInvulP4 == 0) {
+					SetInvincibility(Disable, "Protoss Probe", P4, "Start");
+					SetInvincibility(Disable, "Protoss Probe", P4, "p4");
+				}
+			}
+			if (player == P5 && permInvulP5 == 0 && tempInvulP5 > 0) {
+				tempInvulP5 -= 1;
+				if (tempInvulP5 == 0) {
+					SetInvincibility(Disable, "Protoss Probe", P5, "Start");
+					SetInvincibility(Disable, "Protoss Probe", P5, "p5");
+				}
+			}
+			if (player == P6 && permInvulP6 == 0 && tempInvulP6 > 0) {
+				tempInvulP6 -= 1;
+				if (tempInvulP6 == 0) {
+					SetInvincibility(Disable, "Protoss Probe", P6, "Start");
+					SetInvincibility(Disable, "Protoss Probe", P6, "p6");
+				}
+			}
+			if (player == P7 && permInvulP7 == 0 && tempInvulP7 > 0) {
+				tempInvulP7 -= 1;
+				if (tempInvulP7 == 0) {
+					SetInvincibility(Disable, "Protoss Probe", P7, "Start");
+					SetInvincibility(Disable, "Protoss Probe", P7, "p7");
+				}
+			}
 		}
 	}
 }
