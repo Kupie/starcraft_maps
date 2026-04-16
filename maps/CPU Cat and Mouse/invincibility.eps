@@ -1,0 +1,31 @@
+import common_vars;
+
+var tempInvincibility      = 0;
+var roundPylonsBecomeVulnerable = 0;
+var lastTick      = 0;
+
+var probeInvincibilityStarted = list(0, 0, 0, 0, 0, 0, 0);
+	
+function onPluginStart() {
+	
+}
+
+function afterTriggerExec() {
+	if (common_vars.currentRound >= roundPylonsBecomeVulnerable && Switch("pylon invuln", Set) { 
+		SetSwitch("pylon invuln", Clear);
+		DisplayTextAll("Pylons no longer invincible!");
+		PlayWAVAll("staredit/wav/Industrial Alarm-SoundBible.com-1012301296.wav");
+	}
+	
+	if (Switch("GameStarted", Set)) {
+		var currentTick = getgametick();
+		if (currentTick - lastTick >= 24) {
+			lastTick = currentTick;
+			realCountdown--;
+			SetCountdownTimer(SetTo, realCountdown);
+		}
+		if (realCountdown == 0) {
+			realCountdown = common_vars.realTimeSecondsPerRound * 4 / 3;
+		}
+	}
+}
