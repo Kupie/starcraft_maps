@@ -84,7 +84,7 @@ function onPluginStart() {
 function afterTriggerExec() {
 
 	// ── Step 0: Increment round, reset ───────────────────────────────────────
-	if (CountdownTimer(Exactly, 8) && roundStep == 99) {
+	if (CountdownTimer(Exactly, 10) && roundStep == 99) {
 		common_vars.currentRound += 1;
 		if (common_vars.currentRound == 70) { SetSwitch($S("pylon invuln"), Clear); }
 		currentSpawnIndex  = 0;
@@ -96,7 +96,7 @@ function afterTriggerExec() {
 	}
 
 	// ── Step 1: Randomize locations, place beacons, reduce spawns ────────────
-	if (CountdownTimer(Exactly, 7) && roundStep == 1) {
+	if (CountdownTimer(Exactly, 9) && roundStep == 1) {
 		s1left   = f_rand() % 3776;
 		s1top    = 160 + f_rand() % (3776 - 160);
 		var s1right  = s1left + 320;
@@ -162,12 +162,12 @@ function afterTriggerExec() {
 	if (CountdownTimer(Exactly, 0) && roundStep == 2) {
 		if (hasSpawner1Units(common_vars.currentRound)) {
 			KillUnitAt(All, "Terran Beacon", "spawner",  P8);
-			KillUnitAt(All, "(buildings)",   "spawner",  Force1);
+			KillUnitAt(All, "Protoss Pylon",   "spawner",  Force1);
 			MinimapPing($L("spawner"));
 		}
 		if (hasSpawner2Units(common_vars.currentRound)) {
 			KillUnitAt(All, "Terran Beacon", "spawner2", P8);
-			KillUnitAt(All, "(buildings)",   "spawner2", Force1);
+			KillUnitAt(All, "Protoss Pylon",   "spawner2", Force1);
 			MinimapPing($L("spawner2"));
 		}
 		dbstr_print(beaconString, "2 = Ban\0");
