@@ -1,0 +1,106 @@
+import common_vars;
+
+const deathDelayTimer = EUDArray(7);
+var bonusSpawnsHandled = 0;
+
+function onPluginStart() {
+	foreach(i : py_range(7)) {
+		deathDelayTimer[i] = 0;
+	}
+}
+
+// ── Bonus critter spawn ───────────────────────────────────────────────────
+const bonusCritters = list(
+	py_str("Kakaru (Twilight)"),
+	py_str("Bengalaas (Jungle)"),
+	py_str("Rhynadon (Badlands)"),
+	py_str("Scantid (Desert)"),
+	py_str("Ursadon (Ice World)"),
+	py_str("Ragnasaur (Ashworld)"),
+);
+function handleBonusSpawns() {
+	if (!CountdownTimer(Exactly, 5)) { return; }
+	foreach(i : py_range(6)) {
+		if (Command(P9, AtMost, 1, bonusCritters[i])) {
+			var bonusLeft = 128 + f_rand() % 3808;
+			var bonusTop  = 288 + f_rand() % 3648;
+			setloc($L("bonusSpawner"), bonusLeft, bonusTop, bonusLeft + 32, bonusTop + 32);
+			CreateUnit(1, bonusCritters[i], "bonusSpawner", P8);
+			GiveUnits(1, bonusCritters[i], P8, "bonusSpawner", P9);
+		}
+	}
+}
+
+
+// ── Duran Spawn/Control logic ───────────────────────────────────────────────────
+const durLocs = list(
+	py_str("o1"), py_str("o2"), py_str("o22"), py_str("o3"),
+	py_str("o31"), py_str("o4"), py_str("o44"), py_str("o5"),
+);
+
+var duranPatrolTimer = 80;
+
+function handleDuranLogic() {
+	// Spawn if missing
+	if (Command(P9, AtMost, 0, "Samir Duran (Ghost)")) {
+		var spawnIdx = f_rand() % 8;
+		foreach(i : py_range(8)) {
+			if (spawnIdx == i) {
+				CreateUnit(1, "Samir Duran (Ghost)", durLocs[i], P8);
+				GiveUnits(1, "Samir Duran (Ghost)", P8, durLocs[i], P9);
+			}
+		}
+	}
+
+	// Patrol — throttled to every 5 seconds
+	duranPatrolTimer--;
+	if (duranPatrolTimer == 0) {
+		duranPatrolTimer = 80;
+		foreach(i : py_range(8)) {
+			if (Bring(P9, AtLeast, 1, "Samir Duran (Ghost)", durLocs[i])) {
+				var destIdx = f_rand() % 7;
+				if (destIdx >= i) {
+					destIdx += 1;
+				}
+				foreach(j : py_range(8)) {
+					if (destIdx == j) {
+						Order("Samir Duran (Ghost)", P9, durLocs[i], Move, durLocs[j]);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+function beforeTriggerExec() {
+	if (!Switch("GameStarted", Set)) {
+		return;
+	}
+
+	// ── Dying logic ───────────────────────────────────────────────────────
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		// Death detection — only trigger if not already in death delay
+		if (
+			Command(player, Exactly, 0, "Protoss Probe") &&
+			Command(player, Exactly, 0, "Protoss Shield Battery") &&
+			Command(player, Exactly, 0, "Flag") &&
+			deathDelayTimer[player] == 0
+		) {
+			KillUnitAt(All, "(buildings)", "playground", player);
+			deathDelayTimer[player] = 48;
+		}
+
+		// Death delay countdown
+		if (deathDelayTimer[player] > 0) {
+			deathDelayTimer[player] -= 1;
+			if (deathDelayTimer[player] == 0) {
+				KillUnitAt(All, "Men", "playground", player);
+				CreateUnit(1, "Flag", "Start", player);
+			}
+		}
+	}
+	
+	handleBonusSpawns();
+	handleDuranLogic();
+}

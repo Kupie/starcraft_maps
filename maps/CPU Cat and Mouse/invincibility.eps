@@ -1,183 +1,94 @@
 import common_vars;
 
-var tempInvincibilityDurationFrames = 2400;
-var roundPylonsBecomeVulnerable = 70;
-var roundProbesBecomePermInvuln = 22;
+const tempInvul = EUDArray(7);
+const permInvul = EUDArray(7);
 
-var tempInvulP1 = 0;
-var tempInvulP2 = 0;
-var tempInvulP3 = 0;
-var tempInvulP4 = 0;
-var tempInvulP5 = 0;
-var tempInvulP6 = 0;
-var tempInvulP7 = 0;
-
-var permInvulP1 = 0;
-var permInvulP2 = 0;
-var permInvulP3 = 0;
-var permInvulP4 = 0;
-var permInvulP5 = 0;
-var permInvulP6 = 0;
-var permInvulP7 = 0;
-
-function _rescuePlayer(player, spawnLocation) {
-	var isTemp = 0;
-
-	if (Switch("Long Invulnerability", Set)) {
-		isTemp = 0;
+function _rescueImpl(player, isPerm) {
+	RemoveUnitAt(1, "Flag", "Start", player);
+	CreateUnit(1, "Protoss Probe", "pSpawn", player);
+	SetInvincibility(Enable, "Protoss Probe", player, "pSpawn");
+	if (isPerm == 1) {
+		permInvul[player] = 1;
+		tempInvul[player] = 0;
 	} else {
-		isTemp = 1;
-	}
-
-	KillUnitAt(1, "Flag", "Start", player);
-	CreateUnit(1, "Protoss Probe", spawnLocation, player);
-	CenterView("Start");
-	SetResources(Force1, Add, 20, Gas);
-	SetInvincibility(Enable, "Protoss Probe", player, "spawnLocation");
-
-	if (Switch("Long Invulnerability", Cleared)) {
-		DisplayText("\x013\x006- You have been saved -\x006\r\n\x013\x004Temporary Invincibility!\x004\r\n\r\n\x013\x018+20 gas for everyone\x018\r\n");
-
-		if (player == P1) tempInvulP1 = tempInvincibilityDurationFrames;
-		if (player == P2) tempInvulP2 = tempInvincibilityDurationFrames;
-		if (player == P3) tempInvulP3 = tempInvincibilityDurationFrames;
-		if (player == P4) tempInvulP4 = tempInvincibilityDurationFrames;
-		if (player == P5) tempInvulP5 = tempInvincibilityDurationFrames;
-		if (player == P6) tempInvulP6 = tempInvincibilityDurationFrames;
-		if (player == P7) tempInvulP7 = tempInvincibilityDurationFrames;
-
-		if (player == P1) permInvulP1 = 0;
-		if (player == P2) permInvulP2 = 0;
-		if (player == P3) permInvulP3 = 0;
-		if (player == P4) permInvulP4 = 0;
-		if (player == P5) permInvulP5 = 0;
-		if (player == P6) permInvulP6 = 0;
-		if (player == P7) permInvulP7 = 0;
-	} else {
-		DisplayText("\x013\x006- You have been saved -\x006\r\n\x013\x004PERMANENT Invincibility!\x004\r\n\r\n\x013\x018+20 gas for everyone\x018\r\n");
-
-		if (player == P1) permInvulP1 = 1;
-		if (player == P2) permInvulP2 = 1;
-		if (player == P3) permInvulP3 = 1;
-		if (player == P4) permInvulP4 = 1;
-		if (player == P5) permInvulP5 = 1;
-		if (player == P6) permInvulP6 = 1;
-		if (player == P7) permInvulP7 = 1;
-
-		if (player == P1) tempInvulP1 = 0;
-		if (player == P2) tempInvulP2 = 0;
-		if (player == P3) tempInvulP3 = 0;
-		if (player == P4) tempInvulP4 = 0;
-		if (player == P5) tempInvulP5 = 0;
-		if (player == P6) tempInvulP6 = 0;
-		if (player == P7) tempInvulP7 = 0;
-	}
-}
-
-function _tickTempInvul(player) {
-	if (player == P1 && permInvulP1 == 0 && tempInvulP1 > 0) {
-		tempInvulP1 -= 1;
-		if (tempInvulP1 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
-	}
-
-	if (player == P2 && permInvulP2 == 0 && tempInvulP2 > 0) {
-		tempInvulP2 -= 1;
-		if (tempInvulP2 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
-	}
-
-	if (player == P3 && permInvulP3 == 0 && tempInvulP3 > 0) {
-		tempInvulP3 -= 1;
-		if (tempInvulP3 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
-	}
-
-	if (player == P4 && permInvulP4 == 0 && tempInvulP4 > 0) {
-		tempInvulP4 -= 1;
-		if (tempInvulP4 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
-	}
-
-	if (player == P5 && permInvulP5 == 0 && tempInvulP5 > 0) {
-		tempInvulP5 -= 1;
-		if (tempInvulP5 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
-	}
-
-	if (player == P6 && permInvulP6 == 0 && tempInvulP6 > 0) {
-		tempInvulP6 -= 1;
-		if (tempInvulP6 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
-	}
-
-	if (player == P7 && permInvulP7 == 0 && tempInvulP7 > 0) {
-		tempInvulP7 -= 1;
-		if (tempInvulP7 == 0) {
-			SetInvincibility(Disable, "Protoss Probe", player, "playground");
-		}
+		tempInvul[player] = common_vars.tempInvulFrameAmount;
+		permInvul[player] = 0;
 	}
 }
 
 function onPluginStart() {
-	tempInvulP1 = 0;
-	tempInvulP2 = 0;
-	tempInvulP3 = 0;
-	tempInvulP4 = 0;
-	tempInvulP5 = 0;
-	tempInvulP6 = 0;
-	tempInvulP7 = 0;
-
-	permInvulP1 = 0;
-	permInvulP2 = 0;
-	permInvulP3 = 0;
-	permInvulP4 = 0;
-	permInvulP5 = 0;
-	permInvulP6 = 0;
-	permInvulP7 = 0;
+	foreach(i : py_range(7)) {
+		tempInvul[i] = 0;
+		permInvul[i] = 0;
+	}
+	// Set alliance status for all mice slots
+	foreach(i : py_range(7)) {
+		var savedCp = getcurpl();
+		setcurpl(common_vars.micePlayers[i]);
+		SetAllianceStatus(common_vars.micePlayers[i], Ally);
+		setcurpl(savedCp);
+	}
 }
 
 function afterTriggerExec() {
-	if (common_vars.currentRound >= roundPylonsBecomeVulnerable && Switch("pylon invuln", Set)) {
-		SetSwitch("pylon invuln", Clear);
-		DisplayTextAll("Pylons no longer invincible!");
-		PlayWAVAll("staredit/wav/Industrial Alarm-SoundBible.com-1012301296.wav");
-	}
-
-	if (common_vars.currentRound >= roundProbesBecomePermInvuln && Switch("Long Invulnerability", Cleared)) {
-		SetSwitch("Long Invulnerability", Set);
-	}
-
 	if (!Switch("GameStarted", Set)) {
 		return;
 	}
 
-	foreach (player : EUDLoopPlayer()) {
+	if (common_vars.currentRound < common_vars.roundPylonsBecomeVulnerable) {
+		SetInvincibility(Enable, "Protoss Pylon", Force1, "playground");
+	}
+	if (common_vars.currentRound >= common_vars.roundPylonsBecomeVulnerable && Switch("pylon invuln", Set)) {
+		DoActions(
+			SetSwitch("pylon invuln", Clear),
+			DisplayTextAll("Pylons no longer invincible!"),
+			PlayWAVAll("staredit/wav/Industrial Alarm-SoundBible.com-1012301296.wav")
+		);
+	}
+
+	// ── Move probe to getprobe each frame ─────────────────────────
+	MoveUnit(All, "Any unit", AllPlayers, "pSpawn", "getprobe");
+
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		var savedCp = getcurpl();
+		setcurpl(player);
+
+		// ── Rescue detection ──────────────────────────────────────────
 		if (
 			Command(player, Exactly, 0, "Protoss Probe") &&
 			Command(player, Exactly, 0, "Protoss Shield Battery") &&
 			Command(player, Exactly, 1, "Flag") &&
-			Switch("Rescue", Set) &&
 			(
 				Bring(Force1, AtLeast, 1, "Protoss Probe", "Start") ||
 				Bring(Force1, AtLeast, 1, "Terran SCV", "Start")
 			)
 		) {
-			if (player == P1) _rescuePlayer(player, $L("p1"));
-			if (player == P2) _rescuePlayer(player, $L("p2"));
-			if (player == P3) _rescuePlayer(player, $L("p3"));
-			if (player == P4) _rescuePlayer(player, $L("p4"));
-			if (player == P5) _rescuePlayer(player, $L("p5"));
-			if (player == P6) _rescuePlayer(player, $L("p6"));
-			if (player == P7) _rescuePlayer(player, $L("p7"));
+			if (Switch("Long Invulnerability", Cleared)) {
+				_rescueImpl(player, 0);
+				DoActions(
+					DisplayText("\x06- You have been saved -\x06\r\n\x04Temporary Invincibility!\x04\r\n\r\n\x18+20 gas for everyone\x18\r\n"),
+				);
+			} else {
+				_rescueImpl(player, 1);
+				DoActions(
+					DisplayText("\x06- You have been saved -\x06\r\n\x04PERMANENT Invincibility!\x04\r\n\r\n\x18+20 gas for everyone\x18\r\n"),
+				);
+			}
+			CenterView("getprobe");
+			SetResources(Force1, Add, 20, Gas);
 		}
 
-		_tickTempInvul(player);
+		// ── Temp invul countdown ──────────────────────────────────────
+		if (permInvul[player] == 0 && tempInvul[player] > 0) {
+			tempInvul[player] -= 1;
+			if (tempInvul[player] == 0) {
+				SetInvincibility(Disable, "Protoss Probe", player, "playground");
+				DoActions(
+					DisplayText("\x06- Invincibility Wore Off!"),
+				);
+			}
+		}
+
+		setcurpl(savedCp);
 	}
 }
