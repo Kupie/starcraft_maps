@@ -5,6 +5,11 @@ function afterTriggerExec() {
 	if (Switch("DifficultyChosen", Cleared))  { return; }
 	
 	if (Switch("EasyModeEnabled", Set)) { 
+		common_vars.realTimeSecondsPerRound += 5 ; // Add some seconds for "easy" mode
+				
+		common_vars.delayBetweenSpawns = 80; // Up the delay between spawns a tiny bit
+		
+		SetMemory(0x6C9FA0, Add, 256); // Give probe a slight speed boost, 1280 -> 1536
 		
 		// Shields
 		f_wwrite(0x00660e78, 9000);        // Protoss Corsair (60) Shield
@@ -63,8 +68,7 @@ function afterTriggerExec() {
 			ModifyUnitResourceAmount(All,P12,"HigherGeysers",50000),
 		);
 		
-		// Up the delay between spawns a tiny bit
-		common_vars.delayBetweenSpawns = 80;
+
 	}
 
 

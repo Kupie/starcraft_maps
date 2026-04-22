@@ -21,13 +21,6 @@ function onPluginStart() {
 		tempInvul[i] = 0;
 		permInvul[i] = 0;
 	}
-	// Set alliance status for all mice slots
-	foreach(i : py_range(7)) {
-		var savedCp = getcurpl();
-		setcurpl(common_vars.micePlayers[i]);
-		SetAllianceStatus(common_vars.micePlayers[i], Ally);
-		setcurpl(savedCp);
-	}
 }
 
 function afterTriggerExec() {
@@ -39,19 +32,22 @@ function afterTriggerExec() {
 		SetInvincibility(Enable, "Protoss Pylon", Force1, "playground");
 	}
 	if (common_vars.currentRound >= common_vars.roundPylonsBecomeVulnerable && Switch("pylon invuln", Set)) {
-		DoActions(
-			SetSwitch("pylon invuln", Clear),
-			DisplayTextAll("Pylons no longer invincible!"),
-			PlayWAVAll("staredit/wav/Industrial Alarm-SoundBible.com-1012301296.wav")
-		);
+		SetSwitch("pylon invuln", Clear);
+		DisplayTextAll("Pylons no longer invincible!");
+		PlayWAVAll("staredit/wav/Industrial Alarm-SoundBible.com-1012301296.wav");
 	}
 
 	// ── Move probe to getprobe each frame ─────────────────────────
 	MoveUnit(All, "Any unit", AllPlayers, "pSpawn", "getprobe");
 
+	var savedCp = getcurpl();
 	foreach(player : EUDLoopPlayer(None, Force1)) {
-		var savedCp = getcurpl();
 		setcurpl(player);
+
+		// ── Force Alliance ──────────────────────────────────────────
+		foreach(playerTarget : EUDLoopPlayer(None, Force1)) {
+			SetAllianceStatus(playerTarget, Ally);
+		}
 
 		// ── Rescue detection ──────────────────────────────────────────
 		if (
@@ -65,14 +61,12 @@ function afterTriggerExec() {
 		) {
 			if (Switch("Long Invulnerability", Cleared)) {
 				_rescueImpl(player, 0);
-				DoActions(
-					DisplayText("\x06- You have been saved -\x06\r\n\x04Temporary Invincibility!\x04\r\n\r\n\x18+20 gas for everyone\x18\r\n"),
-				);
+				PlayWAV("sound/misc/transmission.wav");
+				println("\x06- You have been saved -\x06\r\n\x04Temporary ({}s) Invincibility!\x04\r\n\r\n\x18+20 gas for everyone\x18\r\n", common_vars.tempInvulFrameAmount / 24);
 			} else {
 				_rescueImpl(player, 1);
-				DoActions(
-					DisplayText("\x06- You have been saved -\x06\r\n\x04PERMANENT Invincibility!\x04\r\n\r\n\x18+20 gas for everyone\x18\r\n"),
-				);
+				PlayWAV("sound/misc/transmission.wav");
+				DisplayText("\x06- You have been saved -\x06\r\n\x04PERMANENT Invincibility!\x04\r\n\r\n\x18+20 gas for everyone\x18\r\n");
 			}
 			CenterView("getprobe");
 			SetResources(Force1, Add, 20, Gas);
@@ -81,14 +75,19 @@ function afterTriggerExec() {
 		// ── Temp invul countdown ──────────────────────────────────────
 		if (permInvul[player] == 0 && tempInvul[player] > 0) {
 			tempInvul[player] -= 1;
+			if (tempInvul[player] == 238) {
+				PlayWAV("sound/misc/transmission.wav");
+				DisplayText("\x06- Invincibility Wearing off in 10 seconds!");
+			}
 			if (tempInvul[player] == 0) {
 				SetInvincibility(Disable, "Protoss Probe", player, "playground");
-				DoActions(
-					DisplayText("\x06- Invincibility Wore Off!"),
-				);
+				PlayWAV("sound/misc/transmission.wav");
+				DisplayText("\x06- Invincibility Wore Off!");
 			}
 		}
-
-		setcurpl(savedCp);
+		if (permInvul[player] == 1) {
+			SetInvincibility(Enable, "Protoss Probe", player, "playground");
+		}
 	}
+	setcurpl(savedCp);
 }

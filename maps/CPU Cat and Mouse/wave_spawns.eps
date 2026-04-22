@@ -47,10 +47,10 @@ function hasSpawner2Units(roundNumber) {
 // ── Reduce spawns: multiply split counts by active player count ───────────────
 function reduceSpawnsForNumPlayers(roundNumber) {
 	var localPlayerCount = 0;
-	foreach(player : EUDLoopPlayer()) {
+	foreach(player : EUDLoopPlayer(None, Force1)) {
 		localPlayerCount += 1;
 	}
-	printAll("Number of Players: {}", localPlayerCount);
+	// printAll("Number of Players: {}", localPlayerCount); // DEBUG ONLY
 	foreach(i : py_range(0, wave_spawns_indexes.NUM_UNITS)) {
 		WaveSpawnsFull.waveSpawnsFull1[roundNumber][i] = WaveSpawnsSplit.WaveSpawnsSplit1[roundNumber][i] * localPlayerCount;
 		WaveSpawnsFull.waveSpawnsFull2[roundNumber][i] = WaveSpawnsSplit.WaveSpawnsSplit2[roundNumber][i] * localPlayerCount;
@@ -92,6 +92,7 @@ function afterTriggerExec() {
 		beaconVisible      = 0;
 		beaconFlashCounter = 0;
 		roundStep = 1;
+		PlayWAVAll("sound/misc/transmission.wav");
 		printAll("Current Round: {}", common_vars.currentRound);
 	}
 
