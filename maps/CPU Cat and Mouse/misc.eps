@@ -27,6 +27,17 @@ function onPluginStart() {
 		deathDelayTimer[i] = 0;
 		patrolTimers[i] = 80 + i * 13;
 	}
+	
+	// Set cat to ally P9/10/11/12
+	var savedCp = getcurpl();
+	setcurpl(P8);
+	SetAllianceStatus(P9,Ally);
+	SetAllianceStatus(P10,Ally);
+	SetAllianceStatus(P11,Ally);
+	SetAllianceStatus(P12,Ally);
+	setcurpl(savedCp);
+
+
 }
 
 // ── Generic patrol unit handler — keeps 2 of each unit on the map ─────────
