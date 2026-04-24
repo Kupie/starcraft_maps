@@ -22,29 +22,49 @@ const patrolUnits = list(
 // Per-unit patrol timers, staggered so they don't all move at once
 const patrolTimers = EUDArray(7);
 
+// Ban locations and messages per player slot
+const banLocs = list(
+	py_str("ban1"), py_str("ban2"), py_str("ban3"), py_str("ban4"),
+	py_str("ban5"), py_str("ban6"), py_str("ban7"),
+);
+
+const banMessages = list(
+	$T("\x06Player 1 has been banned!"),
+	$T("\x06Player 2 has been banned!"),
+	$T("\x06Player 3 has been banned!"),
+	$T("\x06Player 4 has been banned!"),
+	$T("\x06Player 5 has been banned!"),
+	$T("\x06Player 6 has been banned!"),
+	$T("\x06Player 7 has been banned!"),
+);
+
+
 function onPluginStart() {
 	foreach(i : py_range(7)) {
 		deathDelayTimer[i] = 0;
 		patrolTimers[i] = 80 + i * 13;
 	}
-	
+
 	// Set cat to ally P9/10/11/12
 	var savedCp = getcurpl();
 	setcurpl(P8);
-	SetAllianceStatus(P9,Ally);
-	SetAllianceStatus(P10,Ally);
-	SetAllianceStatus(P11,Ally);
-	SetAllianceStatus(P12,Ally);
+	SetAllianceStatus(P9, Ally);
+	SetAllianceStatus(P10, Ally);
+	SetAllianceStatus(P11, Ally);
+	SetAllianceStatus(P12, Ally);
 	setcurpl(savedCp);
 
-
+	// Set pauses to 200
+	dwwrite(0x0058d718, 200);
+	
+	
 }
 
 // ── Generic patrol unit handler — keeps 2 of each unit on the map ─────────
 function handlePatrolUnit() {
 	foreach(i : py_range(7)) {
-		// Spawn if fewer than 2 exist
-		if (Command(P9, AtMost, 1, patrolUnits[i])) {
+		// Spawn if fewer than 1 exist
+		if (Command(P9, AtMost, 0, patrolUnits[i])) {
 			var spawnIdx = f_rand() % 8;
 			foreach(j : py_range(8)) {
 				if (spawnIdx == j) {
@@ -53,7 +73,7 @@ function handlePatrolUnit() {
 				}
 			}
 		}
-	
+
 		// Patrol
 		patrolTimers[i] -= 1;
 		if (patrolTimers[i] == 0) {
@@ -75,13 +95,39 @@ function handlePatrolUnit() {
 	}
 }
 
-
-function beforeTriggerExec() {
-	if (!Switch("GameStarted", Set)) {
-		return;
+// ── Ban logic ─────────────────────────────────────────────────────────────
+function handleBans() {
+	foreach(i : py_range(7)) {
+		if (playerexist(common_vars.micePlayers[i])) {
+			var savedCp = getcurpl();
+			setcurpl(common_vars.micePlayers[i]);
+			if (
+				Bring(Force1, AtLeast, 2, "Terran Civilian", banLocs[i]) &&
+				Switch("GameStarted", Set)
+			) {
+				DisplayTextAll(banMessages[i]);
+				PlayWAVAll("sound/misc/transmission.wav");
+				Defeat();
+			}
+			setcurpl(savedCp);
+		}
 	}
+}
 
-	// ── Dying logic ───────────────────────────────────────────────────────
+// ── AI nudging to go attack/move around ───────────────────────────────────
+var aiNudgeTimer = common_vars.aiNudgeTimerSeconds * 2381 / 100;
+function nudgeAIToAttack() {
+	aiNudgeTimer--;
+	if (aiNudgeTimer == 0) {
+		aiNudgeTimer = common_vars.aiNudgeTimerSeconds * 2381 / 100;
+		var savedCp = getcurpl();
+		setcurpl(P8);
+		RunAIScriptAt("SuiR", "playground");
+		setcurpl(savedCp);
+	}
+}
+
+function handleDeaths() {
 	foreach(player : EUDLoopPlayer(None, Force1)) {
 		if (
 			Command(player, Exactly, 0, "Protoss Probe") &&
@@ -95,18 +141,66 @@ function beforeTriggerExec() {
 			DisplayText("\x06- You have died!");
 			setcurpl(savedCp);
 			KillUnitAt(All, "(buildings)", "playground", player);
+			KillUnitAt(All, "Terran SCV", "playground", player);
 			deathDelayTimer[player] = 48;
 		}
 
 		if (deathDelayTimer[player] > 0) {
 			deathDelayTimer[player] -= 1;
-			if (deathDelayTimer[player] == 0) {
+			if (deathDelayTimer[player] == 2) {
 				KillUnitAt(All, "Men", "playground", player);
 				CreateUnit(1, "Flag", "Start", player);
 			}
 		}
 	}
+}
 
-	// ── Patrol units — 2 of each ──────────────────────────────────────────
+function beforeTriggerExec() {
+	if (!Switch("GameStarted", Set)) {
+		return;
+	}
+
+	// ── Dying logic ───────────────────────────────────────────────────────
+	handleDeaths();
+	
+	// ── Patrol units ──────────────────────────────────────────────────────
 	handlePatrolUnit();
+
+	// ── AI nudge ──────────────────────────────────────────────────────────
+	nudgeAIToAttack();
+
+	// ── Ban logic ─────────────────────────────────────────────────────────
+	handleBans();
+
+	// ── Victory/Defeat Logic ──────────────────────────────────────────────
+	// All cat units gone — Force1 wins
+	if (common_vars.currentRound >= 2 &&
+		Command(P8, Exactly, 0, "Any unit")
+	) {
+		common_vars.currentRound = 0;
+		DisplayTextAll("\x13\x07 The cats have been defeated. You WIN! Now go touch some grass");
+		foreach(player : EUDLoopPlayer(None, Force1)) {
+			var savedCp = getcurpl();
+			setcurpl(player);
+			Victory();
+			setcurpl(savedCp);
+		}
+	}
+
+	// All mice dead — Force1 loses
+	if (
+		common_vars.currentRound >= 2 &&
+		Command(Force1, Exactly, 0, "Protoss Probe") &&
+		Command(Force1, Exactly, 0, "Terran SCV") &&
+		Command(Force1, Exactly, 0, "Protoss Shield Battery")
+	) {
+		common_vars.currentRound = 0;
+		DisplayTextAll("\x13\x06 All the mice are dead. You LOSE! Git gud.");
+		foreach(player : EUDLoopPlayer(None, Force1)) {
+			var savedCp = getcurpl();
+			setcurpl(player);
+			Defeat();
+			setcurpl(savedCp);
+		}
+	}
 }

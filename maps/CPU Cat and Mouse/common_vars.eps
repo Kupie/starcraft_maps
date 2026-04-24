@@ -10,6 +10,10 @@ const tempInvulFrameAmount = 1072; // 23.81 frames per real-life second
 
 var roundPylonsBecomeVulnerable = 70; // Round where pylons stop being invincible
 
+const micePlayers = list(P1, P2, P3, P4, P5, P6, P7);
+
+const aiNudgeTimerSeconds = 3; // How often to order AI to "go attack", aka nudge them
+
 function beforeTriggerExec() {
 
 	

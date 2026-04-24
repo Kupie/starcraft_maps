@@ -1,0 +1,8 @@
+Changes from normal CPU cat 'n mouse:
+stacking does not require lights, make SCVs at Nexus, "easy" mode has everything from v9, "hard mode" is more v10
+
+stacking does not require lights, make SCVs at Nexus, pylons can be deleted, just click them and click delete
+
+to change:
+reavers should have 1 scarab
+wraiths and tanks shouldn't start with low HP - why?

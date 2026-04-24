@@ -62,13 +62,18 @@ function afterTriggerExec() {
 		f_wwrite(0x006576c0, 300);         // Claws Devouring One (36) Damage Bonus
 		f_wwrite(0x006576c6, 1000);        // Needle Spines Hunter Killer (39) Damage Bonus (upper 16: addr+2)
 	
-		// Set outer geysers to have a bit more gas than default 35
+		// Set outer geysers to have a bit more gas than default 55
 		DoActions(
 			ModifyUnitResourceAmount(All,P12,"playground",75),
 			ModifyUnitResourceAmount(All,P12,"HigherGeysers",50000),
 		);
 		
 
+	} else {
+		DoActions(
+			ModifyUnitResourceAmount(All,P12,"playground",55),
+			ModifyUnitResourceAmount(All,P12,"HigherGeysers",50000),
+		);
 	}
 
 

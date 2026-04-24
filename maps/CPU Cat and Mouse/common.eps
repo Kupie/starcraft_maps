@@ -1,25 +1,7 @@
 
-var aiNudgeTimer = 5;
 
 function beforeTriggerExec() {
 
-	DoActions(
-		// setInvincibility(allPlayers, $U("Protoss Probe"), everywhere, enable);
-		// setMemory(0x00656f2c, setTo, 51711); //Set probe attack to max
-	);
-	// Set pauses to 200
-	dwwrite(0x0058d718, 200);
-	
-	// AI nudging
-	aiNudgeTimer--;
-	if (aiNudgeTimer == 0) {
-		aiNudgeTimer = 72;  // every 5 seconds
-		var savedCp = getcurpl();
-		setcurpl(P8);
-		RunAIScriptAt("SuiR","playground");
-		setcurpl(savedCp);
-	}
-	
 	
 }
 
