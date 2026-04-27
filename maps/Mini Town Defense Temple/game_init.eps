@@ -1,0 +1,140 @@
+// game_init.eps
+// One-shot game setup: alliances, AI scripts, mission objectives,
+// starting gold, intro pings, town-attack warning, P12 cleanup. Wave countdown reset is handled by wave_spawns.eps.
+//
+// RULE: save getcurpl() at top of every function, restore at very bottom.
+// SetAllianceStatus(targetPlayer, status) -- acts on CurrentPlayer
+// RunAIScript(Script)                     -- acts on CurrentPlayer
+// Order(unit, player, startArea, order, targetLoc) -- Patrol is a bare constant
+
+var introTimer = 226;
+var townAttackWarnShown = 0;
+
+function onPluginStart() {
+	const cp = getcurpl();
+
+	// ── Alliance setup ──────────────────────────────────────────────────────
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		setcurpl(player);
+		SetAllianceStatus(P7, Ally);
+		SetAllianceStatus(P6, Enemy);
+		SetAllianceStatus(P8, Enemy);
+	}
+
+	setcurpl(P7);
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		SetAllianceStatus(player, Ally);
+	}
+	setcurpl(P7);
+	SetAllianceStatus(P8, Enemy);
+
+	setcurpl(P6);
+	SetAllianceStatus(P7, Ally);
+
+	setcurpl(P8);
+	SetAllianceStatus(P7, Enemy);
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		setcurpl(P8);
+		SetAllianceStatus(player, Enemy);
+	}
+
+	// ── AI scripts ──────────────────────────────────────────────────────────
+	foreach(player : EUDLoopPlayer(None)) {
+		setcurpl(player);
+		RunAIScript("+Vi0");
+		RunAIScript("+Vi1");
+		RunAIScript("+Vi2");
+		RunAIScript("+Vi3");
+		RunAIScript("+Vi4");
+		RunAIScript("+Vi5");
+		RunAIScript("+Vi6");
+		RunAIScript("+Vi7");
+	}
+
+	// ── Starting gold ───────────────────────────────────────────────────────
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		SetResources(player, Add, 200, Ore);
+	}
+
+	// ── Mission objectives ──────────────────────────────────────────────────
+	SetMissionObjectivesAll("Levels at 500, 1k, 2k, 3k, 5k, 7k, 10k, 15k, 20k, 25k, 35k, 50k, 75k, 100k, 130k, 170k, 220k, 280k, 350k, and 400k experience. Rewards up to 20,000 minerals.");
+
+	introTimer = 226;
+
+	setcurpl(cp);
+}
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	// ── Intro sequence countdown ────────────────────────────────────────────
+	if (introTimer >= 1) {
+		introTimer--;
+		if (introTimer == 225) {
+			DisplayTextAll("YOU MUST DEFEND THE TEMPLE.  Every round!");
+			MinimapPingAll("Temple");
+			PlayWAVAll("sound/misc/transmission.wav");
+			CenterViewAll("Temple");
+		}
+		if (introTimer == 121) {
+			DisplayTextAll("\x04Now \x06S\x04elect \x06Y\x04our \x06H\x04ero and get some cash!\r\n\r\n\r\n\r\n\r\n");
+			CenterViewAll("_Heropick");
+			PlayWAVAll("sound/misc/transmission.wav");
+		}
+		if (introTimer == 122) {
+			MinimapPingAll("_Heropick");
+		}
+		if (introTimer == 98) {
+			MinimapPingAll("_Heropick");
+		}
+		if (introTimer == 74) {
+			MinimapPingAll("_Heropick");
+		}
+	}
+
+
+	// ── Town-attack warning + hero retreat (timer 5) ──────────────────────
+	if (CountdownTimer(Exactly, 5) && townAttackWarnShown == 0) {
+		townAttackWarnShown = 1;	
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			setcurpl(player);
+	
+			if (Command(player, AtLeast, 1, "Gui Montag (Firebat)") ||
+				Command(player, AtLeast, 1, "Tassadar/Zeratul (Archon)")) {
+				DisplayText("\x13\x03Our Town Is Under Attack!\r\n\r\n\x13\x03\x06Sorry No Splash Units Allowed During Town Attack!\r\n\r\n\r\n\r\n\r\n");
+			} else {
+				DisplayText("\x13\x03Our Town Is Under Attack!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+			}
+	
+			MoveUnit(All, "(men)", player, "_Alltraining", "_healing");
+			MoveUnit(All, "(men)", player, "_Trainingpick", "_healing");
+		}
+	}
+
+	// ── TSUx re-run at countdown 200 ───────────────────────────────────────
+	if (CountdownTimer(Exactly, 200)) {
+		townAttackWarnShown = 0;
+		setcurpl(P7);
+		RunAIScript("TSUx");
+	}
+
+	// ── P6 re-allies P7 every frame ─────────────────────────────────────────
+	setcurpl(P6);
+	SetAllianceStatus(P7, Ally);
+
+	// ── Heroes stay allied to each other and P7 every frame ─────────────────
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		setcurpl(player);
+		foreach(ally : EUDLoopPlayer("Human", Force1)) {
+			SetAllianceStatus(ally, Ally);
+		}
+		SetAllianceStatus(P7, Ally);
+	}
+
+	// ── Kill rogue P12 units ────────────────────────────────────────────────
+	if (Bring(P12, AtLeast, 1, "(men)", "Anywhere")) {
+		KillUnit("(men)", P12);
+	}
+
+	setcurpl(cp);
+}

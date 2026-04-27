@@ -1,0 +1,198 @@
+// training_rooms.eps
+// Training room entry/exit, mob spawn per cell, despawn when empty.
+//
+// Only 3 CUWP property slots used:
+//   prop_lurker  : 100% HP, burrowed (Lurkers)
+//   prop_shield  : 100% HP, 100% shield (Dragoon, Archon)
+//   All others   : plain CreateUnit (defaults to 100% HP, no properties needed)
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+
+import common_vars;
+
+const prop_lurker = UnitProperty(hitpoint = 100, burrowed = True);
+const prop_shield = UnitProperty(hitpoint = 100, shield = 100);
+
+const trainEntryLocs = list(
+	py_str("Location 38"),
+	py_str("Location 37"),
+	py_str("Location 34"),
+	py_str("Location 36"),
+	py_str("Location 33"),
+	py_str("Location 35")
+);
+const trainDestLocs = list(
+	py_str("_Trainarchon"),
+	py_str("_Traingoon"),
+	py_str("_Trainhydra"),
+	py_str("_Trainlurk"),
+	py_str("_Trainultra"),
+	py_str("_Trainzerg")
+);
+const trainMessages = list(
+	"\x13\x05Good Luck, You Are Facing 5 Spirit Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+	"\x13\x05Good Luck, You Are Facing 5 Psionic Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+	"\x13\x05Good Luck, You Are Facing 5 Medium Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+	"\x13\x05Good Luck, You Are Facing 5 Stealth Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+	"\x13\x05Good Luck, You Are Facing 5 Mega Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+	"\x13\x05Good Luck, You Are Facing 5 Small Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
+);
+
+const exitLocs = list(
+	py_str("Location 45"), py_str("Location 46"), py_str("Location 47"),
+	py_str("Location 48"), py_str("Location 49"), py_str("Location 50"),
+	py_str("Location 88")
+);
+
+const archonLocs = list(
+	py_str("Location 82"), py_str("Location 83"), py_str("Location 84"),
+	py_str("Location 85"), py_str("Location 86"), py_str("Location 87")
+);
+const dragonLocs = list(
+	py_str("Location 76"), py_str("Location 77"), py_str("Location 78"),
+	py_str("Location 79"), py_str("Location 80"), py_str("Location 81")
+);
+const hydraLocs = list(
+	py_str("Location 57"), py_str("Location 58"), py_str("Location 59"),
+	py_str("Location 60"), py_str("Location 61"), py_str("Location 62"),
+	py_str("Location 61 2"), py_str("Location 59 2"), py_str("Location 57 2")
+);
+const ultraLocs = list(
+	py_str("Location 63"), py_str("Location 65"), py_str("Location 66"),
+	py_str("Location 67"), py_str("Location 68"), py_str("Location 69")
+);
+const lurkerLocs = list(
+	py_str("Location 70"), py_str("Location 71"), py_str("Location 72"),
+	py_str("Location 73"), py_str("Location 74"), py_str("Location 75")
+);
+const zerglingLocs = list(
+	py_str("Location 51"), py_str("Location 52"), py_str("Location 53"),
+	py_str("Location 54"), py_str("Location 55"), py_str("Location 56")
+);
+
+const despawnLocs = list(
+	py_str("despawn bastards 1"),
+	py_str("despawn bastards 2"),
+	py_str("despawn bastards 3")
+);
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		// ── Enter training selection area ─────────────────────────────────
+		if (
+			Bring(player, AtLeast, 1, "(men)", "to training") &&
+			Bring(P8, Exactly, 0, "(men)", "_area")
+		) {
+			MoveUnit(All, "(men)", player, "to training", "Location 32");
+			setcurpl(player);
+			CenterView("_Trainingpick");
+			DisplayText("\x13\x05Select A Monster To Train Against.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+		}
+
+		// ── Select training room ──────────────────────────────────────────
+		foreach(i : py_range(6)) {
+			if (
+				Bring(player, AtLeast, 1, "(men)", trainEntryLocs[i]) &&
+				Bring(player, AtLeast, 1, "(men)", "_Trainingpick")
+			) {
+				MoveUnit(All, "(men)", player, trainEntryLocs[i], trainDestLocs[i]);
+				setcurpl(player);
+				CenterView(trainDestLocs[i]);
+				DisplayText(trainMessages[i]);
+			}
+			if (
+				Bring(player, AtLeast, 1, "(men)", trainEntryLocs[i]) &&
+				Bring(player, Exactly, 0, "(men)", "_Trainingpick")
+			) {
+				MoveUnit(All, "(men)", player, trainEntryLocs[i], trainDestLocs[i]);
+				setcurpl(player);
+				CenterView(trainDestLocs[i]);
+				DisplayText(trainMessages[i]);
+			}
+		}
+
+		// ── Exit training room ─────────────────────────────────────────────
+		foreach(i : py_range(7)) {
+			if (Bring(player, AtLeast, 1, "(men)", exitLocs[i])) {
+				MoveUnit(All, "(men)", player, exitLocs[i], "_healing");
+				setcurpl(player);
+				CenterView("_healing");
+				DisplayText("\x13\x05You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+			}
+		}
+
+		// ── Archon training mob spawn (100% HP + 100% shield) ─────────────
+		foreach(i : py_range(6)) {
+			if (
+				Bring(player, AtLeast, 1, "(men)", archonLocs[i]) &&
+				Bring(P6, Exactly, 0, "Protoss Archon", archonLocs[i])
+			) {
+				CreateUnitWithProperties(5, "Protoss Archon", archonLocs[i], P6, prop_shield);
+			}
+		}
+
+		// ── Dragoon training mob spawn (100% HP + 100% shield) ────────────
+		foreach(i : py_range(6)) {
+			if (
+				Bring(player, AtLeast, 1, "(men)", dragonLocs[i]) &&
+				Bring(P6, Exactly, 0, "Protoss Dragoon", dragonLocs[i])
+			) {
+				CreateUnitWithProperties(5, "Protoss Dragoon", dragonLocs[i], P6, prop_shield);
+			}
+		}
+
+		// ── Hydralisk training mob spawn (100% HP) ────────────────────────
+		foreach(i : py_range(9)) {
+			if (
+				Bring(player, AtLeast, 1, "(men)", hydraLocs[i]) &&
+				Bring(P6, Exactly, 0, "Zerg Hydralisk", hydraLocs[i])
+			) {
+				CreateUnit(5, "Zerg Hydralisk", hydraLocs[i], P6);
+			}
+		}
+
+		// ── Ultralisk training mob spawn (100% HP) ────────────────────────
+		foreach(i : py_range(6)) {
+			if (
+				Bring(player, AtLeast, 1, "(men)", ultraLocs[i]) &&
+				Bring(P6, Exactly, 0, "Zerg Ultralisk", ultraLocs[i])
+			) {
+				CreateUnit(5, "Zerg Ultralisk", ultraLocs[i], P6);
+			}
+		}
+
+		// ── Lurker training mob spawn (100% HP, burrowed) ─────────────────
+		foreach(i : py_range(6)) {
+			if (
+				Bring(player, AtLeast, 1, "(men)", lurkerLocs[i]) &&
+				Bring(P6, Exactly, 0, "Zerg Lurker", lurkerLocs[i])
+			) {
+				CreateUnitWithProperties(5, "Zerg Lurker", lurkerLocs[i], P6, prop_lurker);
+			}
+		}
+
+		// ── Zergling training mob spawn (100% HP) ─────────────────────────
+		foreach(i : py_range(6)) {
+			if (
+				Bring(player, AtLeast, 1, "(men)", zerglingLocs[i]) &&
+				Bring(P6, Exactly, 0, "Zerg Zergling", zerglingLocs[i])
+			) {
+				CreateUnit(5, "Zerg Zergling", zerglingLocs[i], P6);
+			}
+		}
+	}
+
+	// ── Despawn orphan P6 mobs ────────────────────────────────────────────
+	foreach(i : py_range(3)) {
+		if (
+			Bring(Force1, Exactly, 0, "(men)", despawnLocs[i]) &&
+			Bring(P6, AtLeast, 1, "(men)", despawnLocs[i])
+		) {
+			RemoveUnitAt(All, "(men)", despawnLocs[i], P6);
+		}
+	}
+
+	setcurpl(cp);
+}

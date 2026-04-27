@@ -1,0 +1,49 @@
+// upgrades_recruits.eps
+// Upgrade/recruit beacon ownership swaps via GiveUnits.
+// GiveUnits(count, unitType, owner, area, recipient)
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+// No setcurpl needed here — GiveUnits takes explicit player args.
+
+import common_vars;
+
+const beaconLocs = list(
+	py_str("upgrades beacon 1"),
+	py_str("upgrades beacon 2"),
+	py_str("upgrades beacon 3"),
+	py_str("upgrades beacon 4"),
+	py_str("upgrades beacon 5"),
+	py_str("upgrades beacon 6"),
+	py_str("recruit 1 beacon"),
+	py_str("recruit 2 beacon")
+);
+
+const buildingLocs = list(
+	py_str("upgrades 1"),
+	py_str("upgrades 2"),
+	py_str("upgrades 3"),
+	py_str("upgrades 4"),
+	py_str("upgrades 5"),
+	py_str("upgrades 6"),
+	py_str("control 1"),
+	py_str("control 2")
+);
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		foreach(i : py_range(8)) {
+			// Player in beacon → give buildings from P7 to player
+			if (Bring(player, AtLeast, 1, "(men)", beaconLocs[i])) {
+				GiveUnits(All, "(buildings)", P7, buildingLocs[i], player);
+			}
+			// Player not in beacon → give buildings back to P7
+			if (Bring(player, Exactly, 0, "(men)", beaconLocs[i])) {
+				GiveUnits(All, "(buildings)", player, buildingLocs[i], P7);
+			}
+		}
+	}
+
+	setcurpl(cp);
+}

@@ -1,0 +1,205 @@
+// misc_gameplay.eps
+// Heal at Inn, teleports, splash ban, P1 ban triggers, boss bonuses,
+// walker heal+reset.
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+// ModifyUnitHitPoints(count, unitType, player, area, percent)
+// ModifyUnitEnergy(count, unitType, player, area, percent)
+// MoveUnit(count, unitType, player, startArea, targetLocation)
+// KillUnit(unitType, player)
+// Order(unitType, player, startArea, order, targetLocation)  -- Move/Patrol are bare constants
+// Defeat()/Victory() act on CurrentPlayer
+
+import common_vars;
+
+var bossBonus1Done = 0;
+var bossBonus2Done = 0;
+var bossBonus3Done = 0;
+var bossBonus4Done = 0;
+var bossBonus5Done = 0;
+var bossBonus6Done = 0;
+var bossBonus7Done = 0;
+var bossBonus8Done = 0;
+
+function onPluginStart() {
+	const cp = getcurpl();
+
+	bossBonus1Done = 0;
+	bossBonus2Done = 0;
+	bossBonus3Done = 0;
+	bossBonus4Done = 0;
+	bossBonus5Done = 0;
+	bossBonus6Done = 0;
+	bossBonus7Done = 0;
+	bossBonus8Done = 0;
+
+	setcurpl(cp);
+}
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		// ── Heal at Inn ───────────────────────────────────────────────────
+		if (Bring(player, AtLeast, 1, "(men)", "_healing")) {
+			ModifyUnitHitPoints(All, "(men)", player, "_healing", 100);
+			ModifyUnitEnergy(All, "(men)", player, "_healing", 100);
+		}
+
+		// ── Teleport: town → area ─────────────────────────────────────────
+		if (Bring(player, AtLeast, 1, "(men)", "teleport town")) {
+			MoveUnit(All, "(men)", player, "teleport town", "transport land area");
+			setcurpl(player);
+			MinimapPing("transport land area");
+		}
+
+		// ── Teleport: area → town ─────────────────────────────────────────
+		if (Bring(player, AtLeast, 1, "(men)", "teleport area")) {
+			MoveUnit(All, "(men)", player, "teleport area", "tunnel return town");
+			setcurpl(player);
+			MinimapPing("tunnel return town");
+		}
+
+		// ── Splash ban during town attack ─────────────────────────────────
+		if (CountdownTimer(AtMost, 5) && CountdownTimer(AtLeast, 0) && Command(player, AtLeast, 1, "Gui Montag (Firebat)")) {
+			MoveUnit(1, "Gui Montag (Firebat)", player, "Anywhere", "_repick");
+		}
+		if (CountdownTimer(AtMost, 5) && CountdownTimer(AtLeast, 0) && Command(player, AtLeast, 1, "Tassadar/Zeratul (Archon)")) {
+			MoveUnit(1, "Tassadar/Zeratul (Archon)", player, "Anywhere", "_repick");
+		}
+	}
+
+	// ── P1 ban triggers ───────────────────────────────────────────────────
+	// KillUnit(unitType, player) -- Defeat() acts on CurrentPlayer
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 90")) {
+		KillUnit("(any unit)", P2);
+		setcurpl(P2);
+		Defeat();
+	}
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 92")) {
+		KillUnit("(any unit)", P3);
+		setcurpl(P3);
+		Defeat();
+	}
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 93")) {
+		KillUnit("(any unit)", P4);
+		setcurpl(P4);
+		Defeat();
+	}
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 94")) {
+		KillUnit("(any unit)", P5);
+		setcurpl(P5);
+		Defeat();
+	}
+
+	// ── Boss bonuses ──────────────────────────────────────────────────────
+	if (bossBonus1Done == 0 && Deaths(P8, AtLeast, 10, "Zerg Broodling")) {
+		bossBonus1Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 200, Ore);
+		}
+		DisplayTextAll("\x0710 Broodlings killed! +200 gold bonus!");
+	}
+	if (bossBonus2Done == 0 && Deaths(P8, AtLeast, 22, "Zerg Broodling")) {
+		bossBonus2Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 250, Ore);
+		}
+		DisplayTextAll("\x0722 Broodlings killed! +250 gold bonus!");
+	}
+	if (bossBonus3Done == 0 && Deaths(P8, AtLeast, 4, "Zerg Broodling") && Deaths(P8, AtLeast, 1, "Zerg Ultralisk")) {
+		bossBonus3Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 300, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +300 gold");
+	}
+	if (
+		bossBonus4Done == 0 &&
+		Deaths(P8, AtLeast, 4, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 1, "Zerg Ultralisk") &&
+		Deaths(P8, AtLeast, 2, "Alan Schezar (Goliath)")
+	) {
+		bossBonus4Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 350, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +350 gold!");
+	}
+	if (
+		bossBonus5Done == 0 &&
+		Deaths(P8, AtLeast, 4, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 2, "Zerg Ultralisk") &&
+		Deaths(P8, AtLeast, 3, "Alan Schezar (Goliath)") &&
+		Deaths(P8, AtLeast, 1, "Edmund Duke (Tank Mode)")
+	) {
+		bossBonus5Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 400, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +400 gold!");
+	}
+	if (
+		bossBonus6Done == 0 &&
+		Deaths(P8, AtLeast, 7, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 2, "Zerg Ultralisk") &&
+		Deaths(P8, AtLeast, 3, "Alan Schezar (Goliath)") &&
+		Deaths(P8, AtLeast, 1, "Jim Raynor (Vulture)") &&
+		Deaths(P8, AtLeast, 1, "Edmund Duke (Tank Mode)")
+	) {
+		bossBonus6Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 450, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +450 gold!");
+	}
+	if (
+		bossBonus7Done == 0 &&
+		Deaths(P8, AtLeast, 7, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 2, "Zerg Ultralisk") &&
+		Deaths(P8, AtLeast, 3, "Alan Schezar (Goliath)") &&
+		Deaths(P8, AtLeast, 1, "Jim Raynor (Vulture)") &&
+		Deaths(P8, AtLeast, 1, "Edmund Duke (Tank Mode)") &&
+		Deaths(P8, AtLeast, 1, "Protoss Dark Templar")
+	) {
+		bossBonus7Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 500, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +500 gold!");
+	}
+	if (
+		bossBonus8Done == 0 &&
+		Deaths(P8, AtLeast, 7, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 2, "Infested Duran") &&
+		Deaths(P8, AtLeast, 3, "Alan Schezar (Goliath)") &&
+		Deaths(P8, AtLeast, 2, "Jim Raynor (Vulture)") &&
+		Deaths(P8, AtLeast, 1, "Edmund Duke (Tank Mode)") &&
+		Deaths(P8, AtLeast, 1, "Samir Duran (Ghost)") &&
+		Deaths(P8, AtLeast, 1, "Alexei Stukov (Ghost)") &&
+		Deaths(P8, AtLeast, 1, "Protoss Dark Templar")
+	) {
+		bossBonus8Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 550, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +550 gold!");
+	}
+
+	// ── Walker heal + reset ───────────────────────────────────────────────
+	if (
+		Bring(Force1, AtLeast, 1, "(men)", "_area") &&
+		Bring(P7, AtLeast, 1, "(men)", "walker2")
+	) {
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			ModifyUnitHitPoints(All, "(men)", player, "_area", 100);
+			ModifyUnitEnergy(All, "(men)", player, "_area", 100);
+		}
+		MoveUnit(1, "(men)", P7, "walker turf", "walker1");
+		Order("(men)", P7, "walker1", Move, "walker2");
+		SetResources(P7, Add, 300, OreAndGas);
+		SetDeaths(P7, Add, 1, "Floor Missile Trap");
+	}
+
+	setcurpl(cp);
+}

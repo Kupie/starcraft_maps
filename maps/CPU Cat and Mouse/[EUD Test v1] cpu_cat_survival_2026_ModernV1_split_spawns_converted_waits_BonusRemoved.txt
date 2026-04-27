@@ -1949,7 +1949,7 @@ Conditions:
 
 Actions:
 	Comment("TEMPORARY DEBUG TESTING");
-;	Set Invincibility("All players", "Protoss Probe", "Anywhere", enabled);
+;	Set Invincibility("Player 1", "Any unit", "Anywhere", enabled);
 ;	MemoryAddr(0x00656f2c, Set To, 51711);
 ;	Comment("Pause Setter");
 ;	MemoryAddr(0x0058d718, Set To, 200);

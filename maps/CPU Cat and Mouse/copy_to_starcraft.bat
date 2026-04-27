@@ -1,1 +1,1 @@
-copy /Y "C:\Users\Admin\source\repos\Kupie\starcraft_maps\maps\CPU Cat and Mouse\EUD_cpu_cat_survival_2026_v10.9.9.9.9.FINAL_postEUD.scx" "C:\Users\Admin\Documents\StarCraft\Maps\EUDMagic\[EUD Test v1] [EUD Test v1] cpu_cat_survival_2026_ModernV1_test1.scx"
+copy /Y "C:\Users\Admin\source\repos\Kupie\starcraft_maps\maps\CPU Cat and Mouse\EUD_cpu_cat_survival_2026_v10.9.9.9.9.FINAL_postEUD.scx" "C:\Users\Admin\Documents\StarCraft\Maps\EUDMagic\[EUD Test v1] cpu_cat_survival_2026_ModernV1_test1.scx"

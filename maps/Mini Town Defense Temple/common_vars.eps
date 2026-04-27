@@ -1,0 +1,15 @@
+// common_vars.eps
+// Shared runtime state for EPScript plugins.
+// Data-only module: import from other .eps files, but do NOT list this file in the .edd.
+
+// Set while a boss wave is pending/spawning/alive.
+// This blocks countdown reset during the no-unit delay between countdown 0 and first spawn.
+var bossWaveActive = 0;
+
+// Human-readable leaderboard rotation state.
+// 0 = Experience, 1+ = wave-specific kill boards.
+var leaderboardMode = 0;
+var leaderboardTimer = 0;
+
+// startup grace period
+var waveStartupGraceInit = 12;

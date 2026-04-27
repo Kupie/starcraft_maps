@@ -1,0 +1,95 @@
+import common_vars;
+
+// level_up.eps
+// Grants level-up mineral bonuses when Custom score (XP) reaches thresholds.
+//
+// Original triggers: Score(CurrentPlayer, Custom, AtLeast, N) → Display + Add ore
+// These ran WITHOUT Preserve Trigger, meaning they fire ONCE (original behavior).
+// In EPScript we replicate this with per-player "already awarded" flags using a bitmask
+// or EUDArray — here we use an EUDArray of flags per player per level.
+//
+// Levels and thresholds (from original):
+//   Level  1:   500 XP → +100 gold
+//   Level  2:  1000 XP → +200 gold
+//   Level  3:  2000 XP → +300 gold
+//   Level  4:  3000 XP → +400 gold
+//   Level  5:  5000 XP → +500 gold
+//   Level  6:  7000 XP → +600 gold
+//   Level  7: 10000 XP → +700 gold
+//   Level  8: 15000 XP → +800 gold
+//   Level  9: 20000 XP → +900 gold
+//   Level 10: 25000 XP → +1000 gold
+//   Level 11: 35000 XP → +2000 gold
+//   Level 12: 50000 XP → +3000 gold
+//   Level 13: 75000 XP → +4000 gold
+//   Level 14: 100000 XP → +5000 gold
+//   Level 15: 130000 XP → +6000 gold
+//   Level 16: 170000 XP → +8000 gold
+//   Level 17: 220000 XP → +10000 gold
+//   Level 18: 280000 XP → +13000 gold
+//   Level 19: 350000 XP → +16000 gold
+//   Level 20: 400000 XP → +20000 gold
+//
+// Implementation: 20 flags per player. Array index = player * 20 + level_index.
+// 5 players × 20 levels = 100 entries.
+
+const NUM_LEVELS = 20;
+const levelThresholds = EUDVArray(20)(list(
+	500, 1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000,
+	35000, 50000, 75000, 100000, 130000, 170000, 220000, 280000, 350000, 400000
+));
+const levelGold = EUDVArray(20)(list(
+	100, 200, 300, 400, 500, 600, 700, 800, 900, 1000,
+	2000, 3000, 4000, 5000, 6000, 8000, 10000, 13000, 16000, 20000
+));
+const levelMessages = list(
+	$T("\x13\x03Level Up!  Level 1.\r\n\x13\x07+100 Gold."),
+	$T("\x13\x03Level Up!  Level 2.\r\n\x13\x07+200 Gold."),
+	$T("\x13\x03Level Up!  Level 3.\r\n\x13\x07+300 Gold."),
+	$T("\x13\x03Level Up!  Level 4.\r\n\x13\x07+400 Gold."),
+	$T("\x13\x03Level Up!  Level 5.\r\n\x13\x07+500 Gold."),
+	$T("\x13\x03Level Up!  Level 6.\r\n\x13\x07+600 Gold."),
+	$T("\x13\x03Level Up!  Level 7.\r\n\x13\x07+700 Gold."),
+	$T("\x13\x03Level Up!  Level 8.\r\n\x13\x07+800 Gold."),
+	$T("\x13\x03Level Up!  Level 9.\r\n\x13\x07+900 Gold."),
+	$T("\x13\x03Level Up!  Level 10\r\n\x13\x07+1000 Gold."),
+	$T("\x13\x03Level Up!  Level 11\r\n\x13\x07+2000 Gold."),
+	$T("\x13\x03Level Up!  Level 12\r\n\x13\x07+3000 Gold."),
+	$T("\x13\x03Level Up!  Level 13\r\n\x13\x07+4000 Gold."),
+	$T("\x13\x03Level Up!  Level 14\r\n\x13\x07+5000 Gold."),
+	$T("\x13\x03Level Up!  Level 15\r\n\x13\x07+6000 Gold."),
+	$T("\x13\x03Level Up!  Level 16\r\n\x13\x07+8000 Gold"),
+	$T("\x13\x03Level Up!  Level 17\r\n\x13\x07+10000 Gold"),
+	$T("\x13\x03Level Up!  Level 18\r\n\x13\x07+13000 Gold"),
+	$T("\x13\x03Level Up!  Level 19\r\n\x13\x07+16000 Gold"),
+	$T("\x13\x03Level Up!  Level 20 (Final)\r\n\x13\x07+20000 Gold")
+);
+
+// levelAwarded[playerIndex * 20 + levelIndex] = 1 if already awarded
+const levelAwarded = EUDArray(100);
+
+function onPluginStart() {
+	foreach(i : py_range(100)) {
+		levelAwarded[i] = 0;
+	}
+}
+
+function afterTriggerExec() {
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		var pidx = player;	// P1=0..P5=4
+
+		foreach(lvl : py_range(NUM_LEVELS)) {
+			var slot = pidx * NUM_LEVELS + lvl;
+			if (levelAwarded[slot] == 0) {
+				if (Score(player, Custom, AtLeast, levelThresholds[lvl])) {
+					levelAwarded[slot] = 1;
+					SetResources(player, Add, levelGold[lvl], Ore);
+					var savedCp = getcurpl();
+					setcurpl(player);
+					DisplayText(levelMessages[lvl]);
+					setcurpl(savedCp);
+				}
+			}
+		}
+	}
+}

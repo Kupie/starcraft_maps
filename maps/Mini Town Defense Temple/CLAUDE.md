@@ -924,40 +924,6 @@ All major systems are now in EPScript. The following classic triggers have been 
 - ✅ Ban logic — 7 players, per-slot ban locations (misc.eps)
 - ✅ AI nudge timer (misc.eps)
 
-### What Still Needs Converting
-
-From `_EUD_Test_v1__cpu_cat_survival_2026_ModernV1_split_spawns_converted_waits_BonusRemoved.txt`:
-
-- ❌ MoveLocation per-player (21 triggers) — Probe/Gateway/ShieldBattery tracking
-- ❌ MoveUnit transporter→nexus (7 triggers)
-- ❌ P8 Overlord MoveLocation to bb mode 1-10 (10 triggers)
-- ❌ Various one-off misc triggers
-- ❌ AI vision scripts (may keep as classic triggers)
-
-### Current .edd Load Order
-
-```
-invincibility.eps
-misc.eps
-RewardSystem.eps
-common.eps
-difficultyModifier.eps
-main.eps
-countdownTimer.eps
-wave_spawns.eps
-wave_spawns_indexes.eps
-wave_spawns_notifications.eps
-```
-
-NOT in .edd (data only, import only):
-```
-WaveSpawnsFull.eps
-WaveSpawnsSplit.eps
-HardModeSpawnsFull.eps
-HardModeSpawnsSplit.eps
-common_vars.eps
-```
-
 ### Key EPScript Docs Links
 
 ```

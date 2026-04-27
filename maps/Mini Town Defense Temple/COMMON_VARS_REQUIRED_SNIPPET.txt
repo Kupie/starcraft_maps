@@ -1,0 +1,4 @@
+Add this to common_vars.eps if it is not already present:
+
+var bossWaveActive = 0;
+const waveStartupGraceInit = 0;  // frames; raise to 24/48 if you want a pre-spawn grace period

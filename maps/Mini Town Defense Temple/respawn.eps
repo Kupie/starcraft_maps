@@ -1,0 +1,95 @@
+// respawn.eps
+// Player death → penalty → respawn sequence for P1-P5.
+// Wait() replaced with frame counters (21f per 900ms, 24f per 1000ms at fastest).
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+// DisplayText acts on CurrentPlayer (desync-safe).
+// SetDeaths(player, modifier, value, unitType)
+// MoveUnit(count, unitType, player, startArea, targetLocation)
+
+import common_vars;
+
+const respawnTimer     = EUDArray(8);
+const respawnCountdown = EUDArray(8);
+
+function onPluginStart() {
+	const cp = getcurpl();
+
+	foreach(i : py_range(8)) {
+		respawnTimer[i] = 0;
+		respawnCountdown[i] = 0;
+	}
+
+	setcurpl(cp);
+}
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		var idx = player;
+
+		// ── Death detection ───────────────────────────────────────────────
+		if (Deaths(player, AtLeast, 1, "(men)") && respawnTimer[idx] == 0) {
+			SetDeaths(player, Subtract, 1, "(men)");
+			respawnTimer[idx] = 42;
+		}
+
+		// ── Respawn penalty timer ─────────────────────────────────────────
+		if (respawnTimer[idx] >= 1) {
+			respawnTimer[idx]--;
+
+			if (respawnTimer[idx] == 41) {
+				setcurpl(player);
+				DisplayText("\x13\x06You Have Died! -250 Experience.  -50 Gold.");
+			}
+
+			if (respawnTimer[idx] == 21) {
+				SetScore(player, Subtract, 250, Custom);
+				SetResources(player, Subtract, 50, Ore);
+				setcurpl(player);
+				DisplayText("\x13\x03Now Wait 3 Seconds To Be Respawned...");
+			}
+
+			if (respawnTimer[idx] == 1) {
+				CreateUnitWithProperties(1, "Terran Civilian", "Location 14", player,
+					UnitProperty(invincible = False));
+				respawnTimer[idx] = 0;
+			}
+		}
+
+		// ── Respawn countdown (Civilian at Location 14) ───────────────────
+		if (
+			Bring(player, AtLeast, 1, "Terran Civilian", "Location 14") &&
+			respawnCountdown[idx] == 0
+		) {
+			respawnCountdown[idx] = 72;
+		}
+
+		if (respawnCountdown[idx] >= 1) {
+			respawnCountdown[idx]--;
+
+			if (respawnCountdown[idx] == 71) {
+				setcurpl(player);
+				DisplayText("\x13\x06Waiting... \x043 \x05Seconds\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+			}
+			if (respawnCountdown[idx] == 48) {
+				setcurpl(player);
+				DisplayText("\x13\x06Waiting... \x042 \x05Seconds\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+			}
+			if (respawnCountdown[idx] == 24) {
+				setcurpl(player);
+				DisplayText("\x13\x06Waiting... \x041 \x05Second\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+			}
+
+			if (respawnCountdown[idx] == 1) {
+				setcurpl(player);
+				DisplayText("\x13\x03You Have Respawned!  Choose Wisely.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+				MoveUnit(1, "Terran Civilian", player, "Location 14", "_Heropick");
+				respawnCountdown[idx] = 0;
+			}
+		}
+	}
+
+	setcurpl(cp);
+}

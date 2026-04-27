@@ -137,21 +137,21 @@ function afterTriggerExec() {
 			if (beaconVisible == 1) {
 				if (hasSpawner1Units(common_vars.currentRound)) {
 					KillUnitAt(All, "Terran Beacon", "spawner",  P8);
-				//	MinimapPing($L("spawner"));
+								  
 				}
 				if (hasSpawner2Units(common_vars.currentRound)) {
 					KillUnitAt(All, "Terran Beacon", "spawner2", P8);
-				//	MinimapPing($L("spawner2"));
+								   
 				}
 				beaconVisible = 0;
 			} else {
 				if (hasSpawner1Units(common_vars.currentRound)) {
 					placeSpawnerBeacons(s1left, s1top);
-				//	MinimapPing($L("spawner"));
+					MinimapPing($L("spawner"));
 				}
 				if (hasSpawner2Units(common_vars.currentRound)) {
 					placeSpawnerBeacons(s2left, s2top);
-				//	MinimapPing($L("spawner2"));
+					MinimapPing($L("spawner2"));
 				}
 				beaconVisible = 1;
 			}
@@ -159,16 +159,16 @@ function afterTriggerExec() {
 		beaconFlashCounter--;
 	}
 
-	// ── Step 2 -> 3: Kill buildings, start spawning ────────────────────────────────
+	// ── Step 2 -> 3: Kill buildings, start spawning ───────────────────────────
 	if (CountdownTimer(Exactly, 0) && roundStep == 2) {
 		if (hasSpawner1Units(common_vars.currentRound)) {
 			KillUnitAt(All, "Terran Beacon", "spawner",  P8);
-			KillUnitAt(All, "Protoss Pylon",   "spawner",  Force1);
+			KillUnitAt(All, "Protoss Pylon", "spawner",  Force1);
 			MinimapPing($L("spawner"));
 		}
 		if (hasSpawner2Units(common_vars.currentRound)) {
 			KillUnitAt(All, "Terran Beacon", "spawner2", P8);
-			KillUnitAt(All, "Protoss Pylon",   "spawner2", Force1);
+			KillUnitAt(All, "Protoss Pylon", "spawner2", Force1);
 			MinimapPing($L("spawner2"));
 		}
 		dbstr_print(beaconString, "2 = Ban\0");
@@ -187,20 +187,34 @@ function afterTriggerExec() {
 		}
 
 		var spawnIdx = currentSpawnIndex;
-
 		if (count > 0 || count2 > 0) {
+					   
 			if (count > 0) {
-				CreateUnitWithProperties(count, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner", P8, UnitProperty(
-					hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
-					cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
-				);
+				if (wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx] == $U("Protoss Reaver")) {
+					CreateUnitWithProperties(count, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner", P8, UnitProperty(
+						hitpoint = 100, shield = 100, energy = 100, hanger = 0, resource = 0,
+						cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
+					);
+				} else {
+					CreateUnitWithProperties(count, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner", P8, UnitProperty(
+						hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
+						cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
+					);
+				}
 				WaveSpawnsFull.waveSpawnsFull1[common_vars.currentRound][currentSpawnIndex] = 0;
 			}
 			if (count2 > 0) {
-				CreateUnitWithProperties(count2, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner2", P8, UnitProperty(
-					hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
-					cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
-				);
+				if (wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx] == $U("Protoss Reaver")) {
+					CreateUnitWithProperties(count2, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner2", P8, UnitProperty(
+						hitpoint = 100, shield = 100, energy = 100, hanger = 0, resource = 0,
+						cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
+					);
+				} else {
+					CreateUnitWithProperties(count2, wave_spawns_indexes.waveSpawnsUnitIndex[spawnIdx], "spawner2", P8, UnitProperty(
+						hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
+						cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
+					);
+				}
 				WaveSpawnsFull.waveSpawnsFull2[common_vars.currentRound][currentSpawnIndex] = 0;
 			}
 			currentSpawnIndex += 1;
@@ -248,19 +262,36 @@ function afterTriggerExec() {
 		}
 
 		var hardSpawnIdx = currentSpawnIndex;
-
 		if (hardCount > 0 || hardCount2 > 0) {
+						   
+																					   
+						
+	
 			if (hardCount > 0) {
-				CreateUnitWithProperties(hardCount, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner", P8, UnitProperty(
-					hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
-					cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
-				);
+				if (wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx] == $U("Protoss Reaver")) {
+					CreateUnitWithProperties(hardCount, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner", P8, UnitProperty(
+						hitpoint = 100, shield = 100, energy = 100, hanger = 0, resource = 0,
+						cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
+					);
+				} else {
+					CreateUnitWithProperties(hardCount, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner", P8, UnitProperty(
+						hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
+						cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
+					);
+				}
 			}
 			if (hardCount2 > 0) {
-				CreateUnitWithProperties(hardCount2, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner2", P8, UnitProperty(
-					hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
-					cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
-				);
+				if (wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx] == $U("Protoss Reaver")) {
+					CreateUnitWithProperties(hardCount2, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner2", P8, UnitProperty(
+						hitpoint = 100, shield = 100, energy = 100, hanger = 0, resource = 0,
+						cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
+					);
+				} else {
+					CreateUnitWithProperties(hardCount2, wave_spawns_indexes.waveSpawnsUnitIndex[hardSpawnIdx], "spawner2", P8, UnitProperty(
+						hitpoint = 100, shield = 100, energy = 100, hanger = 8, resource = 0,
+						cloaked = False, burrowed = False, intransit = False, hallucinated = False, invincible = False)
+					);
+				}
 			}
 			currentSpawnIndex += 1;
 			spawnTimeCounter = common_vars.delayBetweenSpawns;

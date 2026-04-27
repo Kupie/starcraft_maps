@@ -1,0 +1,139 @@
+// hero_select.eps
+// Terran Civilian at hero pick location → spawn hero unit.
+// Repick beacon and recruit effect.
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+// RemoveUnitAt(count, unitType, area, player)
+// CreateUnit(count, unitType, location, player)
+// CenterView(location) -- desync, acts on CurrentPlayer
+
+				   
+
+const heroPickLocs = list(
+	py_str("Location 21"),
+	py_str("Location 30"),
+	py_str("Location 22"),
+	py_str("Location 19"),
+	py_str("Location 24"),
+	py_str("Location 25"),
+	py_str("Location 26"),
+	py_str("Location 27"),
+	py_str("Location 29"),
+	py_str("Location 20"),
+	py_str("Location 28"),
+	py_str("Location 23")
+);
+
+const heroPickUnits = list(
+	py_str("Tassadar/Zeratul (Archon)"),
+	py_str("Gui Montag (Firebat)"),
+	py_str("Dark Templar (Hero)"),
+	py_str("Sarah Kerrigan (Ghost)"),
+	py_str("Fenix (Dragoon)"),
+	py_str("Hunter Killer (Hydralisk)"),
+	py_str("Infested Kerrigan (Infested Terran)"),
+	py_str("Devouring One (Zergling)"),
+	py_str("Jim Raynor (Marine)"),
+	py_str("Tassadar (Templar)"),
+	py_str("Torrasque (Ultralisk)"),
+	py_str("Fenix (Zealot)")
+);
+
+// 1 = requires no boss attack (P8 not in _area)
+const heroPickNoBoss = list(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+// ── Always-stim refresh for Marine/Firebat heroes ─────────────────────────
+// CUnit stim timer byte: first CUnit address 0x59CDBD = CUnit + 0x115.
+// Byte offset within dword: 0x115 / 4 = 0x45, sub-byte 1.
+const STIM_TIMER_CUNIT_DWORD_OFFSET = 0x45;
+const STIM_TIMER_BYTE_OFFSET = 1;
+const STIM_TIMER_MAX = 255;
+const STIM_REFRESH_FRAMES = 2000;
+
+var stimRefreshTimer = 1;
+
+function writeStimTimerForCurrentCUnit(unit) {
+	const cp = getcurpl();
+	setcurpl(unit + STIM_TIMER_CUNIT_DWORD_OFFSET);
+	bwrite_cp(0, STIM_TIMER_BYTE_OFFSET, STIM_TIMER_MAX);
+	setcurpl(cp);
+}
+
+function refreshStimHeroUnits() {
+	if (stimRefreshTimer > 0) {
+		stimRefreshTimer--;
+	}
+	if (stimRefreshTimer == 0) {
+		stimRefreshTimer = STIM_REFRESH_FRAMES;
+
+		foreach(unit : EUDLoopCUnit()) {
+			if (
+				(unit.unitID == $U("Gui Montag (Firebat)") || unit.unitID == $U("Jim Raynor (Marine)")) &&
+				unit.owner <= P5
+			) {
+				writeStimTimerForCurrentCUnit(unit);
+			}
+		}
+	}
+}
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		// ── Hero picks ────────────────────────────────────────────────────
+		foreach(i : py_range(12)) {
+			if (heroPickNoBoss[i] == 1) {
+				if (
+					Bring(player, AtLeast, 1, "Terran Civilian", heroPickLocs[i]) &&
+					Bring(P8, Exactly, 0, "(men)", "_area")
+				) {
+					RemoveUnitAt(1, "Terran Civilian", heroPickLocs[i], player);
+					CreateUnit(1, heroPickUnits[i], "_healing", player);
+
+					if (i == 1 || i == 8) {
+						stimRefreshTimer = 0;
+					}
+					
+					setcurpl(player);
+					CenterView("_healing");
+				}
+			}
+			if (heroPickNoBoss[i] == 0) {
+				if (Bring(player, AtLeast, 1, "Terran Civilian", heroPickLocs[i])) {
+					RemoveUnitAt(1, "Terran Civilian", heroPickLocs[i], player);
+					CreateUnit(1, heroPickUnits[i], "_healing", player);
+					if (i == 1 || i == 8) {
+						stimRefreshTimer = 0;
+					}
+					setcurpl(player);
+					CenterView("_healing");
+				}
+			}
+		}
+
+		// ── Repick beacon ─────────────────────────────────────────────────
+		if (Bring(player, AtLeast, 1, "Any unit", "_repick")) {
+			// Explicitly remove tracked stim heroes first, then fall back to any other hero.
+			RemoveUnitAt(1, "Gui Montag (Firebat)", "_repick", player);
+			RemoveUnitAt(1, "Jim Raynor (Marine)", "_repick", player);
+			RemoveUnitAt(1, "(men)", "_repick", player);
+			CreateUnit(1, "Terran Civilian", "_Heropick", player);
+			setcurpl(player);
+			CenterView("_Heropick");
+		}
+
+		// ── Recruit effect ────────────────────────────────────────────────
+		if (Command(player, AtLeast, 1, "Protoss Zealot")) {
+			CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", player,
+				UnitProperty(invincible = False));
+			RemoveUnit("Protoss Zealot", player);
+			setcurpl(player);
+			DisplayText("\x13\x07Recruit Was A Success!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+		}
+	}
+
+	refreshStimHeroUnits();
+
+	setcurpl(cp);
+}

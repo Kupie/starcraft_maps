@@ -1,0 +1,147 @@
+// wave_spawns.eps
+// Row-driven Player 8 boss wave spawner.
+//
+// Replaces boss_attacks.eps. Spawn data lives in wave_spawns.csv and is
+// generated into wave_spawns_array.eps by generate_wave_spawns_array_eps.py.
+//
+// No gas/resources are used for wave progression.
+// Flow:
+//   1. Countdown reaches 0 while armed -> start next wave immediately.
+//   2. Spawn each CSV row after that row's WaveDelayMS.
+//   3. After each CreateUnit batch, issue one patrol order from Location 1 to Temple.
+//   4. When all rows are spawned and P8 has no men left in _area, reset countdown to 210.
+
+import common_vars;
+import wave_spawns_array;
+
+var currentWave = 0;
+var activeWave = 0;
+var activeWaveRow = 0;
+var activeWaveEnd = 0;
+var waveDelay = 0;
+var waitingForClear = 0;
+var roundArmed = 0;
+var startupGrace = 0;
+
+const waveStarted = EUDArray(wave_spawns_array.NUM_WAVES + 1);
+
+function onPluginStart() {
+	foreach(i : py_range(0, wave_spawns_array.NUM_WAVES + 1)) {
+		waveStarted[i] = 0;
+	}
+	currentWave = 0;
+	activeWave = 0;
+	activeWaveRow = 0;
+	activeWaveEnd = 0;
+	waveDelay = 0;
+	waitingForClear = 0;
+	roundArmed = 1;
+	startupGrace = 0;
+	common_vars.bossWaveActive = 0;
+	SetCountdownTimer(SetTo, 210);
+}
+
+function orderP8WaveUnits() {
+	Order("(men)", P8, "Location 1", Patrol, "Temple");
+}
+
+function startWave(waveNumber) {
+	waveStarted[waveNumber] = 1;
+	currentWave = waveNumber;
+	activeWave = waveNumber;
+	activeWaveRow = wave_spawns_array.waveSpawnFirstRow[waveNumber];
+	activeWaveEnd = activeWaveRow + wave_spawns_array.waveSpawnRowCount[waveNumber];
+	waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveRow];
+	waitingForClear = 1;
+	roundArmed = 0;
+	startupGrace = common_vars.waveStartupGraceInit;
+	common_vars.bossWaveActive = 1;
+}
+
+function finishWaveRows() {
+	activeWave = 0;
+	activeWaveRow = 0;
+	activeWaveEnd = 0;
+	waveDelay = 0;
+	// Keep bossWaveActive set until spawned enemies are dead and the countdown is reset.
+}
+
+function resetCountdownForNextWave() {
+	SetCountdownTimer(SetTo, 210);
+	ModifyUnitHitPoints(1, "Buildings", P7, "Temple", 100);
+	ModifyUnitShields(1, "Buildings", P7, "Temple", 100);
+	ModifyUnitShields(All, "Warbringer (Reaver)", P7, "Anywhere", 100);
+	ModifyUnitHitPoints(All, "Warbringer (Reaver)", P7, "Anywhere", 100);
+	waitingForClear = 0;
+	roundArmed = 1;
+	common_vars.bossWaveActive = 0;
+}
+
+function spawnCurrentRow() {
+	if (activeWaveRow >= activeWaveEnd) {
+		finishWaveRows();
+		return;
+	}
+
+	foreach(unitIndex : py_range(0, wave_spawns_array.NUM_WAVE_UNITS)) {
+		var count = wave_spawns_array.waveSpawnCounts[activeWaveRow][unitIndex];
+		if (count > 0) {
+			CreateUnit(count, wave_spawns_array.waveSpawnUnitIndex[unitIndex], "Location 1", P8);
+		}
+	}
+
+	orderP8WaveUnits();
+
+	activeWaveRow += 1;
+	if (activeWaveRow >= activeWaveEnd) {
+		finishWaveRows();
+	} else {
+		waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveRow];
+	}
+}
+
+function detectCountdownWaveStart() {
+	if (
+		roundArmed == 1 &&
+		waitingForClear == 0 &&
+		activeWave == 0 &&
+		currentWave < wave_spawns_array.NUM_WAVES &&
+		CountdownTimer(Exactly, 0)
+	) {
+		startWave(currentWave + 1);
+	}
+}
+
+function tickActiveWave() {
+	if (activeWave == 0) {
+		return;
+	}
+
+	if (startupGrace > 0) {
+		startupGrace -= 1;
+		return;
+	}
+
+	if (waveDelay > 0) {
+		waveDelay -= 1;
+	} else {
+		spawnCurrentRow();
+	}
+}
+
+function detectWaveClearAndResetTimer() {
+	if (
+		waitingForClear == 1 &&
+		activeWave == 0 &&
+		CountdownTimer(Exactly, 0) &&
+		Bring(P8, Exactly, 0, "(men)", "_area")
+	) {
+		resetCountdownForNextWave();
+	}
+}
+
+function afterTriggerExec() {
+	detectCountdownWaveStart();
+	tickActiveWave();
+	detectWaveClearAndResetTimer();
+}
