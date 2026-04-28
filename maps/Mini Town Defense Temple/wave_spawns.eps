@@ -38,6 +38,7 @@ function onPluginStart() {
 	roundArmed = 1;
 	startupGrace = 0;
 	common_vars.bossWaveActive = 0;
+	common_vars.finalWaveReached = 0;
 	SetCountdownTimer(SetTo, 210);
 }
 
@@ -56,6 +57,11 @@ function startWave(waveNumber) {
 	roundArmed = 0;
 	startupGrace = common_vars.waveStartupGraceInit;
 	common_vars.bossWaveActive = 1;
+
+	if (waveNumber == wave_spawns_array.NUM_WAVES && common_vars.finalWaveReached == 0) {
+		common_vars.finalWaveReached = 1;
+		DisplayTextAll("\x13\x07Thanks For Playing!  You Won! Now survive for as long as you can on the endless bonus round! Goodluck!\r\n\x13\x062high - 2014\r\n\r\n\r\n\r\n\r\n\r\n");
+	}
 }
 
 function finishWaveRows() {
@@ -94,7 +100,15 @@ function spawnCurrentRow() {
 
 	activeWaveRow += 1;
 	if (activeWaveRow >= activeWaveEnd) {
-		finishWaveRows();
+		if (activeWave == wave_spawns_array.NUM_WAVES) {
+			// Endless bonus round: loop the final wave forever.
+			// Use the final row's delay as the delay before the next loop,
+			// matching the old Encore trigger's wait after Zeratul spawned.
+			waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveEnd - 1];
+			activeWaveRow = wave_spawns_array.waveSpawnFirstRow[activeWave];
+		} else {
+			finishWaveRows();
+		}
 	} else {
 		waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveRow];
 	}

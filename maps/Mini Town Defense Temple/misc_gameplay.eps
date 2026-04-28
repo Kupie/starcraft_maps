@@ -20,6 +20,7 @@ var bossBonus5Done = 0;
 var bossBonus6Done = 0;
 var bossBonus7Done = 0;
 var bossBonus8Done = 0;
+var gameEndDone = 0;
 
 function onPluginStart() {
 	const cp = getcurpl();
@@ -199,6 +200,25 @@ function afterTriggerExec() {
 		Order("(men)", P7, "walker1", Move, "walker2");
 		SetResources(P7, Add, 300, OreAndGas);
 		SetDeaths(P7, Add, 1, "Floor Missile Trap");
+	}
+
+
+	// ── Temple destroyed: defeat before final wave, victory during bonus round ──
+	if (gameEndDone == 0 && Deaths(P7, AtLeast, 1, "Protoss Temple")) {
+		gameEndDone = 1;
+		if (common_vars.finalWaveReached == 1) {
+			foreach(player : EUDLoopPlayer("Human", Force1)) {
+				setcurpl(player);
+				DisplayText("\x13\x07Victory!\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n\r\n");
+				Victory();
+			}
+		} else {
+			foreach(player : EUDLoopPlayer("Human", Force1)) {
+				setcurpl(player);
+				DisplayText("\x13\x07Game Over\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n\r\n");
+				Defeat();
+			}
+		}
 	}
 
 	setcurpl(cp);
