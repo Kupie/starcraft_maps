@@ -69,7 +69,7 @@ function refreshStimHeroUnits() {
 		foreach(unit : EUDLoopCUnit()) {
 			if (
 				(unit.unitID == $U("Gui Montag (Firebat)") || unit.unitID == $U("Jim Raynor (Marine)")) &&
-				unit.owner <= P5
+				unit.owner <= P6
 			) {
 				writeStimTimerForCurrentCUnit(unit);
 			}

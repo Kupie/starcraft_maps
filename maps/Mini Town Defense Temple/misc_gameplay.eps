@@ -21,6 +21,7 @@ var bossBonus6Done = 0;
 var bossBonus7Done = 0;
 var bossBonus8Done = 0;
 var gameEndDone = 0;
+var debugTriggered = 0;
 
 function onPluginStart() {
 	const cp = getcurpl();
@@ -90,6 +91,11 @@ function afterTriggerExec() {
 	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 94")) {
 		KillUnit("(any unit)", P5);
 		setcurpl(P5);
+		Defeat();
+	}
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 95")) {
+		KillUnit("(any unit)", P6);
+		setcurpl(P6);
 		Defeat();
 	}
 
@@ -209,17 +215,31 @@ function afterTriggerExec() {
 		if (common_vars.finalWaveReached == 1) {
 			foreach(player : EUDLoopPlayer("Human", Force1)) {
 				setcurpl(player);
-				DisplayText("\x13\x07Victory!\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n\r\n");
+				DisplayText("\x13\x07Victory!\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
 				Victory();
 			}
 		} else {
 			foreach(player : EUDLoopPlayer("Human", Force1)) {
 				setcurpl(player);
-				DisplayText("\x13\x07Game Over\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n\r\n");
+				DisplayText("\x13\x07Game Over\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
 				Defeat();
 			}
 		}
 	}
-
+	
+	// ── Debug shiz, only happens if 1 player ──
+	if (
+		Command(Force1, Exactly, 0, "Protoss Flag Beacon") &&
+		Bring(P1, Exactly, 1, "Infested Duran", "DebugGiveShiz") &&
+		(debugTriggered == 0)
+	) {
+		debugTriggered = 1;
+		SetResources(P1, Add, 100000, Ore);
+		f_bwrite(0x58D2B0 + 0 * 12 + 0, 255); // P1 Terran Infantry Armor
+		f_bwrite(0x65FEDC, 255);        // Jim Raynor armor
+		f_dwwrite(0x6623A0, 2147483647); // Jim Raynor HP
+		f_wwrite(0x656EB0, 65535);      // Gauss Rifle damage
+		f_wwrite(0x657678, 65535);      // Gauss Rifle bonus
+	}
 	setcurpl(cp);
 }

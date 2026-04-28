@@ -76,7 +76,7 @@ function onPluginStart() {
 
 function afterTriggerExec() {
 	foreach(player : EUDLoopPlayer(None, Force1)) {
-		var pidx = player;	// P1=0..P5=4
+		var pidx = player;	// P1=0..P6=5
 
 		foreach(lvl : py_range(NUM_LEVELS)) {
 			var slot = pidx * NUM_LEVELS + lvl;

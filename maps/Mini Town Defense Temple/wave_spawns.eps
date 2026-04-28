@@ -39,7 +39,7 @@ function onPluginStart() {
 	startupGrace = 0;
 	common_vars.bossWaveActive = 0;
 	common_vars.finalWaveReached = 0;
-	SetCountdownTimer(SetTo, 210);
+	SetCountdownTimer(SetTo, 220);
 }
 
 function orderP8WaveUnits() {
@@ -60,7 +60,7 @@ function startWave(waveNumber) {
 
 	if (waveNumber == wave_spawns_array.NUM_WAVES && common_vars.finalWaveReached == 0) {
 		common_vars.finalWaveReached = 1;
-		DisplayTextAll("\x13\x07Thanks For Playing!  You Won! Now survive for as long as you can on the endless bonus round! Goodluck!\r\n\x13\x062high - 2014\r\n\r\n\r\n\r\n\r\n\r\n");
+		DisplayTextAll("\x13\x07Thanks For Playing!  You Won! Now survive for as long as you can on the endless bonus round! Goodluck!\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high - 2014\r\n\r\n\r\n\r\n\r\n");
 	}
 }
 

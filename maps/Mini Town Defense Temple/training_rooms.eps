@@ -127,9 +127,9 @@ function afterTriggerExec() {
 		foreach(i : py_range(6)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", archonLocs[i]) &&
-				Bring(P6, Exactly, 0, "Protoss Archon", archonLocs[i])
+				Bring(P8, Exactly, 0, "Protoss Archon", archonLocs[i])
 			) {
-				CreateUnitWithProperties(5, "Protoss Archon", archonLocs[i], P6, prop_shield);
+				CreateUnitWithProperties(5, "Protoss Archon", archonLocs[i], P8, prop_shield);
 			}
 		}
 
@@ -137,9 +137,9 @@ function afterTriggerExec() {
 		foreach(i : py_range(6)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", dragonLocs[i]) &&
-				Bring(P6, Exactly, 0, "Protoss Dragoon", dragonLocs[i])
+				Bring(P8, Exactly, 0, "Protoss Dragoon", dragonLocs[i])
 			) {
-				CreateUnitWithProperties(5, "Protoss Dragoon", dragonLocs[i], P6, prop_shield);
+				CreateUnitWithProperties(5, "Protoss Dragoon", dragonLocs[i], P8, prop_shield);
 			}
 		}
 
@@ -147,9 +147,9 @@ function afterTriggerExec() {
 		foreach(i : py_range(9)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", hydraLocs[i]) &&
-				Bring(P6, Exactly, 0, "Zerg Hydralisk", hydraLocs[i])
+				Bring(P8, Exactly, 0, "Zerg Hydralisk", hydraLocs[i])
 			) {
-				CreateUnit(5, "Zerg Hydralisk", hydraLocs[i], P6);
+				CreateUnit(5, "Zerg Hydralisk", hydraLocs[i], P8);
 			}
 		}
 
@@ -157,9 +157,9 @@ function afterTriggerExec() {
 		foreach(i : py_range(6)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", ultraLocs[i]) &&
-				Bring(P6, Exactly, 0, "Zerg Ultralisk", ultraLocs[i])
+				Bring(P8, Exactly, 0, "Zerg Ultralisk", ultraLocs[i])
 			) {
-				CreateUnit(5, "Zerg Ultralisk", ultraLocs[i], P6);
+				CreateUnit(5, "Zerg Ultralisk", ultraLocs[i], P8);
 			}
 		}
 
@@ -167,9 +167,9 @@ function afterTriggerExec() {
 		foreach(i : py_range(6)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", lurkerLocs[i]) &&
-				Bring(P6, Exactly, 0, "Zerg Lurker", lurkerLocs[i])
+				Bring(P8, Exactly, 0, "Zerg Lurker", lurkerLocs[i])
 			) {
-				CreateUnitWithProperties(5, "Zerg Lurker", lurkerLocs[i], P6, prop_lurker);
+				CreateUnitWithProperties(5, "Zerg Lurker", lurkerLocs[i], P8, prop_lurker);
 			}
 		}
 
@@ -177,21 +177,16 @@ function afterTriggerExec() {
 		foreach(i : py_range(6)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", zerglingLocs[i]) &&
-				Bring(P6, Exactly, 0, "Zerg Zergling", zerglingLocs[i])
+				Bring(P8, Exactly, 0, "Zerg Zergling", zerglingLocs[i])
 			) {
-				CreateUnit(5, "Zerg Zergling", zerglingLocs[i], P6);
+				CreateUnit(5, "Zerg Zergling", zerglingLocs[i], P8);
 			}
 		}
 	}
 
-	// ── Despawn orphan P6 mobs ────────────────────────────────────────────
+	// ── Despawn orphan P8 mobs ────────────────────────────────────────────
 	foreach(i : py_range(3)) {
-		if (
-			Bring(Force1, Exactly, 0, "(men)", despawnLocs[i]) &&
-			Bring(P6, AtLeast, 1, "(men)", despawnLocs[i])
-		) {
-			RemoveUnitAt(All, "(men)", despawnLocs[i], P6);
-		}
+		RemoveUnitAt(All, "(men)", despawnLocs[i], P8);
 	}
 
 	setcurpl(cp);

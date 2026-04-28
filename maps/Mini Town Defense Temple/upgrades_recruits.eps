@@ -34,13 +34,14 @@ function afterTriggerExec() {
 
 	foreach(player : EUDLoopPlayer("Human", Force1)) {
 		foreach(i : py_range(8)) {
-			// Player in beacon → give buildings from P7 to player
+			// Player in beacon → give buildings from P10 to player
 			if (Bring(player, AtLeast, 1, "(men)", beaconLocs[i])) {
-				GiveUnits(All, "(buildings)", P7, buildingLocs[i], player);
+				GiveUnits(All, "(buildings)", P10, buildingLocs[i], player);
 			}
-			// Player not in beacon → give buildings back to P7
+			// Player not in beacon → give buildings back to P10
 			if (Bring(player, Exactly, 0, "(men)", beaconLocs[i])) {
 				GiveUnits(All, "(buildings)", player, buildingLocs[i], P7);
+				GiveUnits(All, "(buildings)", P7, buildingLocs[i], P10);
 			}
 		}
 	}
