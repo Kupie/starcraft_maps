@@ -9,6 +9,8 @@
 
 import common_vars;
 
+var dtStatusFlagAddr = 0;
+
 var introTimer = 256;
 var townAttackWarnShown = 0;
 
@@ -16,15 +18,6 @@ function onPluginStart() {
 	const cp = getcurpl();
 
 	// ── Alliance setup ──────────────────────────────────────────────────────
-	foreach(player : EUDLoopPlayer("Human", Force1)) {
-		setcurpl(player);
-		SetAllianceStatus(P7, Ally);
-		SetAllianceStatus(P8, Enemy);
-		SetAllianceStatus(P9, Ally);
-		SetAllianceStatus(P10, Ally);
-		SetAllianceStatus(P11, Ally);
-	}
-
 	setcurpl(P7);
 	foreach(player : EUDLoopPlayer("Human", Force1)) {
 		SetAllianceStatus(player, Ally);
@@ -76,24 +69,42 @@ function onPluginStart() {
 	SetResources(P7, Add, 50000, OreAndGas);
 	RunAIScriptAt("Terran Expansion Custom Level", "CPUTown"); // Terran AI
 	
-	// spawn dark templar (hero) after setting it as NOT perm cloaked, then reset unit data back to be cloaked, also make it small so the fucker will spawn easier
-	SetMemory(0x6641A8, Add, -0x400000); // units:Special Ability Flags  index:74 (Dark Templar Hero) disable permanent cloaking
-	SetMemory(0x662988, Add, -1900544); //   units:StarEdit Placement Box Height  index:74    from 30 To 1
-	SetMemory(0x661A18, Add, -327680); //   units:Unit Size Up  index:74    from 6 To 1
-	SetMemory(0x661A18, Add, -11); //   units:Unit Size Left  index:74    from 12 To 1
-	SetMemory(0x661A1C, Add, -10); //   units:Unit Size Right  index:74    from 11 To 1
-	SetMemory(0x661A1C, Add, -1179648); //   units:Unit Size Down  index:74    from 19 To 1
-	
-	CreateUnit(1, "Dark Templar (Hero)", "dtHeroSelectionSpawner", P7);
-	GiveUnits(All, "Dark Templar (Hero)", P7, "dtHeroSelectionSpawner", P9);
-	//Order("Dark Templar (Hero)",P7,"Anywhere",1,"Anywhere");
-	// Reset it all
-	SetMemory(0x6641A8, Add, 0x400000); // units:Special Ability Flags  index:74 (Dark Templar Hero) enable permanent cloaking
-	SetMemory(0x662988, Add, 1900544); //  
-	SetMemory(0x661A18, Add, 327680); //   
-	SetMemory(0x661A18, Add, 11); //  
-	SetMemory(0x661A1C, Add, 10); //  
-	SetMemory(0x661A1C, Add, 1179648); //  
+//	// spawn dark templar (hero) after setting it as NOT perm cloaked, then reset unit data back to be cloaked, also make it small so the fucker will spawn easier
+//	SetMemory(0x6641A8, Add, -0x400000); // units:Special Ability Flags  index:74 (Dark Templar Hero) disable permanent cloaking
+//	SetMemory(0x662988, Add, -1900544); //   units:StarEdit Placement Box Height  index:74    from 30 To 1
+//	SetMemory(0x661A18, Add, -327680); //   units:Unit Size Up  index:74    from 6 To 1
+//	SetMemory(0x661A18, Add, -11); //   units:Unit Size Left  index:74    from 12 To 1
+//	SetMemory(0x661A1C, Add, -10); //   units:Unit Size Right  index:74    from 11 To 1
+//	SetMemory(0x661A1C, Add, -1179648); //   units:Unit Size Down  index:74    from 19 To 1
+//	
+//	//CreateUnit(1, "Dark Templar (Hero)", "dtHeroSelectionSpawner", P7);
+//	//GiveUnits(All, "Dark Templar (Hero)", P7, "dtHeroSelectionSpawner", P9);
+//
+
+
+
+
+	// ── NEW TEST TO MAKE DT VISIBLE: ────────────────────
+	// ── One-time cloak flag clear on the P9 Dark Templar ────────────────────
+	// Test: if the engine doesn't re-apply cloak flags each frame, this is all
+	// we need. If it re-cloaks, we'll need to move this to afterTriggerExec.
+	// Clearing: Cloaked (0x200) | CloakingForFree (0x800) | RequiresDetection (0x100)
+	//           combined mask = 0x00000B00
+	foreach(unit : EUDLoopCUnit()) {
+		if (unit.unitID == $U("Dark Templar (Hero)") && unit.owner == P9) {
+			dtStatusFlagAddr = unit * 4 + 0x58A364 + 0xDC;
+		//	printAll("DEBUG: Found DT Hero P9 — EPD={}, statusAddr={}", unit, dtStatusFlagAddr); //DEBUG ONLY
+		}
+	}
+
+//	//Order("Dark Templar (Hero)",P7,"Anywhere",1,"Anywhere");
+//	// Reset it all
+//	SetMemory(0x6641A8, Add, 0x400000); // units:Special Ability Flags  index:74 (Dark Templar Hero) enable permanent cloaking
+//	SetMemory(0x662988, Add, 1900544); //  
+//	SetMemory(0x661A18, Add, 327680); //   
+//	SetMemory(0x661A18, Add, 11); //  
+//	SetMemory(0x661A1C, Add, 10); //  
+//	SetMemory(0x661A1C, Add, 1179648); //  
 
 	// Set pauses to 200
 	dwwrite(0x0058d718, 200);
@@ -240,7 +251,16 @@ function afterTriggerExec() {
 	var tileID = 110;
 	// then access tile at (x, y):
 	wwrite(mtxmAddr + (y * mapWidth + x) * 2, tileID);
-	
-	
+
+	// ── Every-frame cloak clear on P9 Dark Templar ──────────────────────────
+	// Engine re-applies cloak each frame for permanently cloaked units,
+	// so we must clear these bits every frame.
+	// we clear RequiresDetection and Cloaked so the unit is selectable, then use a placed "sprite only" since I can't figure out making the unit look normal yet
+	// dtStatusFlagAddr is set in onPluginStart when the unit is found.
+	if (dtStatusFlagAddr >= 1) {
+		SetMemoryX(dtStatusFlagAddr, SetTo, 0, 0x00000300);	// clears bits 0x100, 0x200, 0x800
+		
+	}
+
 	setcurpl(cp);
 }
