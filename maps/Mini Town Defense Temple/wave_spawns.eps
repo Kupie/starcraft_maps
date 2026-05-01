@@ -23,6 +23,8 @@ var waitingForClear = 0;
 var roundArmed = 0;
 var startupGrace = 0;
 
+var setHitPointsTo = EUDVariable(100);
+
 const waveStarted = EUDArray(wave_spawns_array.NUM_WAVES + 1);
 
 function onPluginStart() {
@@ -39,7 +41,7 @@ function onPluginStart() {
 	startupGrace = 0;
 	common_vars.bossWaveActive = 0;
 	common_vars.finalWaveReached = 0;
-	SetCountdownTimer(SetTo, 220);
+	SetCountdownTimer(SetTo, 225);
 }
 
 function orderP8WaveUnits() {
@@ -89,10 +91,24 @@ function spawnCurrentRow() {
 		return;
 	}
 
+
+
+	var hpPercent = 100;
+	if (common_vars.EasyModeEnable == 2) {
+		hpPercent = common_vars.numPlayers * 100 / 6;
+ 
+		if (hpPercent < 15)  { hpPercent = 15; }   // minimum 15%
+		if (hpPercent > 100) { hpPercent = 100; }  // maximum 100%
+	}
+
 	foreach(unitIndex : py_range(0, wave_spawns_array.NUM_WAVE_UNITS)) {
 		var count = wave_spawns_array.waveSpawnCounts[activeWaveRow][unitIndex];
 		if (count > 0) {
 			CreateUnit(count, wave_spawns_array.waveSpawnUnitIndex[unitIndex], "Location 1", P8);
+			if (common_vars.EasyModeEnable == 2) {
+				ModifyUnitHitPoints(All, "(men)", P8, "Location 1", hpPercent);
+			}
+			
 		}
 	}
 

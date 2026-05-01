@@ -23,6 +23,7 @@ var bossBonus8Done = 0;
 var gameEndDone = 0;
 var debugTriggered = 0;
 
+
 function onPluginStart() {
 	const cp = getcurpl();
 
@@ -204,8 +205,6 @@ function afterTriggerExec() {
 		}
 		MoveUnit(1, "(men)", P7, "walker turf", "walker1");
 		Order("(men)", P7, "walker1", Move, "walker2");
-		SetResources(P7, Add, 300, OreAndGas);
-		SetDeaths(P7, Add, 1, "Floor Missile Trap");
 	}
 
 
@@ -213,19 +212,39 @@ function afterTriggerExec() {
 	if (gameEndDone == 0 && Deaths(P7, AtLeast, 1, "Protoss Temple")) {
 		gameEndDone = 1;
 		if (common_vars.finalWaveReached == 1) {
-			foreach(player : EUDLoopPlayer("Human", Force1)) {
+			foreach(player : EUDLoopPlayer("Human")) {
 				setcurpl(player);
 				DisplayText("\x13\x07Victory!\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
 				Victory();
 			}
 		} else {
-			foreach(player : EUDLoopPlayer("Human", Force1)) {
+			foreach(player : EUDLoopPlayer("Human")) {
 				setcurpl(player);
 				DisplayText("\x13\x07Game Over\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
 				Defeat();
 			}
 		}
 	}
+	
+	// ── Easy Mode Enabler ──
+	// State 0 → 1: show prompt, warp Duran back. Not enabled yet.
+	// State 1 → 2: confirmed, enable easy mode, show confirmation.
+	if (Bring(P1, Exactly, 1, "Infested Duran", "EasyModeEnableLoc")) {
+		setcurpl(P1);
+		if (common_vars.EasyModeEnable == 0) {
+			DisplayText("\x1FEnable Adjusted HP Mode? This will make enemy spawn HP adjusted to how many active players there are.");
+			DisplayText("\x1FSend Infested Duran to the beacon again to confirm.");
+			MoveUnit(1, "Infested Duran", P1, "EasyModeEnableLoc", "BanArea");
+			common_vars.EasyModeEnable = 1;
+		} else if (common_vars.EasyModeEnable == 1) {
+			DisplayTextAll("\x07Enemy waves adjusted to number of players.");
+			MoveUnit(1, "Infested Duran", P1, "EasyModeEnableLoc", "BanArea");
+			common_vars.EasyModeEnable = 2;
+			RemoveUnitAt(1, "Vespene Tank (Terran Type 1)", "EasyModeEnableLoc", P7);
+		}
+	}
+	
+	
 	
 	// ── Debug shiz, only happens if 1 player ──
 	if (
@@ -235,11 +254,45 @@ function afterTriggerExec() {
 	) {
 		debugTriggered = 1;
 		SetResources(P1, Add, 100000, Ore);
-		f_bwrite(0x58D2B0 + 0 * 12 + 0, 255); // P1 Terran Infantry Armor
+		DisplayTextAll("DEBUG MODE ENABLED");
+		DisplayTextAll("DEBUG MODE ENABLED");
+		DisplayTextAll("DEBUG MODE ENABLED");
+		DisplayTextAll("DEBUG MODE ENABLED");
 		f_bwrite(0x65FEDC, 255);        // Jim Raynor armor
 		f_dwwrite(0x6623A0, 2147483647); // Jim Raynor HP
 		f_wwrite(0x656EB0, 65535);      // Gauss Rifle damage
 		f_wwrite(0x657678, 65535);      // Gauss Rifle bonus
+		
+		// Player 1 normal upgrades (0-45), base 0x58D2B0, stride 46 bytes
+		dwwrite(0x58D2B0, 0xFFFFFFFF);  // upgrades 0-3
+		dwwrite(0x58D2B4, 0xFFFFFFFF);  // upgrades 4-7
+		dwwrite(0x58D2B8, 0xFFFFFFFF);  // upgrades 8-11
+		dwwrite(0x58D2BC, 0xFFFFFFFF);  // upgrades 12-15
+		dwwrite(0x58D2C0, 0xFFFFFFFF);  // upgrades 16-19
+		dwwrite(0x58D2C4, 0xFFFFFFFF);  // upgrades 20-23
+		dwwrite(0x58D2C8, 0xFFFFFFFF);  // upgrades 24-27
+		dwwrite(0x58D2CC, 0xFFFFFFFF);  // upgrades 28-31
+		dwwrite(0x58D2D0, 0xFFFFFFFF);  // upgrades 32-35
+		dwwrite(0x58D2D4, 0xFFFFFFFF);  // upgrades 36-39
+		dwwrite(0x58D2D8, 0xFFFFFFFF);  // upgrades 40-43
+		dwwrite(0x58D2DC, 0x0000FFFF);  // upgrades 44-45
+		
+		// Player 1 BW upgrades (46-57), base 0x58F32C, stride 12 bytes
+		dwwrite(0x58F32C, 0xFFFFFFFF);  // BW upgrades 46-49
+		dwwrite(0x58F330, 0xFFFFFFFF);  // BW upgrades 50-53
+		dwwrite(0x58F334, 0xFFFFFFFF);  // BW upgrades 54-57
+		
+		
+		
+	}
+	
+	
+	
+	
+	// Set numPlayers to currently active player amount
+	common_vars.numPlayers = 0;
+	foreach(player : EUDLoopPlayer("Human")) {
+		common_vars.numPlayers++;
 	}
 	setcurpl(cp);
 }

@@ -15,3 +15,14 @@ var leaderboardTimer = 0;
 var waveStartupGraceInit = 12;
 // Set once the final bonus wave starts. Used for victory vs defeat logic.
 var finalWaveReached = 0;
+
+const playerList = list(P1, P2, P3, P4, P5, P6, P7, P8);
+const visionShare = list("+Vi0","+Vi1","+Vi2","+Vi3","+Vi4","+Vi5","+Vi6","+Vi7");
+const visionShareP8 = list("-Vi0","-Vi1","-Vi2","-Vi3","-Vi4","-Vi5","+Vi6","+Vi7");
+
+// Number of active human players
+var numPlayers = 0;
+
+
+// Easy Mode enabled? (Currently just makes HP of enemies be 1/5 * number of players)
+var EasyModeEnable = 0;

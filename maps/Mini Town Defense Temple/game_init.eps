@@ -7,7 +7,9 @@
 // RunAIScript(Script)                     -- acts on CurrentPlayer
 // Order(unit, player, startArea, order, targetLoc) -- Patrol is a bare constant
 
-var introTimer = 226;
+import common_vars;
+
+var introTimer = 256;
 var townAttackWarnShown = 0;
 
 function onPluginStart() {
@@ -30,33 +32,34 @@ function onPluginStart() {
 	setcurpl(P7);
 	SetAllianceStatus(P8, Enemy);
 
-	//setcurpl(P6);
-	//SetAllianceStatus(P7, Ally);
-
 	setcurpl(P8);
 	SetAllianceStatus(P7, Enemy);
 	foreach(player : EUDLoopPlayer("Human", Force1)) {
-		setcurpl(P8);
 		SetAllianceStatus(player, Enemy);
 	}
+	
+	// Set CPU to see P9-12 as allys too
+	SetAllianceStatus(P9, Ally);
+	SetAllianceStatus(P10, Ally);
+	SetAllianceStatus(P11, Ally);
+	SetAllianceStatus(P12, Ally);
 
-	// ── AI scripts ──────────────────────────────────────────────────────────
-	foreach(player : EUDLoopPlayer(None)) {
-		setcurpl(player);
-		RunAIScript("+Vi0");
-		RunAIScript("+Vi1");
-		RunAIScript("+Vi2");
-		RunAIScript("+Vi3");
-		RunAIScript("+Vi4");
-		RunAIScript("+Vi5");
-		RunAIScript("+Vi6");
-	//	RunAIScript("+Vi7");
-	}
-	foreach(player : EUDLoopPlayer("Human")) {
-		setcurpl(player);
-		RunAIScript("-Vi7");
+	// ── First set all P1-P7 to see everyone else ─────────────────────────────────────────
+	foreach(i : py_range(7)) {
+		setcurpl(common_vars.playerList[i]);
+		foreach(i : py_range(8)) {
+			RunAIScript(common_vars.visionShare[i]);
+		}
 	}
 
+	
+	// 	── Then take it away so P8 cannot see cloaked/burrowed P1-P6 units ────────────────────────────────────
+	setcurpl(P8);
+	foreach(i : py_range(8)) {
+		RunAIScript(common_vars.visionShareP8[i]);
+	}
+		
+		
 	// ── Starting gold ───────────────────────────────────────────────────────
 	foreach(player : EUDLoopPlayer("Human", Force1)) {
 		SetResources(player, Add, 200, Ore);
@@ -65,48 +68,132 @@ function onPluginStart() {
 	// ── Mission objectives ──────────────────────────────────────────────────
 	SetMissionObjectivesAll("Levels at 500, 1k, 2k, 3k, 5k, 7k, 10k, 15k, 20k, 25k, 35k, 50k, 75k, 100k, 130k, 170k, 220k, 280k, 350k, and 400k experience. Rewards up to 20,000 minerals.\r\n\r\n\x04open source: github @Kupie/starcraft_maps");
 
-	introTimer = 226;
+	introTimer = 256;
 	
 	
 	// ── Try to get CPU to rebuild town  ────────────────────────────
 	setcurpl(P7);
 	SetResources(P7, Add, 50000, OreAndGas);
 	RunAIScriptAt("Terran Expansion Custom Level", "CPUTown"); // Terran AI
-		
+	
+	// spawn dark templar (hero) after setting it as NOT perm cloaked, then reset unit data back to be cloaked, also make it small so the fucker will spawn easier
+	SetMemory(0x6641A8, Add, -0x400000); // units:Special Ability Flags  index:74 (Dark Templar Hero) disable permanent cloaking
+	SetMemory(0x662988, Add, -1900544); //   units:StarEdit Placement Box Height  index:74    from 30 To 1
+	SetMemory(0x661A18, Add, -327680); //   units:Unit Size Up  index:74    from 6 To 1
+	SetMemory(0x661A18, Add, -11); //   units:Unit Size Left  index:74    from 12 To 1
+	SetMemory(0x661A1C, Add, -10); //   units:Unit Size Right  index:74    from 11 To 1
+	SetMemory(0x661A1C, Add, -1179648); //   units:Unit Size Down  index:74    from 19 To 1
+	
+	CreateUnit(1, "Dark Templar (Hero)", "dtHeroSelectionSpawner", P7);
+	GiveUnits(All, "Dark Templar (Hero)", P7, "dtHeroSelectionSpawner", P9);
+	//Order("Dark Templar (Hero)",P7,"Anywhere",1,"Anywhere");
+	// Reset it all
+	SetMemory(0x6641A8, Add, 0x400000); // units:Special Ability Flags  index:74 (Dark Templar Hero) enable permanent cloaking
+	SetMemory(0x662988, Add, 1900544); //  
+	SetMemory(0x661A18, Add, 327680); //   
+	SetMemory(0x661A18, Add, 11); //  
+	SetMemory(0x661A1C, Add, 10); //  
+	SetMemory(0x661A1C, Add, 1179648); //  
+
+	// Set pauses to 200
+	dwwrite(0x0058d718, 200);
+	
 	setcurpl(cp);
+	
 }
 
 function afterTriggerExec() {
 	const cp = getcurpl();
 
 	// ── Intro sequence countdown ────────────────────────────────────────────
+	// introTimer counts down from 256 to 0.
+	//
+	// Phase 1 — Temple warning  (t=256..171): eprintAll flashes between
+	//   red \x06 and yellow \x04, alternating every 15 frames via % 30.
+	//   Sound + minimap ping + CenterView only on the very first show (t=255).
+	//
+	// Phase 2 — Hero select     (t=170..61):  eprintAll flashes between
+	//   white \x04 and green \x07, alternating every 15 frames via % 30.
+	//   Sound + CenterView + minimap ping only on the very first show (t=169).
+	//   Minimap pings repeat at t=122, 98, 74.
+	//
+	// Phase 3 — Changelog       (t=60 and t=0): printAllAt lines 0-8.
+	//   eprintAll hero prompt re-shown with sound at both t=60 and t=0
+	//   so it stays visible through the end of the sequence.
+	//
+	// eprintAll is the error-message area (below screen center) —
+	// completely separate from the printAllAt scroll lines 0-10.
+
 	if (introTimer >= 1) {
 		introTimer--;
-		if (introTimer == 225) {
-			DisplayTextAll("YOU MUST DEFEND THE TEMPLE.  Every round!");
-			MinimapPingAll("Temple");
-			PlayWAVAll("sound/misc/transmission.wav");
-			CenterViewAll("Temple");
+
+		// ── Phase 1: Temple warning flash (t=255..171) ───────────────────
+		if (introTimer >= 171 && introTimer <= 255) {
+			// First frame only: sound + minimap + center view
+			if (introTimer == 255) {
+				PlayWAVAll("sound/misc/transmission.wav");
+				MinimapPingAll("Temple");
+				CenterViewAll("Temple");
+			}
+			// Flash every 15 frames: remainder 0 = white, remainder 15 = yellow
+			var templeRem = introTimer % 30;
+			if (templeRem == 0)  { eprintAll("\x04YOU MUST DEFEND THE TEMPLE.  Every round!"); }
+			if (templeRem == 15) { eprintAll("\x03YOU MUST DEFEND THE TEMPLE.  Every round!"); }
 		}
-		if (introTimer == 121) {
-			DisplayTextAll("\x04Now \x06S\x04elect \x06Y\x04our \x06H\x04ero and get some cash!\r\n\r\n\r\n\r\n\r\n");
-			CenterViewAll("_Heropick");
-			PlayWAVAll("sound/misc/transmission.wav");
+
+		// ── Phase 2: Hero select flash (t=170..61) ───────────────────────
+		if (introTimer >= 0 && introTimer <= 170) {
+			// First frame only: sound + center view
+			if (introTimer == 170) {
+				PlayWAVAll("sound/misc/transmission.wav");
+				CenterViewAll("_Heropick");
+			}
+			// Flash every 15 frames: remainder 15 = green, remainder 0 = white
+			var heroRem = introTimer % 30;
+			if (heroRem == 0)  { eprintAll("\x04Now Select Your Hero and get some cash!"); }
+			if (heroRem == 15) { eprintAll("\x07Now Select Your Hero and get some cash!"); }
 		}
-		if (introTimer == 122) {
-			MinimapPingAll("_Heropick");
+
+		// Minimap pings for hero area
+		if (introTimer == 122) { MinimapPingAll("_Heropick"); }
+		if (introTimer == 98)  { MinimapPingAll("_Heropick"); }
+		if (introTimer == 74)  { MinimapPingAll("_Heropick"); }
+
+		// ── Phase 3a: Changelog first display (t=80) ─────────────────────
+		if (introTimer == 80) {
+			printAllAt(0, "\x13\x12Map revamped with EUD + Turbo triggers by Kupie 2026");
+			printAllAt(1, "\x13\x12Testing version 1");
+			printAllAt(2, "\x13\x12open source: https://github.com/Kupie/starcraft_maps");
+		//	printAllAt(3, "");
+			printAllAt(4, "\x13\x12Gameplay changes:");
+			printAllAt(5, "\x13\x12- Marine/Firebat heroes permastimmed");
+			printAllAt(6, "\x13\x12- Firebat slightly nerfed");
+			printAllAt(7, "\x13\x12- Zerg heroes share the same attack upgrade");
+			printAllAt(8, "\x13\x12- Upgrades/Recruit available at every upgrade building");
+		//	PlayWAVAll("sound/misc/transmission.wav");
+			//Order("Dark Templar (Hero)",P7,"Anywhere",1,"Anywhere");
 		}
-		if (introTimer == 98) {
-			MinimapPingAll("_Heropick");
+
+		// ── Phase 3b: Changelog re-display (t=0) — refreshes before expiry
+		if (introTimer == 1) {
+			//Order("Dark Templar (Hero)",P7,"Anywhere",1,"Anywhere");
+			
 		}
-		if (introTimer == 74) {
-			MinimapPingAll("_Heropick");
-		}
+		// ── Phase 3b: Changelog re-display (t=0) — refreshes before expiry
 		if (introTimer == 0) {
-			DisplayTextAll("\x13\x04Map revamped with EUD + Turbo triggers by Kupie 2026\r\n\x13\x04Testing version 1\r\n\x13\x04open source: https://github.com/Kupie/starcraft_maps\r\n\r\n\x13\x04Gameplay changes:\r\n\x13\x04- Marine/Firebat heroes permastimmed\r\n\x13\x04- Firebat slightly nerfed\r\n\x13\x04- Zerg heroes share the same attack upgrade\r\n\x13\x04- Upgrades/Recruit available at every upgrade building\r\n\x13\x04- Tassadar no longer slow as shit\r\n");
-			PlayWAVAll("sound/misc/transmission.wav");
+			printAllAt(0, "\x13\x12Map revamped with EUD + Turbo triggers by Kupie 2026");
+			printAllAt(1, "\x13\x12Testing version 1");
+			printAllAt(2, "\x13\x12open source: https://github.com/Kupie/starcraft_maps");
+		//	printAllAt(3, "");
+			printAllAt(4, "\x13\x12Gameplay changes:");
+			printAllAt(5, "\x13\x12- Marine/Firebat heroes permastimmed");
+			printAllAt(6, "\x13\x12- Firebat slightly nerfed");
+			printAllAt(7, "\x13\x12- Zerg heroes share the same attack upgrade");
+			printAllAt(8, "\x13\x12- Upgrades/Recruit available at every upgrade building");
+		//	PlayWAVAll("sound/misc/transmission.wav");
 		}
 	}
+
 
 
 	// ── Town-attack warning + hero retreat (timer 5) ──────────────────────
@@ -132,10 +219,6 @@ function afterTriggerExec() {
 		townAttackWarnShown = 0;
 	}
 
-	// ── P6 re-allies P7 every frame ─────────────────────────────────────────
-	//setcurpl(P6);
-	//SetAllianceStatus(P7, Ally);
-
 	// ── Heroes stay allied to each other and P7 every frame ─────────────────
 	foreach(player : EUDLoopPlayer("Human", Force1)) {
 		setcurpl(player);
@@ -149,6 +232,15 @@ function afterTriggerExec() {
 	if (Bring(P12, AtLeast, 1, "(men)", "Anywhere")) {
 		KillUnit("(men)", P12);
 	}
-
+	
+	var mtxmAddr = dwread(0x5993C4);
+	var mapWidth = 96;
+	var x = 9;
+	var y = 11;
+	var tileID = 110;
+	// then access tile at (x, y):
+	wwrite(mtxmAddr + (y * mapWidth + x) * 2, tileID);
+	
+	
 	setcurpl(cp);
 }

@@ -1,0 +1,32 @@
+var DeathAmount = 0;
+var DeathDisplayed = 0;
+
+function afterTriggerExec() {
+	var chatVal = bread(0x58D900);
+	if (chatVal >= 1) {
+		eprintAll("0x58D900 = {}", chatVal);
+	}
+	foreach(player : py_range(12)) {
+		if (Deaths(player, AtLeast, 1, "Unused type   2")) {
+			printAll("player {} detected", player);
+			if      (Deaths(player, AtLeast, 65536, "Unused type   2")) { printAll("  = 65536"); }
+			else if (Deaths(player, AtLeast, 32768, "Unused type   2")) { printAll("  = 32768"); }
+			else if (Deaths(player, AtLeast, 16384, "Unused type   2")) { printAll("  = 16384"); }
+			else if (Deaths(player, AtLeast, 8192,  "Unused type   2")) { printAll("  = 8192"); }
+			else if (Deaths(player, AtLeast, 4096,  "Unused type   2")) { printAll("  = 4096"); }
+			else if (Deaths(player, AtLeast, 2048,  "Unused type   2")) { printAll("  = 2048"); }
+			else if (Deaths(player, AtLeast, 1024,  "Unused type   2")) { printAll("  = 1024"); }
+			else if (Deaths(player, AtLeast, 512,   "Unused type   2")) { printAll("  = 512"); }
+			else if (Deaths(player, AtLeast, 256,   "Unused type   2")) { printAll("  = 256"); }
+			else if (Deaths(player, AtLeast, 128,   "Unused type   2")) { printAll("  = 128"); }
+			else if (Deaths(player, AtLeast, 64,    "Unused type   2")) { printAll("  = 64"); }
+			else if (Deaths(player, AtLeast, 32,    "Unused type   2")) { printAll("  = 32"); }
+			else if (Deaths(player, AtLeast, 16,    "Unused type   2")) { printAll("  = 16"); }
+			else if (Deaths(player, AtLeast, 8,     "Unused type   2")) { printAll("  = 8"); }
+			else if (Deaths(player, AtLeast, 4,     "Unused type   2")) { printAll("  = 4"); }
+			else if (Deaths(player, AtLeast, 2,     "Unused type   2")) { printAll("  = 2"); }
+			else                                                         { printAll("  = 1"); }
+			SetDeaths(player, SetTo, 0, "Unused type   2");
+		}
+	}
+}

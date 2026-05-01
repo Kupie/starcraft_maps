@@ -1,0 +1,138 @@
+// easter_eggs.eps
+// Chat command detection via chatEvent + MSQC sync using PVariable.
+//
+// chatFlag[player] gets written by MSQC with the sum of all active chat bits.
+// flagCheck decodes from highest bit to lowest, firing each active cheat
+// and subtracting its value so lower bits still fire correctly.
+//
+// Chat map:
+//   65536 = cheat p
+//   32768 = cheat o
+//   16384 = cheat n
+//   8192  = cheat m
+//   4096  = cheat l
+//   2048  = cheat k
+//   1024  = cheat j
+//   512   = cheat i
+//   256   = cheat h
+//   128   = cheat g
+//   64    = cheat f
+//   32    = cheat e
+//   16    = cheat d
+//   8     = cheat c
+//   4     = cheat b
+//   2     = "power overwhelming"
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+
+const chatFlag = PVariable();
+EUDRegisterObjectToNamespace("chatFlag", chatFlag);
+
+var easterEggTriggered1 = 0;	// state for "power overwhelming" (0/1/2)
+
+function debugPrintChatVar() {
+	var chatVal = bread(0x58D900);
+	if (chatVal >= 1) {
+		eprintAll("0x58D900 = {}", chatVal);
+	}
+}
+
+function afterTriggerExec() {
+	debugPrintChatVar();
+	const cp = getcurpl();
+
+	foreach(player : EUDLoopPlayer(None)) {
+		if (chatFlag[player] >= 1) {
+			var flagCheck = chatFlag[player];
+			chatFlag[player] = 0;
+
+			// ── Decode from highest bit to lowest ─────────────────────────
+			if (flagCheck >= 65536) {
+				DisplayTextAll("\x07cheat p detected");
+				flagCheck = flagCheck - 65536;
+			}
+			if (flagCheck >= 32768) {
+				DisplayTextAll("\x07cheat o detected");
+				flagCheck = flagCheck - 32768;
+			}
+			if (flagCheck >= 16384) {
+				DisplayTextAll("\x07cheat n detected");
+				flagCheck = flagCheck - 16384;
+			}
+			if (flagCheck >= 8192) {
+				DisplayTextAll("\x07cheat m detected");
+				flagCheck = flagCheck - 8192;
+			}
+			if (flagCheck >= 4096) {
+				DisplayTextAll("\x07cheat l detected");
+				flagCheck = flagCheck - 4096;
+			}
+			if (flagCheck >= 2048) {
+				DisplayTextAll("\x07cheat k detected");
+				flagCheck = flagCheck - 2048;
+			}
+			if (flagCheck >= 1024) {
+				DisplayTextAll("\x07cheat j detected");
+				flagCheck = flagCheck - 1024;
+			}
+			if (flagCheck >= 512) {
+				DisplayTextAll("\x07cheat i detected");
+				flagCheck = flagCheck - 512;
+			}
+			if (flagCheck >= 256) {
+				DisplayTextAll("\x07cheat h detected");
+				flagCheck = flagCheck - 256;
+			}
+			if (flagCheck >= 128) {
+				DisplayTextAll("\x07cheat g detected");
+				flagCheck = flagCheck - 128;
+			}
+			if (flagCheck >= 64) {
+				DisplayTextAll("\x07cheat f detected");
+				flagCheck = flagCheck - 64;
+			}
+			if (flagCheck >= 32) {
+				DisplayTextAll("\x07cheat e detected");
+				flagCheck = flagCheck - 32;
+			}
+			if (flagCheck >= 16) {
+				DisplayTextAll("\x07cheat d detected");
+				flagCheck = flagCheck - 16;
+			}
+			if (flagCheck >= 8) {
+				DisplayTextAll("\x07cheat c detected");
+				flagCheck = flagCheck - 8;
+			}
+			if (flagCheck >= 4) {
+				DisplayTextAll("\x07cheat b detected");
+				flagCheck = flagCheck - 4;
+			}
+			if (flagCheck >= 2) {
+				// ── "power overwhelming" ──────────────────────────────────
+				if (easterEggTriggered1 == 0) {
+					SetResources(Force1, Add, 10, Ore);
+					DisplayTextAll("\x07Nice try! Here's 10 minerals for the trouble.");
+					easterEggTriggered1 = 1;
+				} else if (easterEggTriggered1 == 1) {
+					DisplayTextAll("\x07Go ahead, try it one more time");
+					easterEggTriggered1 = 2;
+				} else if (easterEggTriggered1 == 2) {
+					setcurpl(player);
+					DisplayTextAll("\x06I warned ya!");
+					DisplayText("\x06I warned ya!");
+					DisplayText("\x06I warned ya!");
+					DisplayText("\x06I warned ya!");
+					DisplayText("\x06I warned ya!");
+					SetInvincibility(Disable, "(men)", player, "Anywhere");
+					SetInvincibility(Enable, "Infested Duran", player, "Anywhere");
+					MoveUnit(All, "(men)", player, "Anywhere", "KillBox");
+					MoveUnit(All, "Infested Duran", player, "Anywhere", "BanArea");
+				}
+				flagCheck = flagCheck - 2;
+			}
+			// flagCheck should be 0 here if all bits accounted for
+		}
+	}
+
+	setcurpl(cp);
+}

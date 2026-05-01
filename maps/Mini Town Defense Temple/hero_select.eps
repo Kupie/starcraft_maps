@@ -42,38 +42,32 @@ const heroPickUnits = list(
 // 1 = requires no boss attack (P8 not in _area)
 const heroPickNoBoss = list(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
-// ── Always-stim refresh for Marine/Firebat heroes ─────────────────────────
-// CUnit stim timer byte: first CUnit address 0x59CDBD = CUnit + 0x115.
-// Byte offset within dword: 0x115 / 4 = 0x45, sub-byte 1.
-const STIM_TIMER_CUNIT_DWORD_OFFSET = 0x45;
-const STIM_TIMER_BYTE_OFFSET = 1;
-const STIM_TIMER_MAX = 255;
-const STIM_REFRESH_FRAMES = 2000;
+// ── Speed/Cooldown upgrade flags for Marine/Firebat heroes ──────────────────
+// Sets CUnit status flags 0x10000000 (SpeedUpgrade) and 0x20000000 (CooldownUpgrade)
+// once when unit is picked. applySpeedCooldownFlags() runs one frame after pick,
+// then resets to a huge value so it never runs again until next pick.
+//
+// 0x30000000 = SpeedUpgrade | CooldownUpgrade combined mask
 
-var stimRefreshTimer = 1;
+const SPEED_COOLDOWN_FLAGS = 0x30000000;
+const TIMER_IDLE = 0xFFFFFFFF;
 
-function writeStimTimerForCurrentCUnit(unit) {
-	const cp = getcurpl();
-	setcurpl(unit + STIM_TIMER_CUNIT_DWORD_OFFSET);
-	bwrite_cp(0, STIM_TIMER_BYTE_OFFSET, STIM_TIMER_MAX);
-	setcurpl(cp);
-}
+var stimRefreshTimer = TIMER_IDLE;
 
-function refreshStimHeroUnits() {
-	if (stimRefreshTimer > 0) {
-		stimRefreshTimer--;
-	}
-	if (stimRefreshTimer == 0) {
-		stimRefreshTimer = STIM_REFRESH_FRAMES;
-
+function applySpeedCooldownFlags() {
+	if (stimRefreshTimer == 1) {
+		stimRefreshTimer = TIMER_IDLE;
 		foreach(unit : EUDLoopCUnit()) {
 			if (
 				(unit.unitID == $U("Gui Montag (Firebat)") || unit.unitID == $U("Jim Raynor (Marine)")) &&
 				unit.owner <= P6
 			) {
-				writeStimTimerForCurrentCUnit(unit);
+				unit.set_status_flag(SPEED_COOLDOWN_FLAGS);
 			}
 		}
+	}
+	if (stimRefreshTimer >= 2) {
+		stimRefreshTimer--;
 	}
 }
 
@@ -92,7 +86,7 @@ function afterTriggerExec() {
 					CreateUnit(1, heroPickUnits[i], "_healing", player);
 
 					if (i == 1 || i == 8) {
-						stimRefreshTimer = 0;
+						stimRefreshTimer = 1;
 					}
 					
 					setcurpl(player);
@@ -104,7 +98,7 @@ function afterTriggerExec() {
 					RemoveUnitAt(1, "Terran Civilian", heroPickLocs[i], player);
 					CreateUnit(1, heroPickUnits[i], "_healing", player);
 					if (i == 1 || i == 8) {
-						stimRefreshTimer = 0;
+						stimRefreshTimer = 1;
 					}
 					setcurpl(player);
 					CenterView("_healing");
@@ -118,22 +112,21 @@ function afterTriggerExec() {
 			RemoveUnitAt(1, "Gui Montag (Firebat)", "_repick", player);
 			RemoveUnitAt(1, "Jim Raynor (Marine)", "_repick", player);
 			RemoveUnitAt(1, "(men)", "_repick", player);
-			CreateUnit(1, "Terran Civilian", "_Heropick", player);
+			CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", player, UnitProperty(invincible = True));
 			setcurpl(player);
 			CenterView("_Heropick");
 		}
 
 		// ── Recruit effect ────────────────────────────────────────────────
 		if (Command(player, AtLeast, 1, "Protoss Zealot")) {
-			CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", player,
-				UnitProperty(invincible = False));
+			CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", player, UnitProperty(invincible = True));
 			RemoveUnit("Protoss Zealot", player);
 			setcurpl(player);
 			DisplayText("\x13\x07Recruit Was A Success!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
 		}
 	}
 
-	refreshStimHeroUnits();
+	applySpeedCooldownFlags();
 
 	setcurpl(cp);
 }
