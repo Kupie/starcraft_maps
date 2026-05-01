@@ -59,6 +59,7 @@ function startWave(waveNumber) {
 	roundArmed = 0;
 	startupGrace = common_vars.waveStartupGraceInit;
 	common_vars.bossWaveActive = 1;
+	bwrite(0x58D3F7, 255);	// P8 Protoss Armor = 255 during boss wave
 
 	if (waveNumber == wave_spawns_array.NUM_WAVES && common_vars.finalWaveReached == 0) {
 		common_vars.finalWaveReached = 1;
@@ -83,6 +84,7 @@ function resetCountdownForNextWave() {
 	waitingForClear = 0;
 	roundArmed = 1;
 	common_vars.bossWaveActive = 0;
+	bwrite(0x58D3F7, 135);	// P8 Protoss Armor = 135 during training phase
 }
 
 function spawnCurrentRow() {
