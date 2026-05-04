@@ -46,7 +46,8 @@ const exitLocs = list(
 
 const archonLocs = list(
 	py_str("Location 82"), py_str("Location 83"), py_str("Location 84"),
-	py_str("Location 85"), py_str("Location 86"), py_str("Location 87")
+	py_str("Location 85"), py_str("Location 86"), py_str("Location 87"),
+	py_str("Location 83 2"), py_str("Location 85 2"), py_str("Location 87 2"),
 );
 const dragonLocs = list(
 	py_str("Location 76"), py_str("Location 77"), py_str("Location 78"),
@@ -59,7 +60,8 @@ const hydraLocs = list(
 );
 const ultraLocs = list(
 	py_str("Location 63"), py_str("Location 65"), py_str("Location 66"),
-	py_str("Location 67"), py_str("Location 68"), py_str("Location 69")
+	py_str("Location 67"), py_str("Location 68"), py_str("Location 69"),
+	py_str("Location 65 2"), py_str("Location 67 2"), py_str("Location 69 2")
 );
 const lurkerLocs = list(
 	py_str("Location 70"), py_str("Location 71"), py_str("Location 72"),
@@ -154,7 +156,7 @@ function afterTriggerExec() {
 		}
 
 		// ── Ultralisk training mob spawn (100% HP) ────────────────────────
-		foreach(i : py_range(6)) {
+		foreach(i : py_range(9)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", ultraLocs[i]) &&
 				Bring(P8, Exactly, 0, "Zerg Ultralisk", ultraLocs[i])

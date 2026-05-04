@@ -25,9 +25,10 @@ const TOTAL_SLOTS      = 160;	// 8 * 20
 // ~1.75s penalty display (42f) + ~3s respawn wait (72f) = ~4.75s total
 const TOTAL_DELAY = 114;
 
-const qTimer  = EUDArray(TOTAL_SLOTS);
-const qHead   = EUDArray(NUM_PLAYERS);
-const qCount  = EUDArray(NUM_PLAYERS);
+const qTimer     = EUDArray(TOTAL_SLOTS);
+const qHead      = EUDArray(NUM_PLAYERS);
+const qCount     = EUDArray(NUM_PLAYERS);
+const qCountLast = EUDArray(NUM_PLAYERS);
 
 function onPluginStart() {
 	const cp = getcurpl();
@@ -36,8 +37,9 @@ function onPluginStart() {
 		qTimer[i] = 0;
 	}
 	foreach(i : py_range(NUM_PLAYERS)) {
-		qHead[i]  = 0;
-		qCount[i] = 0;
+		qHead[i]      = 0;
+		qCount[i]     = 0;
+		qCountLast[i] = 0;
 	}
 
 	setcurpl(cp);
@@ -129,8 +131,9 @@ function afterTriggerExec() {
 				eprintln("\x06Respawning...");
 			}
 
-			// Show the count too
-			if (qCount[player] >= 1) {
+			// Show the count only when it changes
+			if (qCount[player] >= 1 && qCount[player] != qCountLast[player]) {
+				qCountLast[player] = qCount[player];
 				setcurpl(player);
 				printAt(10, "\x13\x04({} respawns queued)", qCount[player]);
 			}

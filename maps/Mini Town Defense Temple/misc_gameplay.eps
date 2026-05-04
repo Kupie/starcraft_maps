@@ -310,6 +310,9 @@ function afterTriggerExec() {
 	ModifyUnitHitPoints(All, "(men)", P11, "Anywhere", 100);
 	ModifyUnitHitPoints(All, "(men)", P12, "Anywhere", 100);
 	
+	// remove flags, just cleans up flag beacons
+	RemoveUnitAt(All,"Flag","Anywhere",Force1);
+	
 	// Set numPlayers to currently active player amount
 	common_vars.numPlayers = 0;
 	foreach(player : EUDLoopPlayer("Human")) {
