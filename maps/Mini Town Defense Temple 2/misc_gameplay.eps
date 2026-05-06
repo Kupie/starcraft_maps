@@ -1,0 +1,322 @@
+// misc_gameplay.eps
+// Heal at Inn, teleports, splash ban, P1 ban triggers, boss bonuses,
+// walker heal+reset.
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+// ModifyUnitHitPoints(count, unitType, player, area, percent)
+// ModifyUnitEnergy(count, unitType, player, area, percent)
+// MoveUnit(count, unitType, player, startArea, targetLocation)
+// KillUnit(unitType, player)
+// Order(unitType, player, startArea, order, targetLocation)  -- Move/Patrol are bare constants
+// Defeat()/Victory() act on CurrentPlayer
+
+import common_vars;
+
+var bossBonus1Done = 0;
+var bossBonus2Done = 0;
+var bossBonus3Done = 0;
+var bossBonus4Done = 0;
+var bossBonus5Done = 0;
+var bossBonus6Done = 0;
+var bossBonus7Done = 0;
+var bossBonus8Done = 0;
+var gameEndDone = 0;
+var debugTriggered = 0;
+
+
+function onPluginStart() {
+	const cp = getcurpl();
+
+	bossBonus1Done = 0;
+	bossBonus2Done = 0;
+	bossBonus3Done = 0;
+	bossBonus4Done = 0;
+	bossBonus5Done = 0;
+	bossBonus6Done = 0;
+	bossBonus7Done = 0;
+	bossBonus8Done = 0;
+
+	setcurpl(cp);
+}
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		// ── Heal at Inn ───────────────────────────────────────────────────
+		if (Bring(player, AtLeast, 1, "(men)", "_healing")) {
+			ModifyUnitHitPoints(All, "(men)", player, "_healing", 100);
+			ModifyUnitEnergy(All, "(men)", player, "_healing", 100);
+		}
+
+		// ── Teleport: town → area ─────────────────────────────────────────
+		if (Bring(player, AtLeast, 1, "(men)", "teleport town")) {
+			MoveUnit(All, "(men)", player, "teleport town", "transport land area");
+			setcurpl(player);
+			MinimapPing("transport land area");
+		}
+
+		// ── Teleport: area → town ─────────────────────────────────────────
+		if (Bring(player, AtLeast, 1, "(men)", "teleport area")) {
+			MoveUnit(All, "(men)", player, "teleport area", "tunnel return town");
+			setcurpl(player);
+			MinimapPing("tunnel return town");
+		}
+
+		// ── Splash ban during town attack ─────────────────────────────────
+		if (CountdownTimer(AtMost, 5) && CountdownTimer(AtLeast, 0) && Command(player, AtLeast, 1, "Gui Montag (Firebat)")) {
+			MoveUnit(1, "Gui Montag (Firebat)", player, "Anywhere", "_repick");
+		}
+		if (CountdownTimer(AtMost, 5) && CountdownTimer(AtLeast, 0) && Command(player, AtLeast, 1, "Tassadar/Zeratul (Archon)")) {
+			MoveUnit(1, "Tassadar/Zeratul (Archon)", player, "Anywhere", "_repick");
+		}
+	}
+
+	// ── P1 ban triggers ───────────────────────────────────────────────────
+	// KillUnit(unitType, player) -- Defeat() acts on CurrentPlayer
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 90")) {
+		KillUnit("(any unit)", P2);
+		setcurpl(P2);
+		Defeat();
+	}
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 92")) {
+		KillUnit("(any unit)", P3);
+		setcurpl(P3);
+		Defeat();
+	}
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 93")) {
+		KillUnit("(any unit)", P4);
+		setcurpl(P4);
+		Defeat();
+	}
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 94")) {
+		KillUnit("(any unit)", P5);
+		setcurpl(P5);
+		Defeat();
+	}
+	if (Bring(P1, AtLeast, 1, "(any unit)", "Location 95")) {
+		KillUnit("(any unit)", P6);
+		setcurpl(P6);
+		Defeat();
+	}
+
+	// ── Boss bonuses ──────────────────────────────────────────────────────
+	if (bossBonus1Done == 0 && Deaths(P8, AtLeast, 10, "Zerg Broodling")) {
+		bossBonus1Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 200, Ore);
+		}
+		DisplayTextAll("\x0710 Broodlings killed! +200 gold bonus!");
+	}
+	if (bossBonus2Done == 0 && Deaths(P8, AtLeast, 22, "Zerg Broodling")) {
+		bossBonus2Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 250, Ore);
+		}
+		DisplayTextAll("\x0722 Broodlings killed! +250 gold bonus!");
+	}
+	if (bossBonus3Done == 0 && Deaths(P8, AtLeast, 4, "Zerg Broodling") && Deaths(P8, AtLeast, 1, "Zerg Ultralisk")) {
+		bossBonus3Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 300, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +300 gold");
+	}
+	if (
+		bossBonus4Done == 0 &&
+		Deaths(P8, AtLeast, 4, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 1, "Zerg Ultralisk") &&
+		Deaths(P8, AtLeast, 2, "Alan Schezar (Goliath)")
+	) {
+		bossBonus4Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 350, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +350 gold!");
+	}
+	if (
+		bossBonus5Done == 0 &&
+		Deaths(P8, AtLeast, 4, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 2, "Zerg Ultralisk") &&
+		Deaths(P8, AtLeast, 3, "Alan Schezar (Goliath)") &&
+		Deaths(P8, AtLeast, 1, "Edmund Duke (Tank Mode)")
+	) {
+		bossBonus5Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 400, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +400 gold!");
+	}
+	if (
+		bossBonus6Done == 0 &&
+		Deaths(P8, AtLeast, 7, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 2, "Zerg Ultralisk") &&
+		Deaths(P8, AtLeast, 3, "Alan Schezar (Goliath)") &&
+		Deaths(P8, AtLeast, 1, "Jim Raynor (Vulture)") &&
+		Deaths(P8, AtLeast, 1, "Edmund Duke (Tank Mode)")
+	) {
+		bossBonus6Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 450, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +450 gold!");
+	}
+	if (
+		bossBonus7Done == 0 &&
+		Deaths(P8, AtLeast, 7, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 2, "Zerg Ultralisk") &&
+		Deaths(P8, AtLeast, 3, "Alan Schezar (Goliath)") &&
+		Deaths(P8, AtLeast, 1, "Jim Raynor (Vulture)") &&
+		Deaths(P8, AtLeast, 1, "Edmund Duke (Tank Mode)") &&
+		Deaths(P8, AtLeast, 1, "Protoss Dark Templar")
+	) {
+		bossBonus7Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 500, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +500 gold!");
+	}
+	if (
+		bossBonus8Done == 0 &&
+		Deaths(P8, AtLeast, 7, "Zerg Broodling") &&
+		Deaths(P8, AtLeast, 2, "Infested Duran") &&
+		Deaths(P8, AtLeast, 3, "Alan Schezar (Goliath)") &&
+		Deaths(P8, AtLeast, 2, "Jim Raynor (Vulture)") &&
+		Deaths(P8, AtLeast, 1, "Edmund Duke (Tank Mode)") &&
+		Deaths(P8, AtLeast, 1, "Samir Duran (Ghost)") &&
+		Deaths(P8, AtLeast, 1, "Alexei Stukov (Ghost)") &&
+		Deaths(P8, AtLeast, 1, "Protoss Dark Templar")
+	) {
+		bossBonus8Done = 1;
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			SetResources(player, Add, 550, Ore);
+		}
+		DisplayTextAll("\x07Boss bonus! +550 gold!");
+	}
+
+	// ── Walker heal + reset ───────────────────────────────────────────────
+	if (
+		Bring(Force1, AtLeast, 1, "(men)", "_area") &&
+		Bring(P7, AtLeast, 1, "(men)", "walker2")
+	) {
+		foreach(player : EUDLoopPlayer("Human", Force1)) {
+			ModifyUnitHitPoints(All, "(men)", player, "_area", 100);
+			ModifyUnitEnergy(All, "(men)", player, "_area", 100);
+		}
+		MoveUnit(1, "(men)", P7, "walker turf", "walker1");
+		Order("(men)", P7, "walker1", Move, "walker2");
+	}
+
+
+	// ── Temple destroyed: defeat before final wave, victory during bonus round ──
+	if (gameEndDone == 0 && Deaths(P7, AtLeast, 1, "Protoss Temple")) {
+		gameEndDone = 1;
+		if (common_vars.finalWaveReached == 1) {
+			foreach(player : EUDLoopPlayer("Human")) {
+				setcurpl(player);
+				DisplayText("\x13\x07Victory!\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
+				Victory();
+			}
+		} else {
+			foreach(player : EUDLoopPlayer("Human")) {
+				setcurpl(player);
+				DisplayText("\x13\x07Game Over\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
+				Defeat();
+			}
+		}
+	}
+	
+	// ── Easy Mode Enabler ──
+	// State 0 → 1: show prompt, warp Duran back. Not enabled yet.
+	// State 1 → 2: confirmed, enable easy mode, show confirmation.
+	if (Bring(P1, Exactly, 1, "Infested Duran", "EasyModeEnableLoc")) {
+		setcurpl(P1);
+		if (common_vars.EasyModeEnable == 0) {
+			DisplayText("\x1FEnable Adjusted HP Mode? This will make enemy spawn HP adjusted to how many active players there are.");
+			DisplayText("\x1FSend Infested Duran to the beacon again to confirm.");
+			MoveUnit(1, "Infested Duran", P1, "EasyModeEnableLoc", "BanArea");
+			common_vars.EasyModeEnable = 1;
+		} else if (common_vars.EasyModeEnable == 1) {
+			DisplayTextAll("\x07Enemy waves adjusted to number of players.");
+			MoveUnit(1, "Infested Duran", P1, "EasyModeEnableLoc", "BanArea");
+			common_vars.EasyModeEnable = 2;
+			RemoveUnitAt(1, "Vespene Tank (Terran Type 1)", "EasyModeEnableLoc", P9);
+		}
+	}
+	
+	
+	
+	// ── Debug shiz, only happens if 1 player ──
+	if (
+		Command(Force1, Exactly, 0, "Protoss Flag Beacon") &&
+		Bring(P1, Exactly, 1, "Infested Duran", "DebugGiveShiz") &&
+		(debugTriggered == 0)
+	) {
+		debugTriggered = 1;
+		SetResources(P1, Add, 100000, Ore);
+		DisplayTextAll("DEBUG MODE ENABLED");
+		DisplayTextAll("DEBUG MODE ENABLED");
+		DisplayTextAll("DEBUG MODE ENABLED");
+		DisplayTextAll("DEBUG MODE ENABLED");
+		f_bwrite(0x65FEDC, 255);        // Jim Raynor armor
+		f_dwwrite(0x6623A0, 2147483647); // Jim Raynor HP
+		f_wwrite(0x656EB0, 65535);      // Gauss Rifle damage
+		f_wwrite(0x657678, 65535);      // Gauss Rifle bonus
+		
+		// Player 1 normal upgrades (0-45), base 0x58D2B0, stride 46 bytes
+		dwwrite(0x58D2B0, 0xFFFFFFFF);  // upgrades 0-3
+		dwwrite(0x58D2B4, 0xFFFFFFFF);  // upgrades 4-7
+		dwwrite(0x58D2B8, 0xFFFFFFFF);  // upgrades 8-11
+		dwwrite(0x58D2BC, 0xFFFFFFFF);  // upgrades 12-15
+		dwwrite(0x58D2C0, 0xFFFFFFFF);  // upgrades 16-19
+		dwwrite(0x58D2C4, 0xFFFFFFFF);  // upgrades 20-23
+		dwwrite(0x58D2C8, 0xFFFFFFFF);  // upgrades 24-27
+		dwwrite(0x58D2CC, 0xFFFFFFFF);  // upgrades 28-31
+		dwwrite(0x58D2D0, 0xFFFFFFFF);  // upgrades 32-35
+		dwwrite(0x58D2D4, 0xFFFFFFFF);  // upgrades 36-39
+		dwwrite(0x58D2D8, 0xFFFFFFFF);  // upgrades 40-43
+		dwwrite(0x58D2DC, 0x0000FFFF);  // upgrades 44-45
+		
+		// Player 1 BW upgrades (46-57), base 0x58F32C, stride 12 bytes
+		dwwrite(0x58F32C, 0xFFFFFFFF);  // BW upgrades 46-49
+		dwwrite(0x58F330, 0xFFFFFFFF);  // BW upgrades 50-53
+		dwwrite(0x58F334, 0xFFFFFFFF);  // BW upgrades 54-57
+		
+		
+		
+	}
+	
+	
+	// ── Alliance setup ──────────────────────────────────────────────────────
+	foreach(player : EUDLoopPlayer("Human")) {
+		setcurpl(player);
+		SetAllianceStatus(P1, Ally);
+		SetAllianceStatus(P2, Ally);
+		SetAllianceStatus(P3, Ally);
+		SetAllianceStatus(P4, Ally);
+		SetAllianceStatus(P5, Ally);
+		SetAllianceStatus(P6, Ally);
+		SetAllianceStatus(P7, Ally);
+		SetAllianceStatus(P8, Enemy);
+		SetAllianceStatus(P9, Ally);
+		SetAllianceStatus(P10, Ally);
+		SetAllianceStatus(P11, Ally);
+		SetAllianceStatus(P12, Ally);
+	}
+	
+	// ── P9-P12 are all neutral units that should do nothing, including die ─────────────────────────────────
+	ModifyUnitHitPoints(All, "(men)", P9, "Anywhere", 100);
+	ModifyUnitHitPoints(All, "(men)", P10, "Anywhere", 100);
+	ModifyUnitHitPoints(All, "(men)", P11, "Anywhere", 100);
+	ModifyUnitHitPoints(All, "(men)", P12, "Anywhere", 100);
+	
+	// remove flags, just cleans up flag beacons
+	RemoveUnitAt(All,"Flag","Anywhere",Force1);
+	
+	// Set numPlayers to currently active player amount
+	common_vars.numPlayers = 0;
+	foreach(player : EUDLoopPlayer("Human")) {
+		common_vars.numPlayers++;
+	}
+	setcurpl(cp);
+}

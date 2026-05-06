@@ -51,7 +51,6 @@ function orderP8WaveUnits() {
 function startWave(waveNumber) {
 	waveStarted[waveNumber] = 1;
 	currentWave = waveNumber;
-	common_vars.currentWave = waveNumber;
 	activeWave = waveNumber;
 	activeWaveRow = wave_spawns_array.waveSpawnFirstRow[waveNumber];
 	activeWaveEnd = activeWaveRow + wave_spawns_array.waveSpawnRowCount[waveNumber];

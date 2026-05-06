@@ -1,0 +1,132 @@
+// hero_select.eps
+// Terran Civilian at hero pick location → spawn hero unit.
+// Repick beacon and recruit effect.
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+// RemoveUnitAt(count, unitType, area, player)
+// CreateUnit(count, unitType, location, player)
+// CenterView(location) -- desync, acts on CurrentPlayer
+
+				   
+
+const heroPickLocs = list(
+	py_str("Location 21"),
+	py_str("Location 30"),
+	py_str("Location 22"),
+	py_str("Location 19"),
+	py_str("Location 24"),
+	py_str("Location 25"),
+	py_str("Location 26"),
+	py_str("Location 27"),
+	py_str("Location 29"),
+	py_str("Location 20"),
+	py_str("Location 28"),
+	py_str("Location 23")
+);
+
+const heroPickUnits = list(
+	py_str("Tassadar/Zeratul (Archon)"),
+	py_str("Gui Montag (Firebat)"),
+	py_str("Dark Templar (Hero)"),
+	py_str("Sarah Kerrigan (Ghost)"),
+	py_str("Fenix (Dragoon)"),
+	py_str("Hunter Killer (Hydralisk)"),
+	py_str("Infested Kerrigan (Infested Terran)"),
+	py_str("Devouring One (Zergling)"),
+	py_str("Jim Raynor (Marine)"),
+	py_str("Tassadar (Templar)"),
+	py_str("Torrasque (Ultralisk)"),
+	py_str("Fenix (Zealot)")
+);
+
+// 1 = requires no boss attack (P8 not in _area)
+const heroPickNoBoss = list(1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+// ── Speed/Cooldown upgrade flags for Marine/Firebat heroes ──────────────────
+// Sets CUnit status flags 0x10000000 (SpeedUpgrade) and 0x20000000 (CooldownUpgrade)
+// once when unit is picked. applySpeedCooldownFlags() runs one frame after pick,
+// then resets to a huge value so it never runs again until next pick.
+//
+// 0x30000000 = SpeedUpgrade | CooldownUpgrade combined mask
+
+const SPEED_COOLDOWN_FLAGS = 0x30000000;
+const TIMER_IDLE = 0xFFFFFFFF;
+
+var stimRefreshTimer = TIMER_IDLE;
+
+function applySpeedCooldownFlags() {
+	if (stimRefreshTimer == 1) {
+		stimRefreshTimer = TIMER_IDLE;
+		foreach(unit : EUDLoopCUnit()) {
+			if (
+				(unit.unitID == $U("Gui Montag (Firebat)") || unit.unitID == $U("Jim Raynor (Marine)")) &&
+				unit.owner <= P6
+			) {
+				unit.set_status_flag(SPEED_COOLDOWN_FLAGS);
+			}
+		}
+	}
+	if (stimRefreshTimer >= 2) {
+		stimRefreshTimer--;
+	}
+}
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		// ── Hero picks ────────────────────────────────────────────────────
+		foreach(i : py_range(12)) {
+			if (heroPickNoBoss[i] == 1) {
+				if (
+					Bring(player, AtLeast, 1, "Terran Civilian", heroPickLocs[i]) &&
+					Bring(P8, Exactly, 0, "(men)", "_area")
+				) {
+					RemoveUnitAt(1, "Terran Civilian", heroPickLocs[i], player);
+					CreateUnit(1, heroPickUnits[i], "_healing", player);
+
+					if (i == 1 || i == 8) {
+						stimRefreshTimer = 1;
+					}
+					
+					setcurpl(player);
+					CenterView("_healing");
+				}
+			}
+			if (heroPickNoBoss[i] == 0) {
+				if (Bring(player, AtLeast, 1, "Terran Civilian", heroPickLocs[i])) {
+					RemoveUnitAt(1, "Terran Civilian", heroPickLocs[i], player);
+					CreateUnit(1, heroPickUnits[i], "_healing", player);
+					if (i == 1 || i == 8) {
+						stimRefreshTimer = 1;
+					}
+					setcurpl(player);
+					CenterView("_healing");
+				}
+			}
+		}
+
+		// ── Repick beacon ─────────────────────────────────────────────────
+		if (Bring(player, AtLeast, 1, "Any unit", "_repick")) {
+			// Explicitly remove tracked stim heroes first, then fall back to any other hero.
+			RemoveUnitAt(1, "Gui Montag (Firebat)", "_repick", player);
+			RemoveUnitAt(1, "Jim Raynor (Marine)", "_repick", player);
+			RemoveUnitAt(1, "(men)", "_repick", player);
+			CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", player, UnitProperty(invincible = True));
+			setcurpl(player);
+			CenterView("_Heropick");
+		}
+
+		// ── Recruit effect ────────────────────────────────────────────────
+		if (Command(player, AtLeast, 1, "Protoss Zealot")) {
+			CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", player, UnitProperty(invincible = True));
+			RemoveUnit("Protoss Zealot", player);
+			setcurpl(player);
+			DisplayText("\x13\x07Recruit Was A Success!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+		}
+	}
+
+	applySpeedCooldownFlags();
+
+	setcurpl(cp);
+}

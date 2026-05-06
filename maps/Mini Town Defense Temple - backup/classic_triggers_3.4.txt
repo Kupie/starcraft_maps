@@ -1,0 +1,3649 @@
+Trigger("Heroes"){
+Conditions:
+	Always();
+
+Actions:
+	Set Mission Objectives("Levels at 500, 1k, 2k, 3k, 5k, 7k, 10k, 15k, 20k, 25k, 35k, 50k, 75k, 100k, 130k, 170k, 220k, 280k, 350k, and 400k experience.\r\n\r\nRewards up to 20,000 minerals.");
+	Center View("Temple");
+	Display Text Message(Always Display, "YOU MUST DEFEND THE TEMPLE.  Every round!");
+	Wait(6000);
+	Set Resources("Current Player", Add, 200, ore);
+	Display Text Message(Always Display, "\x004Now \x006S\x004elect \x006Y\x004our \x006H\x004ero and get some cash!\r\n\r\n\r\n\r\n\r\n");
+	Comment("Starting Triggers");
+	Minimap Ping("_Heropick");
+	Wait(1000);
+	Minimap Ping("_Heropick");
+	Wait(1000);
+	Minimap Ping("_Heropick");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(Exactly, 0);
+	Accumulate("Player 8", At most, 9, gas);
+
+Actions:
+	Set Countdown Timer(Set To, 210);
+	Modify Unit Hit Points("Player 7", "Buildings", 100, 1, "Temple");
+	Modify Unit Shield Points("Player 7", "Buildings", 100, 1, "Temple");
+	Modify Unit Shield Points("Player 7", "Warbringer (Reaver)", 100, All, "_area");
+	Preserve Trigger();
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Countdown Timer(At most, 5);
+	Countdown Timer(At least, 1);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Our Town Is Under Attack!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Move Unit("Heroes", "Men", All, "_Alltraining", "_healing");
+	Move Unit("Heroes", "Men", All, "_Trainingpick", "_healing");
+	Preserve Trigger();
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Always();
+
+Actions:
+	Set Alliance Status("Player 6", Enemy);
+	Set Alliance Status("Player 8", Enemy);
+	Run AI Script("+Vi7");
+	Run AI Script("+Vi6");
+	Run AI Script("+Vi5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("The Town"){
+Conditions:
+	Always();
+
+Actions:
+	Set Alliance Status("Heroes", Ally);
+	Set Alliance Status("Player 8", Enemy);
+	Run AI Script("+Vi7");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("The Town"){
+Conditions:
+	Always();
+
+Actions:
+	Run AI Script At Location("TSUx", "Location 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("v3.0"){
+Conditions:
+	Always();
+
+Actions:
+	Set Alliance Status("Heroes", Enemy);
+	Run AI Script("+Vi0");
+	Run AI Script("+Vi1");
+	Run AI Script("+Vi2");
+	Run AI Script("+Vi3");
+	Run AI Script("+Vi4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Always();
+
+Actions:
+	Set Resources("Player 8", Set To, 1, gas);
+	Set Alliance Status("Player 7", Enemy);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "_healing", At least, 1);
+
+Actions:
+	Modify Unit Hit Points("Current Player", "Men", 100, All, "hero spawn");
+	Modify Unit Energy("Current Player", "Men", 100, All, "hero spawn");
+	Preserve Trigger();
+	Comment("Heal @ Inn");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "zerg up 2 beacon", At least, 1);
+
+Actions:
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "zerg up 2");
+	Preserve Trigger();
+	Comment("Zerg Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "zerg up 2 beacon", Exactly, 0);
+
+Actions:
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "zerg up 2");
+	Preserve Trigger();
+	Comment("Zerg Upgrade Done");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "zerg up 1 beacon", At least, 1);
+
+Actions:
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "zerg up 1");
+	Preserve Trigger();
+	Comment("Zerg Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "zerg up 1 beacon", Exactly, 0);
+
+Actions:
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "zerg up 1");
+	Preserve Trigger();
+	Comment("Zerg Upgrade Done");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "terran up 1 beacon", At least, 1);
+
+Actions:
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "terran up 1b");
+	Preserve Trigger();
+	Comment("Terran Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "terran up 1 beacon", Exactly, 0);
+
+Actions:
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "terran up 1b");
+	Preserve Trigger();
+	Comment("Terran Upgrade Done");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "terran up 2 beacon", At least, 1);
+
+Actions:
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "terran up 2b");
+	Preserve Trigger();
+	Comment("Terran Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "terran up 2 beacon", Exactly, 0);
+
+Actions:
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "terran up 2b");
+	Preserve Trigger();
+	Comment("Terran Upgrade Done");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "forge 2 beaocn", At least, 1);
+
+Actions:
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "fcontrol 2");
+	Preserve Trigger();
+	Comment("Protoss Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "forge 2 beaocn", Exactly, 0);
+
+Actions:
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "fcontrol 2");
+	Preserve Trigger();
+	Comment("Protoss Upgrade Done");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "forge 1 beacon", At least, 1);
+
+Actions:
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "fcontrol 1");
+	Preserve Trigger();
+	Comment("Protoss Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "forge 1 beacon", Exactly, 0);
+
+Actions:
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "fcontrol 1");
+	Preserve Trigger();
+	Comment("Protoss Upgrade Done");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "recruit 1 beacon", At least, 1);
+
+Actions:
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "control 1");
+	Preserve Trigger();
+	Comment("Recruiting");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "recruit 1 beacon", Exactly, 0);
+
+Actions:
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "control 1");
+	Preserve Trigger();
+	Comment("Recruiting Done");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "recruit 2 beacon", At least, 1);
+
+Actions:
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "control 2");
+	Preserve Trigger();
+	Comment("Recruiting");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Men", "recruit 2 beacon", Exactly, 0);
+
+Actions:
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "control 2");
+	Preserve Trigger();
+	Comment("Recruiting Done");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 14", At least, 1);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x006Waiting... \x0043 \x005Seconds\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Wait(1000);
+	Display Text Message(Always Display, "\x013\x006Waiting... \x0042 \x005Seconds\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Wait(1000);
+	Display Text Message(Always Display, "\x013\x006Waiting... \x0041 \x005Seconds\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Wait(1000);
+	Display Text Message(Always Display, "\x013\x003You Have Respawned!  Choose Wisely.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Move Unit("Current Player", "Terran Civilian", 1, "Location 14", "_Heropick");
+	Preserve Trigger();
+	Comment("Respawning");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Deaths("Current Player", "Men", At least, 1);
+
+Actions:
+	Set Deaths("Current Player", "Men", Subtract, 1);
+	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
+	Wait(900);
+	Set Score("Current Player", Subtract, 250, Custom);
+	Set Resources("Current Player", Subtract, 50, ore);
+	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
+	Wait(900);
+	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
+	Preserve Trigger();
+	Comment("Respawn Wait new");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Deaths("Current Player", "Men", At least, 1);
+
+Actions:
+	Set Deaths("Current Player", "Men", Subtract, 1);
+	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
+	Wait(900);
+	Set Score("Current Player", Subtract, 250, Custom);
+	Set Resources("Current Player", Subtract, 50, ore);
+	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
+	Wait(900);
+	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
+	Preserve Trigger();
+	Comment("Respawn Wait new");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Deaths("Current Player", "Men", At least, 1);
+
+Actions:
+	Set Deaths("Current Player", "Men", Subtract, 1);
+	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
+	Wait(900);
+	Set Score("Current Player", Subtract, 250, Custom);
+	Set Resources("Current Player", Subtract, 50, ore);
+	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
+	Wait(900);
+	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
+	Preserve Trigger();
+	Comment("Respawn Wait new");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Deaths("Current Player", "Men", At least, 1);
+
+Actions:
+	Set Deaths("Current Player", "Men", Subtract, 1);
+	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
+	Wait(900);
+	Set Score("Current Player", Subtract, 250, Custom);
+	Set Resources("Current Player", Subtract, 50, ore);
+	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
+	Wait(900);
+	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
+	Preserve Trigger();
+	Comment("Respawn Wait new");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Deaths("Current Player", "Men", At least, 1);
+
+Actions:
+	Set Deaths("Current Player", "Men", Subtract, 1);
+	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
+	Wait(900);
+	Set Score("Current Player", Subtract, 250, Custom);
+	Set Resources("Current Player", Subtract, 50, ore);
+	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
+	Wait(900);
+	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
+	Preserve Trigger();
+	Comment("Respawn Wait new");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Any unit", "_repick", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Any unit", 1, "_repick");
+	Create Unit("Current Player", "Terran Civilian", 1, "_Heropick");
+	Center View("_Heropick");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Score("Current Player", Kills, At most, 49);
+	Score("Current Player", Kills, At least, 25);
+
+Actions:
+	Set Score("Current Player", Subtract, 25, Kills);
+	Set Score("Current Player", Add, 5, Custom);
+	Set Resources("Current Player", Add, 1, ore);
+	Preserve Trigger();
+;	Comment("25 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Score("Current Player", Kills, At most, 74);
+	Score("Current Player", Kills, At least, 50);
+
+Actions:
+	Set Score("Current Player", Subtract, 50, Kills);
+	Set Score("Current Player", Add, 10, Custom);
+	Set Resources("Current Player", Add, 2, ore);
+	Preserve Trigger();
+;	Comment("50 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Score("Current Player", Kills, At most, 99);
+	Score("Current Player", Kills, At least, 75);
+
+Actions:
+	Set Score("Current Player", Subtract, 75, Kills);
+	Set Score("Current Player", Add, 15, Custom);
+	Set Resources("Current Player", Add, 3, ore);
+	Preserve Trigger();
+;	Comment("75 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Score("Current Player", Kills, At most, 499);
+	Score("Current Player", Kills, At least, 100);
+
+Actions:
+	Set Score("Current Player", Subtract, 100, Kills);
+	Set Score("Current Player", Add, 20, Custom);
+	Set Resources("Current Player", Add, 4, ore);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Engineering Bay", "terran up 1a", At least, 1);
+
+Actions:
+	Remove Unit At Location("All players", "Terran Engineering Bay", All, "terran up 1a");
+	Create Unit with Properties("Player 7", "Terran Engineering Bay", 1, "terran up 1b", 1);
+	Display Text Message(Always Display, "\x013\x003You're Wasting Your Time!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Anti-Lift Terran Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 21", At least, 1);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 21");
+	Create Unit("Current Player", "Tassadar/Zeratul (Archon)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Archon Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 30", At least, 1);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 30");
+	Create Unit("Current Player", "Gui Montag (Firebat)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Firebat Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 22", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 22");
+	Create Unit("Current Player", "Dark Templar (Hero)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Dark Templar Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 19", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 19");
+	Create Unit("Current Player", "Sarah Kerrigan (Ghost)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Sarah Kerrigan Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 24", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 24");
+	Create Unit("Current Player", "Fenix (Dragoon)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Dragoon Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 25", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 25");
+	Create Unit("Current Player", "Hunter Killer (Hydralisk)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Hydralisk Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 26", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 26");
+	Create Unit("Current Player", "Infested Kerrigan (Infested Terran)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Infested Kerrigan Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 27", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 27");
+	Create Unit("Current Player", "Devouring One (Zergling)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Zergling Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 29", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 29");
+	Create Unit("Current Player", "Jim Raynor (Marine)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Marine Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 20", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 20");
+	Create Unit("Current Player", "Tassadar (Templar)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("High Templar Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 28", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 28");
+	Create Unit("Current Player", "Torrasque (Ultralisk)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Ultralisk Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Location 23", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 23");
+	Create Unit("Current Player", "Fenix (Zealot)", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Zealot Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Command("Current Player", "Protoss Zealot", At least, 1);
+
+Actions:
+	Create Unit with Properties("Current Player", "Terran Civilian", 1, "_Heropick", 2);
+	Remove Unit At Location("Current Player", "Protoss Zealot", 1, "Anywhere");
+	Display Text Message(Always Display, "\x013\x007Recruit Was A Success!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Recruiting Effect");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Score("Current Player", Kills, At most, 999);
+	Score("Current Player", Kills, At least, 500);
+
+Actions:
+	Set Score("Current Player", Subtract, 500, Kills);
+	Set Score("Current Player", Add, 100, Custom);
+	Set Resources("Current Player", Add, 20, ore);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Score("Current Player", Kills, At most, 1999);
+	Score("Current Player", Kills, At least, 1000);
+
+Actions:
+	Set Score("Current Player", Subtract, 1000, Kills);
+	Set Score("Current Player", Add, 200, Custom);
+	Set Resources("Current Player", Add, 40, ore);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Score("Current Player", Kills, At least, 2000);
+
+Actions:
+	Set Score("Current Player", Subtract, 2000, Kills);
+	Set Score("Current Player", Add, 400, Custom);
+	Set Resources("Current Player", Add, 80, ore);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 2, gas);
+
+Actions:
+	Create Unit("Player 8", "Zerg Zergling", 24, "Location 1");
+	Wait(1500);
+	Create Unit("Player 8", "Zerg Zergling", 14, "Location 1");
+	Wait(1500);
+	Create Unit("Player 8", "Zerg Zergling", 14, "Location 1");
+	Wait(1500);
+	Create Unit("Player 8", "Zerg Zergling", 14, "Location 1");
+	Wait(2500);
+	Create Unit("Player 8", "Zerg Zergling", 14, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 20, "Location 1");
+	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
+	Create Unit("Current Player", "Zerg Ultralisk", 1, "Location 1");
+	Comment("Level 1 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 3, gas);
+
+Actions:
+	Create Unit("Current Player", "Zerg Zergling", 20, "Location 1");
+	Wait(1000);
+	Create Unit("Current Player", "Zerg Zergling", 10, "Location 1");
+	Wait(1000);
+	Create Unit("Current Player", "Zerg Zergling", 10, "Location 1");
+	Wait(2000);
+	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Broodling", 20, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Ultralisk", 10, "Location 1");
+	Comment("Level 2 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 4, gas);
+
+Actions:
+	Create Unit("Current Player", "Zerg Zergling", 24, "Location 1");
+	Wait(1000);
+	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
+	Wait(1500);
+	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
+	Wait(1500);
+	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Zerg Broodling", 24, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 5, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 5, "Location 1");
+	Comment("Level 3 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 5, gas);
+
+Actions:
+	Create Unit("Current Player", "Zerg Zergling", 24, "Location 1");
+	Wait(1000);
+	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
+	Wait(1500);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Protoss Dragoon", 4, "Location 1");
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 3, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 2, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 5, "Location 1");
+	Comment("Level 4 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 6, gas);
+
+Actions:
+	Create Unit("Current Player", "Zerg Zergling", 24, "Location 1");
+	Wait(1000);
+	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
+	Wait(2000);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(2000);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Zerg Broodling", 20, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Broodling", 15, "Location 1");
+	Wait(3500);
+	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
+	Wait(4500);
+	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
+	Wait(4500);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 9, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Protoss Dark Templar", 6, "Location 1");
+	Create Unit("Current Player", "Zerg Ultralisk", 5, "Location 1");
+	Comment("Level 5 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 7, gas);
+
+Actions:
+	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
+	Wait(2000);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Protoss Archon", 14, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Protoss Archon", 14, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 5, "Location 1");
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 1, "Location 1");
+	Create Unit("Current Player", "Alexei Stukov (Ghost)", 1, "Location 1");
+	Comment("Level 6 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 8, gas);
+
+Actions:
+	Create Unit("Current Player", "Zerg Hydralisk", 12, "Location 1");
+	Wait(1000);
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Wait(2000);
+	Create Unit("Current Player", "Zerg Broodling", 24, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Zerg Ultralisk", 14, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
+	Create Unit("Current Player", "Protoss Dark Templar", 10, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Protoss Dark Templar", 6, "Location 1");
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 8, "Location 1");
+	Comment("Level 7 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 9, gas);
+
+Actions:
+	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
+	Wait(2000);
+	Create Unit("Current Player", "Protoss Dragoon", 15, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Zerg Ultralisk", 14, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Alexei Stukov (Ghost)", 6, "Location 1");
+	Create Unit("Current Player", "Samir Duran (Ghost)", 6, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Infested Duran", 6, "Location 1");
+	Create Unit("Current Player", "Samir Duran (Ghost)", 6, "Location 1");
+	Comment("Level 8 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 10, gas);
+
+Actions:
+	Create Unit("Current Player", "Zerg Hydralisk", 12, "Location 1");
+	Wait(1000);
+	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
+	Wait(1000);
+	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
+	Wait(2000);
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 20, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 20, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 10, "Location 1");
+	Create Unit("Current Player", "Alexei Stukov (Ghost)", 14, "Location 1");
+	Wait(4000);
+	Create Unit("Current Player", "Zeratul (Dark Templar)", 15, "Location 1");
+	Wait(3000);
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 20, "Location 1");
+	Comment("Level 9 Boss Attack");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 7", "Protoss Temple", At least, 1);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x007Game Over\r\n\x013\x0062high   @useast - 2014\r\n\r\n\r\n\r\n\r\n");
+	Defeat();
+	Comment("Defeat");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "nexus beacon", At least, 1);
+
+Actions:
+	Order("Current Player", "Men", "nexus beacon", "_healing", move);
+	Center View("Temple");
+	Transmission(Always Display, "\x013\x004Our Town Is In Need Of Defense While We Thrive In This Land.\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Nexus", "Temple", Set To, 4000, "220 dmg", 480);
+	Center View("hero spawn");
+	Transmission(Always Display, "\x013\x004You May Sleep At Our Inn For Free!\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Fleet Beacon", "Anywhere", Set To, 4000, "220 dmg", 480);
+	Center View("terran up 1b");
+	Transmission(Always Display, "\x013\x004Our Blacksmiths Are Ready To Improve Your Weapons.\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Terran Engineering Bay", "terran up 1b", Set To, 4000, "220 dmg", 480);
+	Center View("to training");
+	Transmission(Always Display, "\x013\x004You Can Train At This Center For Free!\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Cybernetics Core", "Anywhere", Set To, 4000, "220 dmg", 480);
+	Center View("control 1");
+	Transmission(Always Display, "\x013\x004And Finally, You May Recruit More Forces Here!\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Gateway", "Anywhere", Set To, 4000, "220 dmg", 480);
+	Center View("_healing");
+	Transmission(Always Display, "\x013\x004Good Luck, And Thank You.\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Gateway", "Anywhere", Set To, 4000, "220 dmg", 480);
+	Preserve Trigger();
+	Comment("Town Hall Talk");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "to training", At least, 1);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Bring("Current Player", "Men", "_area", At least, 1);
+
+Actions:
+	Center View("_Trainingpick");
+	Move Unit("Current Player", "Men", All, "to training", "Location 32");
+	Display Text Message(Always Display, "\x013\x005Select A Monster To Train Against.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 38", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", At least, 1);
+
+Actions:
+	Center View("_Trainarchon");
+	Move Unit("Current Player", "Men", All, "Location 38", "_Trainarchon");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Spirit Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Archon");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 37", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", At least, 1);
+
+Actions:
+	Center View("_Traingoon");
+	Move Unit("Current Player", "Men", All, "Location 37", "_Traingoon");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Psionic Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Dragoon");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 34", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", At least, 1);
+
+Actions:
+	Center View("_Trainhydra");
+	Move Unit("Current Player", "Men", All, "Location 34", "_Trainhydra");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Medium Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Hydralisk");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 36", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", At least, 1);
+
+Actions:
+	Center View("_Trainlurk");
+	Move Unit("Current Player", "Men", All, "Location 36", "_Trainlurk");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Stealth Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Lurker");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 33", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", At least, 1);
+
+Actions:
+	Center View("_Trainultra");
+	Move Unit("Current Player", "Men", All, "Location 33", "_Trainultra");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Mega Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Ultralisk");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 35", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", At least, 1);
+
+Actions:
+	Center View("_Trainzerg");
+	Move Unit("Current Player", "Men", All, "Location 35", "_Trainzerg");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Small Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Zergling");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 45", At least, 1);
+
+Actions:
+	Center View("_healing");
+	Move Unit("Current Player", "Men", All, "Location 45", "_healing");
+	Display Text Message(Always Display, "\x013\x005You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Exit 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 46", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Men", All, "Location 46", "_healing");
+	Center View("_healing");
+	Display Text Message(Always Display, "\x013\x005You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Exit 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 47", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Men", All, "Location 47", "_healing");
+	Center View("_healing");
+	Display Text Message(Always Display, "\x013\x005You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Exit 3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 48", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Men", All, "Location 48", "_healing");
+	Center View("_healing");
+	Display Text Message(Always Display, "\x013\x005You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Exit 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 49", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Men", All, "Location 49", "_healing");
+	Center View("_healing");
+	Display Text Message(Always Display, "\x013\x005You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Exit 5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 50", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Men", All, "Location 50", "_healing");
+	Center View("_healing");
+	Display Text Message(Always Display, "\x013\x005You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Exit 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 88", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Men", All, "Location 88", "_healing");
+	Center View("_healing");
+	Display Text Message(Always Display, "\x013\x005You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Exit 7");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 82", At least, 1);
+	Bring("Player 6", "Protoss Archon", "Location 82", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 82", 3);
+	Preserve Trigger();
+	Comment("Archon Training 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 83", At least, 1);
+	Bring("Player 6", "Protoss Archon", "Location 83", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 83", 6);
+	Preserve Trigger();
+	Comment("Archon Training 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 84", At least, 1);
+	Bring("Player 6", "Protoss Archon", "Location 84", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 84", 7);
+	Preserve Trigger();
+	Comment("Archon Training 3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 85", At least, 1);
+	Bring("Player 6", "Protoss Archon", "Location 85", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 85", 8);
+	Preserve Trigger();
+	Comment("Archon Training 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 86", At least, 1);
+	Bring("Player 6", "Protoss Archon", "Location 86", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 86", 9);
+	Preserve Trigger();
+	Comment("Archon Training 5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 87", At least, 1);
+	Bring("Player 6", "Protoss Archon", "Location 87", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 87", 10);
+	Preserve Trigger();
+	Comment("Archon Training 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 76", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Location 76", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 76", 11);
+	Preserve Trigger();
+	Comment("Dragoon Training 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 77", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Location 77", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 77", 12);
+	Preserve Trigger();
+	Comment("Dragoon Training 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 78", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Location 78", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 78", 13);
+	Preserve Trigger();
+	Comment("Dragoon Training 3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 79", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Location 79", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 79", 14);
+	Preserve Trigger();
+	Comment("Dragoon Training 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 80", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Location 80", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 80", 15);
+	Preserve Trigger();
+	Comment("Dragoon Training 5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 81", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Location 81", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 81", 16);
+	Preserve Trigger();
+	Comment("Dragoon Training 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 57", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 57", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 57", 17);
+	Preserve Trigger();
+	Comment("Hydralisk Training 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 58", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 58", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 58", 17);
+	Preserve Trigger();
+	Comment("Hydralisk Training 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 59", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 59", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 59", 19);
+	Preserve Trigger();
+	Comment("Hydralisk Training 3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 60", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 60", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 60", 20);
+	Preserve Trigger();
+	Comment("Hydralisk Training 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 61", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 61", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 61", 21);
+	Preserve Trigger();
+	Comment("Hydralisk Training 5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 62", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 62", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 62", 22);
+	Preserve Trigger();
+	Comment("Hydralisk Training 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 61 2", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 61 2", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 61 2", 42);
+	Preserve Trigger();
+	Comment("Hydralisk Training 7");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 59 2", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 59 2", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 59 2", 43);
+	Preserve Trigger();
+	Comment("Hydralisk Training 8");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 57 2", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "Location 57 2", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 57 2", 44);
+	Preserve Trigger();
+	Comment("Hydralisk Training 9");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 63", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Location 63", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 63", 29);
+	Preserve Trigger();
+	Comment("Ultralisk Training 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 65", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Location 65", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 65", 30);
+	Preserve Trigger();
+	Comment("Ultralisk Training 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 66", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Location 66", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 66", 31);
+	Preserve Trigger();
+	Comment("Ultralisk Training 3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 67", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Location 67", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 67", 32);
+	Preserve Trigger();
+	Comment("Ultralisk Training 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 68", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Location 68", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 68", 33);
+	Preserve Trigger();
+	Comment("Ultralisk Training 5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 69", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Location 69", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 69", 34);
+	Preserve Trigger();
+	Comment("Ultralisk Training 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 51", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "Location 51", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 51", 35);
+	Preserve Trigger();
+	Comment("Zergling Training 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 52", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "Location 52", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 52", 36);
+	Preserve Trigger();
+	Comment("Zergling Training 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 53", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "Location 53", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 53", 37);
+	Preserve Trigger();
+	Comment("Zergling Training 3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 54", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "Location 54", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 54", 38);
+	Preserve Trigger();
+	Comment("Zergling Training 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 55", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "Location 55", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 55", 39);
+	Preserve Trigger();
+	Comment("Zergling Training 5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 56", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "Location 56", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 56", 40);
+	Preserve Trigger();
+	Comment("Zergling Training 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zerg Broodling", At least, 10);
+
+Actions:
+	Set Resources("Current Player", Add, 200, ore);
+	Display Text Message(Always Display, "\x00710 Broodlings killed!+200 gold bonus!");
+	Comment("Boss Bonus 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zerg Broodling", At least, 22);
+
+Actions:
+	Set Resources("Current Player", Add, 250, ore);
+	Display Text Message(Always Display, "\x00722 Broodlings killed!+250 gold bonus!");
+	Comment("Boss Bonus 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zerg Broodling", At least, 4);
+	Deaths("Player 8", "Zerg Ultralisk", At least, 1);
+
+Actions:
+	Set Resources("Current Player", Add, 300, ore);
+	Comment("Boss Bonus 3");
+	Display Text Message(Always Display, "\x007Boss bonus! +300 gold");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zerg Broodling", At least, 4);
+	Deaths("Player 8", "Zerg Ultralisk", At least, 1);
+	Deaths("Player 8", "Alan Schezar (Goliath)", At least, 2);
+
+Actions:
+	Set Resources("Current Player", Add, 350, ore);
+	Display Text Message(Always Display, "\x007 Boss bonus! +350 gold!");
+	Comment("Boss Bonus 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zerg Broodling", At least, 4);
+	Deaths("Player 8", "Zerg Ultralisk", At least, 2);
+	Deaths("Player 8", "Alan Schezar (Goliath)", At least, 3);
+	Deaths("Player 8", "Edmund Duke (Siege Tank)", At least, 1);
+
+Actions:
+	Set Resources("Current Player", Add, 400, ore);
+	Comment("Boss Bonus 5");
+	Display Text Message(Always Display, "\x007 Boss bonus! +400 gold!");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zerg Broodling", At least, 7);
+	Deaths("Player 8", "Zerg Ultralisk", At least, 2);
+	Deaths("Player 8", "Alan Schezar (Goliath)", At least, 3);
+	Deaths("Player 8", "Jim Raynor (Vulture)", At least, 1);
+	Deaths("Player 8", "Edmund Duke (Siege Tank)", At least, 1);
+
+Actions:
+	Set Resources("Current Player", Add, 450, ore);
+	Comment("Boss Bonus 6");
+	Display Text Message(Always Display, "\x007 Boss bonus! +450 gold!");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zerg Broodling", At least, 7);
+	Deaths("Player 8", "Zerg Ultralisk", At least, 2);
+	Deaths("Player 8", "Alan Schezar (Goliath)", At least, 3);
+	Deaths("Player 8", "Jim Raynor (Vulture)", At least, 1);
+	Deaths("Player 8", "Edmund Duke (Siege Tank)", At least, 1);
+	Deaths("Player 8", "Protoss Dark Templar", At least, 1);
+
+Actions:
+	Set Resources("Current Player", Add, 500, ore);
+	Comment("Boss Bonus 7");
+	Display Text Message(Always Display, "\x007 Boss bonus! +500 gold!");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zerg Broodling", At least, 7);
+	Deaths("Player 8", "Infested Duran", At least, 2);
+	Deaths("Player 8", "Alan Schezar (Goliath)", At least, 3);
+	Deaths("Player 8", "Jim Raynor (Vulture)", At least, 2);
+	Deaths("Player 8", "Edmund Duke (Siege Tank)", At least, 1);
+	Deaths("Player 8", "Samir Duran (Ghost)", At least, 1);
+	Deaths("Player 8", "Alexei Stukov (Ghost)", At least, 1);
+	Deaths("Player 8", "Protoss Dark Templar", At least, 1);
+
+Actions:
+	Set Resources("Current Player", Add, 550, ore);
+	Comment("Boss Bonus 8");
+	Display Text Message(Always Display, "\x007 Boss bonus! +550 gold!");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 70", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Location 70", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 70", 23);
+	Preserve Trigger();
+	Comment("Lurker Training 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 71", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Location 71", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 71", 25);
+	Preserve Trigger();
+	Comment("Lurker Training 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 72", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Location 72", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 72", 26);
+	Preserve Trigger();
+	Comment("Lurker Training 3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 73", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Location 73", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 73", 27);
+	Preserve Trigger();
+	Comment("Lurker Training 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 74", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Location 74", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 74", 28);
+	Preserve Trigger();
+	Comment("Lurker Training 5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 75", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Location 75", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 75", 41);
+	Preserve Trigger();
+	Comment("Lurker Training 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 8", "Zeratul (Dark Templar)", At least, 1);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x007Thanks For Playing!  You Won!\r\n\x013\x0062high - 2014\r\n\r\n\r\n\r\n\r\n\r\n");
+	Victory();
+	Comment("Victory*");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Bring("Player 1", "Any unit", "Location 90", At least, 1);
+
+Actions:
+	Kill Unit("Player 2", "Any unit");
+	Defeat();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Bring("Player 1", "Any unit", "Location 92", At least, 1);
+
+Actions:
+	Kill Unit("Player 3", "Any unit");
+	Defeat();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Bring("Player 1", "Any unit", "Location 93", At least, 1);
+
+Actions:
+	Kill Unit("Player 4", "Any unit");
+	Defeat();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Bring("Player 1", "Any unit", "Location 94", At least, 1);
+
+Actions:
+	Kill Unit("Player 5", "Any unit");
+	Defeat();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Score("Current Player", Kills, At most, 49);
+	Score("Current Player", Kills, At least, 25);
+
+Actions:
+	Set Score("Current Player", Subtract, 25, Kills);
+	Set Score("Current Player", Add, 5, Custom);
+	Set Resources("Current Player", Add, 1, ore);
+	Set Resources("Player 7", Add, 5, ore and gas);
+	Preserve Trigger();
+;	Comment("25 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Score("Current Player", Kills, At most, 49);
+	Score("Current Player", Kills, At least, 25);
+
+Actions:
+	Set Score("Current Player", Subtract, 25, Kills);
+	Set Score("Current Player", Add, 5, Custom);
+	Set Resources("Current Player", Add, 1, ore);
+	Set Resources("Player 7", Add, 5, ore and gas);
+	Preserve Trigger();
+;	Comment("25 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Score("Current Player", Kills, At most, 49);
+	Score("Current Player", Kills, At least, 25);
+
+Actions:
+	Set Score("Current Player", Subtract, 25, Kills);
+	Set Score("Current Player", Add, 5, Custom);
+	Set Resources("Current Player", Add, 1, ore);
+	Set Resources("Player 7", Add, 5, ore and gas);
+	Preserve Trigger();
+;	Comment("25 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Score("Current Player", Kills, At most, 49);
+	Score("Current Player", Kills, At least, 25);
+
+Actions:
+	Set Score("Current Player", Subtract, 25, Kills);
+	Set Score("Current Player", Add, 5, Custom);
+	Set Resources("Current Player", Add, 1, ore);
+	Set Resources("Player 7", Add, 5, ore and gas);
+	Preserve Trigger();
+;	Comment("25 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Score("Current Player", Kills, At most, 74);
+	Score("Current Player", Kills, At least, 50);
+
+Actions:
+	Set Score("Current Player", Subtract, 50, Kills);
+	Set Score("Current Player", Add, 10, Custom);
+	Set Resources("Current Player", Add, 2, ore);
+	Set Resources("Player 7", Add, 10, ore and gas);
+	Preserve Trigger();
+;	Comment("50 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Score("Current Player", Kills, At most, 74);
+	Score("Current Player", Kills, At least, 50);
+
+Actions:
+	Set Score("Current Player", Subtract, 50, Kills);
+	Set Score("Current Player", Add, 10, Custom);
+	Set Resources("Current Player", Add, 2, ore);
+	Set Resources("Player 7", Add, 10, ore and gas);
+	Preserve Trigger();
+;	Comment("50 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Score("Current Player", Kills, At most, 74);
+	Score("Current Player", Kills, At least, 50);
+
+Actions:
+	Set Score("Current Player", Subtract, 50, Kills);
+	Set Score("Current Player", Add, 10, Custom);
+	Set Resources("Current Player", Add, 2, ore);
+	Set Resources("Player 7", Add, 10, ore and gas);
+	Preserve Trigger();
+;	Comment("50 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Score("Current Player", Kills, At most, 74);
+	Score("Current Player", Kills, At least, 50);
+
+Actions:
+	Set Score("Current Player", Subtract, 50, Kills);
+	Set Score("Current Player", Add, 10, Custom);
+	Set Resources("Current Player", Add, 2, ore);
+	Set Resources("Player 7", Add, 10, ore and gas);
+	Preserve Trigger();
+;	Comment("50 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Score("Current Player", Kills, At most, 99);
+	Score("Current Player", Kills, At least, 75);
+
+Actions:
+	Set Score("Current Player", Subtract, 75, Kills);
+	Set Score("Current Player", Add, 15, Custom);
+	Set Resources("Current Player", Add, 3, ore);
+	Set Resources("Player 7", Add, 15, ore and gas);
+	Preserve Trigger();
+;	Comment("75 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Score("Current Player", Kills, At most, 99);
+	Score("Current Player", Kills, At least, 75);
+
+Actions:
+	Set Score("Current Player", Subtract, 75, Kills);
+	Set Score("Current Player", Add, 15, Custom);
+	Set Resources("Current Player", Add, 3, ore);
+	Set Resources("Player 7", Add, 15, ore and gas);
+	Preserve Trigger();
+;	Comment("75 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Score("Current Player", Kills, At most, 99);
+	Score("Current Player", Kills, At least, 75);
+
+Actions:
+	Set Score("Current Player", Subtract, 75, Kills);
+	Set Score("Current Player", Add, 15, Custom);
+	Set Resources("Current Player", Add, 3, ore);
+	Set Resources("Player 7", Add, 15, ore and gas);
+	Preserve Trigger();
+;	Comment("75 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Score("Current Player", Kills, At most, 99);
+	Score("Current Player", Kills, At least, 75);
+
+Actions:
+	Set Score("Current Player", Subtract, 75, Kills);
+	Set Score("Current Player", Add, 15, Custom);
+	Set Resources("Current Player", Add, 3, ore);
+	Set Resources("Player 7", Add, 15, ore and gas);
+	Preserve Trigger();
+;	Comment("75 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Score("Current Player", Kills, At most, 499);
+	Score("Current Player", Kills, At least, 100);
+
+Actions:
+	Set Score("Current Player", Subtract, 100, Kills);
+	Set Score("Current Player", Add, 20, Custom);
+	Set Resources("Current Player", Add, 4, ore);
+	Set Resources("Player 7", Add, 20, ore and gas);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Score("Current Player", Kills, At most, 499);
+	Score("Current Player", Kills, At least, 100);
+
+Actions:
+	Set Score("Current Player", Subtract, 100, Kills);
+	Set Score("Current Player", Add, 20, Custom);
+	Set Resources("Current Player", Add, 4, ore);
+	Set Resources("Player 7", Add, 20, ore and gas);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Score("Current Player", Kills, At most, 499);
+	Score("Current Player", Kills, At least, 100);
+
+Actions:
+	Set Score("Current Player", Subtract, 100, Kills);
+	Set Score("Current Player", Add, 20, Custom);
+	Set Resources("Current Player", Add, 4, ore);
+	Set Resources("Player 7", Add, 20, ore and gas);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Score("Current Player", Kills, At most, 499);
+	Score("Current Player", Kills, At least, 100);
+
+Actions:
+	Set Score("Current Player", Subtract, 100, Kills);
+	Set Score("Current Player", Add, 20, Custom);
+	Set Resources("Current Player", Add, 4, ore);
+	Set Resources("Player 7", Add, 20, ore and gas);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Score("Current Player", Kills, At most, 999);
+	Score("Current Player", Kills, At least, 500);
+
+Actions:
+	Set Score("Current Player", Subtract, 500, Kills);
+	Set Score("Current Player", Add, 100, Custom);
+	Set Resources("Current Player", Add, 20, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Score("Current Player", Kills, At most, 1999);
+	Score("Current Player", Kills, At least, 1000);
+
+Actions:
+	Set Score("Current Player", Subtract, 1000, Kills);
+	Set Score("Current Player", Add, 200, Custom);
+	Set Resources("Current Player", Add, 40, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Score("Current Player", Kills, At least, 2000);
+
+Actions:
+	Set Score("Current Player", Subtract, 2000, Kills);
+	Set Score("Current Player", Add, 400, Custom);
+	Set Resources("Current Player", Add, 80, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Score("Current Player", Kills, At most, 999);
+	Score("Current Player", Kills, At least, 500);
+
+Actions:
+	Set Score("Current Player", Subtract, 500, Kills);
+	Set Score("Current Player", Add, 100, Custom);
+	Set Resources("Current Player", Add, 20, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Score("Current Player", Kills, At most, 1999);
+	Score("Current Player", Kills, At least, 1000);
+
+Actions:
+	Set Score("Current Player", Subtract, 1000, Kills);
+	Set Score("Current Player", Add, 200, Custom);
+	Set Resources("Current Player", Add, 40, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Score("Current Player", Kills, At least, 2000);
+
+Actions:
+	Set Score("Current Player", Subtract, 2000, Kills);
+	Set Score("Current Player", Add, 400, Custom);
+	Set Resources("Current Player", Add, 80, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Score("Current Player", Kills, At most, 999);
+	Score("Current Player", Kills, At least, 500);
+
+Actions:
+	Set Score("Current Player", Subtract, 500, Kills);
+	Set Score("Current Player", Add, 100, Custom);
+	Set Resources("Current Player", Add, 20, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Score("Current Player", Kills, At most, 1999);
+	Score("Current Player", Kills, At least, 1000);
+
+Actions:
+	Set Score("Current Player", Subtract, 1000, Kills);
+	Set Score("Current Player", Add, 200, Custom);
+	Set Resources("Current Player", Add, 40, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Score("Current Player", Kills, At least, 2000);
+
+Actions:
+	Set Score("Current Player", Subtract, 2000, Kills);
+	Set Score("Current Player", Add, 400, Custom);
+	Set Resources("Current Player", Add, 80, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Score("Current Player", Kills, At most, 999);
+	Score("Current Player", Kills, At least, 500);
+
+Actions:
+	Set Score("Current Player", Subtract, 500, Kills);
+	Set Score("Current Player", Add, 100, Custom);
+	Set Resources("Current Player", Add, 20, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("100 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Score("Current Player", Kills, At most, 1999);
+	Score("Current Player", Kills, At least, 1000);
+
+Actions:
+	Set Score("Current Player", Subtract, 1000, Kills);
+	Set Score("Current Player", Add, 200, Custom);
+	Set Resources("Current Player", Add, 40, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Score("Current Player", Kills, At least, 2000);
+
+Actions:
+	Set Score("Current Player", Subtract, 2000, Kills);
+	Set Score("Current Player", Add, 400, Custom);
+	Set Resources("Current Player", Add, 80, ore);
+	Set Resources("Player 7", Add, 200, ore and gas);
+	Preserve Trigger();
+;	Comment("1000 Kills");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 500);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 1.\r\n\x013\x007+100 Gold.");
+	Set Resources("Current Player", Add, 100, ore);
+;	Comment("Level 1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 1000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 2.\r\n\x013\x007+200 Gold.");
+	Set Resources("Current Player", Add, 200, ore);
+;	Comment("Level 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 2000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 3.\r\n\x013\x007+300 Gold.");
+	Set Resources("Current Player", Add, 300, ore);
+;	Comment("Level 3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 3000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 4.\r\n\x013\x007+400 Gold.");
+	Set Resources("Current Player", Add, 400, ore);
+;	Comment("Level 4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 5000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 5.\r\n\x013\x007+500 Gold.");
+	Set Resources("Current Player", Add, 500, ore);
+;	Comment("Level 5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 7000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 6.\r\n\x013\x007+600 Gold.");
+	Set Resources("Current Player", Add, 600, ore);
+;	Comment("Level 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 10000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 7.\r\n\x013\x007+700 Gold.");
+	Set Resources("Current Player", Add, 700, ore);
+;	Comment("Level 7");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 15000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 8.\r\n\x013\x007+800 Gold.");
+	Set Resources("Current Player", Add, 800, ore);
+;	Comment("Level 8");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 20000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 9.\r\n\x013\x007+900 Gold.");
+	Set Resources("Current Player", Add, 900, ore);
+;	Comment("Level 9");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 25000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 10\r\n\x013\x007+1000 Gold.");
+	Set Resources("Current Player", Add, 1000, ore);
+;	Comment("Level 10");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Terran Engineering Bay", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Terran Engineering Bay", 1, "terran up 1b");
+	Create Unit("Player 7", "Terran Engineering Bay", 1, "terran up 2b");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Terran Engineering Bay", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Terran Engineering Bay", 1, "terran up 1b");
+	Create Unit("Player 7", "Terran Engineering Bay", 1, "terran up 2b");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Zerg Evolution Chamber", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Zerg Evolution Chamber", 1, "zerg up 2");
+	Create Unit("Player 7", "Zerg Evolution Chamber", 1, "zerg up 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Zerg Evolution Chamber", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Zerg Evolution Chamber", 1, "zerg up 2");
+	Create Unit("Player 7", "Zerg Evolution Chamber", 1, "zerg up 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Forge", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Forge", 1, "forge 2");
+	Create Unit("Player 7", "Protoss Forge", 1, "forge 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Forge", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Forge", 1, "forge 2");
+	Create Unit("Player 7", "Protoss Forge", 1, "forge 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Gateway", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Gateway", 1, "Gateway 1");
+	Create Unit("Player 7", "Protoss Gateway", 1, "gateway 2");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Gateway", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Gateway", 1, "Gateway 1");
+	Create Unit("Player 7", "Protoss Gateway", 1, "gateway 2");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Pylon", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Pylon", 1, "fpylon 2");
+	Create Unit("Player 7", "Protoss Pylon", 1, "pylon 1");
+	Create Unit("Player 7", "Protoss Pylon", 1, "pylon 1");
+	Create Unit("Player 7", "Protoss Pylon", 1, "fpylon 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Pylon", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Pylon", 1, "fpylon 2");
+	Create Unit("Player 7", "Protoss Pylon", 1, "pylon 1");
+	Create Unit("Player 7", "Protoss Pylon", 1, "pylon 1");
+	Create Unit("Player 7", "Protoss Pylon", 1, "fpylon 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 35000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 11\r\n\x013\x007+2000 Gold.");
+	Set Resources("Current Player", Add, 2000, ore);
+;	Comment("Level 11");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 50000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 12\r\n\x013\x007+3000 Gold.");
+	Set Resources("Current Player", Add, 3000, ore);
+;	Comment("Level 12");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 75000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 13\r\n\x013\x007+4000 Gold.");
+	Set Resources("Current Player", Add, 4000, ore);
+;	Comment("Level 13");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 100000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 14\r\n\x013\x007+5000 Gold.");
+	Set Resources("Current Player", Add, 5000, ore);
+;	Comment("Level 14");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 130000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 15\r\n\x013\x007+6000 Gold.");
+	Set Resources("Current Player", Add, 6000, ore);
+;	Comment("Level 15");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Pylon", Exactly, 2);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Pylon", 1, "fpylon 2");
+	Create Unit("Player 7", "Protoss Pylon", 1, "pylon 1");
+	Create Unit("Player 7", "Protoss Pylon", 1, "pylon 1");
+	Create Unit("Player 7", "Protoss Pylon", 1, "fpylon 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Pylon", Exactly, 3);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Pylon", 1, "fpylon 2");
+	Create Unit("Player 7", "Protoss Pylon", 1, "pylon 1");
+	Create Unit("Player 7", "Protoss Pylon", 1, "pylon 1");
+	Create Unit("Player 7", "Protoss Pylon", 1, "fpylon 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Engineering Bay", "terran up 2a", At least, 1);
+
+Actions:
+	Remove Unit At Location("All players", "Terran Engineering Bay", All, "terran up 2a");
+	Create Unit with Properties("Player 7", "Terran Engineering Bay", 1, "terran up 2b", 0);
+	Display Text Message(Always Display, "\x013\x003You're Wasting Your Time!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Anti-Lift Terran Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 12", "Men", "Anywhere", At least, 1);
+
+Actions:
+	Preserve Trigger();
+	Kill Unit("Player 12", "Men");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Countdown Timer(At most, 5);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+	Wait(10000);
+	Set Switch("Switch200", set);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Switch("Switch200", Set);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(At most, 5);
+	Countdown Timer(At least, 1);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+	Wait(10000);
+	Set Switch("Switch201", set);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Switch("Switch201", Set);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(At most, 5);
+	Countdown Timer(At least, 1);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+	Wait(10000);
+	Set Switch("Switch202", set);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Switch("Switch202", Set);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(At most, 5);
+	Countdown Timer(At least, 1);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+	Wait(10000);
+	Set Switch("Switch203", set);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Switch("Switch203", Set);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(At most, 5);
+	Countdown Timer(At least, 1);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+	Wait(10000);
+	Set Switch("Switch204", set);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Switch("Switch204", Set);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(At most, 5);
+	Countdown Timer(At least, 1);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+	Wait(10000);
+	Set Switch("Switch205", set);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Switch("Switch205", Set);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(At most, 5);
+	Countdown Timer(At least, 1);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+	Wait(10000);
+	Set Switch("Switch206", set);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Switch("Switch206", Set);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(At most, 5);
+	Countdown Timer(At least, 1);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+	Wait(10000);
+	Set Switch("Switch207", set);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Switch("Switch207", Set);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Countdown Timer(At most, 5);
+
+Actions:
+	Set Resources("Player 8", Add, 1, gas);
+;	Comment("Countdown Timer");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 8"){
+Conditions:
+	Always();
+
+Actions:
+	Order("Player 8", "Men", "Location 1", "Temple", patrol);
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Countdown Timer(Exactly, 0);
+	Command("Heroes", "Gui Montag (Firebat)", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Gui Montag (Firebat)", 1, "Anywhere", "_repick");
+	Wait(20);
+	Display Text Message(Always Display, "\x006Sorry No Splash Units Allowed During Town Attack!");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Countdown Timer(Exactly, 0);
+	Command("Heroes", "Tassadar/Zeratul (Archon)", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Tassadar/Zeratul (Archon)", 1, "Anywhere", "_repick");
+	Wait(50);
+	Display Text Message(Always Display, "\x006Sorry No Splash Units Allowed During Town Attack!");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 6"){
+Conditions:
+	Always();
+
+Actions:
+	Set Alliance Status("Player 7", Ally);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Always();
+
+Actions:
+	Set Alliance Status("Heroes", Ally);
+	Set Alliance Status("Player 7", Ally);
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 170000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 16\r\n\x013\x007+8000 Gold");
+	Set Resources("Current Player", Add, 8000, ore);
+;	Comment("Level 15");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 220000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 17\r\n\x013\x007+10000 Gold");
+	Set Resources("Current Player", Add, 10000, ore);
+;	Comment("Level 15");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 280000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 18\r\n\x013\x007+13000 Gold");
+	Set Resources("Current Player", Add, 13000, ore);
+;	Comment("Level 15");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 350000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 19\r\n\x013\x007+16000 Gold");
+	Set Resources("Current Player", Add, 16000, ore);
+;	Comment("Level 15");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Score("Current Player", Custom, At least, 400000);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x003Level Up!  Level 20 (Final)\r\n\x013\x007+20000 Gold");
+	Set Resources("Current Player", Add, 20000, ore);
+;	Comment("Level 15");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "to training", At least, 1);
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+	Bring("Current Player", "Men", "_area", Exactly, 0);
+
+Actions:
+	Center View("_Trainingpick");
+	Move Unit("Current Player", "Men", All, "to training", "Location 32");
+	Display Text Message(Always Display, "\x013\x005Select A Monster To Train Against.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 38", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", Exactly, 0);
+
+Actions:
+	Center View("_Trainarchon");
+	Move Unit("Current Player", "Men", All, "Location 38", "_Trainarchon");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Spirit Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Archon");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 37", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", Exactly, 0);
+
+Actions:
+	Center View("_Traingoon");
+	Move Unit("Current Player", "Men", All, "Location 37", "_Traingoon");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Psionic Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Dragoon");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 34", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", Exactly, 0);
+
+Actions:
+	Center View("_Trainhydra");
+	Move Unit("Current Player", "Men", All, "Location 34", "_Trainhydra");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Medium Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Hydralisk");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 36", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", Exactly, 0);
+
+Actions:
+	Center View("_Trainlurk");
+	Move Unit("Current Player", "Men", All, "Location 36", "_Trainlurk");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Stealth Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Lurker");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 33", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", Exactly, 0);
+
+Actions:
+	Center View("_Trainultra");
+	Move Unit("Current Player", "Men", All, "Location 33", "_Trainultra");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Mega Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Ultralisk");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Location 35", At least, 1);
+	Bring("Current Player", "Men", "_Trainingpick", Exactly, 0);
+
+Actions:
+	Center View("_Trainzerg");
+	Move Unit("Current Player", "Men", All, "Location 35", "_Trainzerg");
+	Display Text Message(Always Display, "\x013\x005Good Luck, You Are Facing 5 Small Fiends.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Enter Training Zergling");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "_area", At least, 1);
+	Bring("Player 7", "Men", "walker2", At least, 1);
+
+Actions:
+	Modify Unit Hit Points("Heroes", "Men", 100, All, "_area");
+	Modify Unit Energy("Heroes", "Men", 100, All, "_area");
+	Move Unit("Player 7", "Men", 1, "walker turf", "walker1");
+	Order("Player 7", "Men", "walker1", "walker2", move);
+	Set Resources("Player 7", Add, 300, ore and gas);
+	Set Deaths("Player 7", "Floor Missile Trap", Add, 1);
+	Preserve Trigger();
+	Comment("Heal");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "teleport town", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Men", All, "teleport town", "transport land area");
+	Minimap Ping("transport land area");
+	Preserve Trigger();
+	Comment("teleport from town to area");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "teleport area", At least, 1);
+
+Actions:
+	Move Unit("Current Player", "Men", All, "teleport area", "tunnel return town");
+	Minimap Ping("tunnel return town");
+	Preserve Trigger();
+	Comment("teleport from area to town");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Countdown Timer(Exactly, 200);
+
+Actions:
+	Run AI Script("TSUx");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", Exactly, 0);
+
+Actions:
+	Leader Board Points("Experience:", Custom);
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("EXP leaderboard");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 0);
+
+Actions:
+	Leader Board Points("Experience:", Custom);
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("exp during attack leaderboard");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 2, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Broodling(s) killed:", "Zerg Broodling");
+	Leaderboard Computer Players(disabled);
+	Wait(5000);
+	Leader Board Points("Experience:", Custom);
+	Leaderboard Computer Players(disabled);
+	Wait(5000);
+	Preserve Trigger();
+	Comment("level 1 leaderboard");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 2, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("Ultralisk(s) killed:", "Zerg Ultralisk");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("level 1 leaderboard");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 2, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 3);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 1 leaderboard");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 3, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 3);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 2 leaderboard");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 3, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Broodling(s) killed:", "Zerg Broodling");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("leaderboard level 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 3, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("Ultralisk(s) killed:", "Zerg Ultralisk");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("leaderboard level 2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 4, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 3);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 3 leaderboard count reset");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 4, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("Ultralisk(s) killed:", "Zerg Ultralisk");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 3 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 4, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Goliath(s) killed:", "Alan Schezar (Goliath)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 3 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 5, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 3);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 4 leaderboard count reset");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 5, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Goliath(s) killed:", "Alan Schezar (Goliath)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 4 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 5, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("Tank(s) killed:", "Edmund Duke (Siege Tank)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 4 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 6, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 3);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 5 leaderboard count reset");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 6, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Goliath(s) killed:", "Alan Schezar (Goliath)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 5 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 6, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("Goliath(s) killed:", "Alan Schezar (Goliath)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 5 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 7, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 3);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 6 leaderboard count reset");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 7, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Goliath(s) killed:", "Alan Schezar (Goliath)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 6 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 7, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("Vulture(s) killed:", "Jim Raynor (Vulture)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 6 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 8, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 4);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 7 leaderboard count reset");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 8, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Goliath(s) killed:", "Alan Schezar (Goliath)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 7 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 8, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("DT(s) killed:", "Protoss Dark Templar");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 7 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 8, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 3);
+
+Actions:
+	Leader Board Kills("Tank(s) killed:", "Edmund Duke (Siege Tank)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 7 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 9, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 4);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 8 leaderboard count reset");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 9, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Alexei Stukov(s) killed:", "Alexei Stukov (Ghost)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 8 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 9, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("Samir Duran(s) killed:", "Samir Duran (Ghost)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 8 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 9, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 3);
+
+Actions:
+	Leader Board Kills("ReAp3r(s) killed:", "Infested Duran");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 8 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 10, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", At least, 4);
+
+Actions:
+	Preserve Trigger();
+	Comment("level 9 leaderboard count reset");
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Set To, 0);
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 10, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 1);
+
+Actions:
+	Leader Board Kills("Goliath(s) killed:", "Alan Schezar (Goliath)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 9 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 10, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 2);
+
+Actions:
+	Leader Board Kills("DT(s) killed:", "Protoss Dark Templar");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 9 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Player 8", "Men", "_area", At least, 1);
+	Accumulate("Player 8", Exactly, 10, gas);
+	Deaths("Player 7", "Floor Hatch (UNUSED)", Exactly, 3);
+
+Actions:
+	Leader Board Kills("Alexei Stukov(s) killed:", "Alexei Stukov (Ghost)");
+	Leaderboard Computer Players(disabled);
+	Preserve Trigger();
+	Comment("Level 9 leaderboard (unedited)");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 7", "Floor Missile Trap", Exactly, 2);
+
+Actions:
+	Set Deaths("Player 7", "Floor Missile Trap", Set To, 0);
+	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Add, 1);
+	Preserve Trigger();
+	Comment("timer x2");
+}
+
+//-----------------------------------------------------------------//
+

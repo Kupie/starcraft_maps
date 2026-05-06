@@ -1,0 +1,158 @@
+// leaderboard.eps
+// Edge-triggered global leaderboard controller.
+// - Outside active waves: show Experience (Custom score), applied only when changing state.
+// - During active waves: every LB_ROTATE_FRAMES, pick the next boss-unit kill board
+//   where at least one active human player has >= 1 kill for that unit.
+// - If no boss-unit kills exist yet, leave/show Experience.
+
+import common_vars;
+
+const LB_ROTATE_FRAMES = 120;  // 5 seconds at 24 fps
+const LB_BOSS_MODE_COUNT = 9;
+
+// Last board actually applied to the StarCraft leaderboard UI.
+// 999 forces the first Experience board to apply on startup.
+var displayedLeaderboardMode = 999;
+var currentBossLeaderboardMode = 0;
+var leaderboardRotateTimer = LB_ROTATE_FRAMES;
+
+function applyExperienceBoard() {
+	LeaderBoardScore(Custom, "Experience");
+	LeaderBoardComputerPlayers(Disable);
+	displayedLeaderboardMode = 0;
+}
+
+function applyBossBoard(mode) {
+	if (mode == 1) {
+		LeaderBoardKills($U("Zerg Broodling"), "Broodlings Killed");
+	}
+	if (mode == 2) {
+		LeaderBoardKills($U("Zerg Ultralisk"), "Ultralisks Killed");
+	}
+	if (mode == 3) {
+		LeaderBoardKills($U("Alan Schezar (Goliath)"), "Goliaths Killed");
+	}
+	if (mode == 4) {
+		LeaderBoardKills($U("Edmund Duke (Tank Mode)"), "Tanks Killed");
+	}
+	if (mode == 5) {
+		LeaderBoardKills($U("Jim Raynor (Vulture)"), "Vultures Killed");
+	}
+	if (mode == 6) {
+		LeaderBoardKills($U("Protoss Dark Templar"), "Dark Templars Killed");
+	}
+	if (mode == 7) {
+		LeaderBoardKills($U("Alexei Stukov (Ghost)"), "Stukovs Killed");
+	}
+	if (mode == 8) {
+		LeaderBoardKills($U("Samir Duran (Ghost)"), "Durans Killed");
+	}
+	if (mode == 9) {
+		LeaderBoardKills($U("Infested Duran"), "Infested Durans Killed");
+	}
+	LeaderBoardComputerPlayers(Disable);
+	displayedLeaderboardMode = mode;
+}
+
+function activeHumanKilledUnit(unitType : TrgUnit) {
+	var found = 0;
+	foreach(player : py_range(0, 5)) {
+		if (playerexist(player) && Kills(player, AtLeast, 1, unitType)) {
+			found = 1;
+		}
+	}
+	return found;
+}
+
+function bossModeHasKills(mode) {
+	if (mode == 1) { return activeHumanKilledUnit($U("Zerg Broodling")); }
+	if (mode == 2) { return activeHumanKilledUnit($U("Zerg Ultralisk")); }
+	if (mode == 3) { return activeHumanKilledUnit($U("Alan Schezar (Goliath)")); }
+	if (mode == 4) { return activeHumanKilledUnit($U("Edmund Duke (Tank Mode)")); }
+	if (mode == 5) { return activeHumanKilledUnit($U("Jim Raynor (Vulture)")); }
+	if (mode == 6) { return activeHumanKilledUnit($U("Protoss Dark Templar")); }
+	if (mode == 7) { return activeHumanKilledUnit($U("Alexei Stukov (Ghost)")); }
+	if (mode == 8) { return activeHumanKilledUnit($U("Samir Duran (Ghost)")); }
+	if (mode == 9) { return activeHumanKilledUnit($U("Infested Duran")); }
+	return 0;
+}
+
+function anyBossModeHasKills() {
+	var found = 0;
+	foreach(mode : py_range(1, LB_BOSS_MODE_COUNT + 1)) {
+		if (bossModeHasKills(mode)) {
+			found = 1;
+		}
+	}
+	return found;
+}
+
+function pickNextVisibleBossMode() {
+	foreach(step : py_range(0, LB_BOSS_MODE_COUNT)) {
+		currentBossLeaderboardMode++;
+		if (currentBossLeaderboardMode > LB_BOSS_MODE_COUNT) {
+			currentBossLeaderboardMode = 1;
+		}
+		if (bossModeHasKills(currentBossLeaderboardMode)) {
+			return currentBossLeaderboardMode;
+		}
+	}
+	return 0;
+}
+
+function waveIsActiveForLeaderboard() {
+	if (common_vars.bossWaveActive != 0) {
+		return 1;
+	}
+	if (Bring(P8, AtLeast, 1, "(men)", "_area")) {
+		return 1;
+	}
+	return 0;
+}
+
+function showExperienceIfNeeded() {
+	currentBossLeaderboardMode = 0;
+	leaderboardRotateTimer = LB_ROTATE_FRAMES;
+	if (displayedLeaderboardMode != 0) {
+		applyExperienceBoard();
+	}
+}
+
+function onPluginStart() {
+	applyExperienceBoard();
+}
+
+function afterTriggerExec() {
+	if (!waveIsActiveForLeaderboard()) {
+		showExperienceIfNeeded();
+		return;
+	}
+
+	// During waves, do not spam leaderboard actions. If no tracked boss kills exist yet,
+	// leave/show Experience until one appears.
+	if (!anyBossModeHasKills()) {
+		if (displayedLeaderboardMode != 0) {
+			applyExperienceBoard();
+		}
+		return;
+	}
+
+	if (leaderboardRotateTimer > 0) {
+		leaderboardRotateTimer--;
+		return;
+	}
+
+	leaderboardRotateTimer = LB_ROTATE_FRAMES;
+	var nextMode = pickNextVisibleBossMode();
+
+	if (nextMode == 0) {
+		if (displayedLeaderboardMode != 0) {
+			applyExperienceBoard();
+		}
+		return;
+	}
+
+	if (displayedLeaderboardMode != nextMode) {
+		applyBossBoard(nextMode);
+	}
+}

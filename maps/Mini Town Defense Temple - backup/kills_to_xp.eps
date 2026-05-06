@@ -1,0 +1,77 @@
+import common_vars;
+
+// kills_to_xp.eps
+// Converts accumulated Kill score into Custom score (XP) + Ore (minerals).
+//
+// Original pattern (separate triggers per player P1–P6, identical logic):
+//   25 kills bracket (25–49):   -25 kills, +5 XP, +1 ore
+//   50 kills bracket (50–74):   -50 kills, +10 XP, +2 ore
+//   75 kills bracket (75–99):   -75 kills, +15 XP, +3 ore
+//   100 kills bracket (100–499): -100 kills, +20 XP, +4 ore
+//   500 kills bracket (500–999): -500 kills, +100 XP, +20 ore
+//   1000 kills bracket (1000–1999): -1000 kills, +200 XP, +40 ore
+//   2000+ kills bracket (2000+): -2000 kills, +400 XP, +80 ore
+//
+// NOTE: P1's triggers did NOT have "Set Resources(P7, Add, N, ore and gas)" —
+// only P2–P6 did. This may have been an oversight in the original map.
+// We replicate exact original behavior: P7 gets resources only from P2–P6.
+//
+// IMPORTANT: These must fire multiple times per frame if kills are high,
+// since each trigger fires once per frame. With hyper triggers in EUD mode,
+// each afterTriggerExec runs every frame. Multiple brackets can apply in one
+// frame — this is correct behavior (same as original Preserve Trigger behavior
+// where all matching triggers fire in one trigger round).
+
+function afterTriggerExec() {
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+
+		// ── 2000+ kills ───────────────────────────────────────────
+		if (Score(player, Kills, AtLeast, 2000)) {
+			SetScore(player, Subtract, 2000, Kills);
+			SetScore(player, Add, 400, Custom);
+			SetResources(player, Add, 80, Ore);
+		}
+
+		// ── 1000–1999 ─────────────────────────────────────────────
+		else if (Score(player, Kills, AtLeast, 1000)) {
+			SetScore(player, Subtract, 1000, Kills);
+			SetScore(player, Add, 200, Custom);
+			SetResources(player, Add, 40, Ore);
+		}
+
+		// ── 500–999 ───────────────────────────────────────────────
+		else if (Score(player, Kills, AtLeast, 500)) {
+			SetScore(player, Subtract, 500, Kills);
+			SetScore(player, Add, 100, Custom);
+			SetResources(player, Add, 20, Ore);
+		}
+
+		// ── 100–499 ───────────────────────────────────────────────
+		else if (Score(player, Kills, AtLeast, 100)) {
+			SetScore(player, Subtract, 100, Kills);
+			SetScore(player, Add, 20, Custom);
+			SetResources(player, Add, 4, Ore);
+		}
+
+		// ── 75–99 ─────────────────────────────────────────────────
+		else if (Score(player, Kills, AtLeast, 75)) {
+			SetScore(player, Subtract, 75, Kills);
+			SetScore(player, Add, 15, Custom);
+			SetResources(player, Add, 3, Ore);
+		}
+
+		// ── 50–74 ─────────────────────────────────────────────────
+		else if (Score(player, Kills, AtLeast, 50)) {
+			SetScore(player, Subtract, 50, Kills);
+			SetScore(player, Add, 10, Custom);
+			SetResources(player, Add, 2, Ore);
+		}
+
+		// ── 25–49 ─────────────────────────────────────────────────
+		else if (Score(player, Kills, AtLeast, 25)) {
+			SetScore(player, Subtract, 25, Kills);
+			SetScore(player, Add, 5, Custom);
+			SetResources(player, Add, 1, Ore);
+		}
+	}
+}

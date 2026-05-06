@@ -65,11 +65,6 @@ function onPluginStart() {
 	introTimer = 256;
 	
 	
-	// ── Try to get CPU to rebuild town  ────────────────────────────
-	setcurpl(P7);
-	SetResources(P7, Add, 50000, OreAndGas);
-	RunAIScriptAt("Terran Expansion Custom Level", "CPUTown"); // Terran AI
-	
 	
 	// ───── spawn dark templar (hero) after setting it as NOT perm cloaked, then reset unit data back to be cloaked ───────────────────
 	// ───── This makes it visible for everyone when picking heroes, as there's only one P9 dark templar pre-placed on the map for hero selection───────────

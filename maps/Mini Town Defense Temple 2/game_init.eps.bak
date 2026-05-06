@@ -8,7 +8,6 @@
 // Order(unit, player, startArea, order, targetLoc) -- Patrol is a bare constant
 
 import common_vars;
-import wave_spawns_array;
 
 var dtStatusFlagAddr = 0;
 
@@ -186,9 +185,6 @@ function afterTriggerExec() {
 	// ── Town-attack warning + hero retreat (timer 5) ──────────────────────
 	if (CountdownTimer(Exactly, 5) && townAttackWarnShown == 0) {
 		townAttackWarnShown = 1;	
-		if (common_vars.currentWave + 1 <= wave_spawns_array.NUM_WAVES) {
-			printAll("\x13\x04Wave \x06{} \x04of \x06{} \x04incoming!", common_vars.currentWave + 1, wave_spawns_array.NUM_WAVES);
-		}
 		foreach(player : EUDLoopPlayer("Human", Force1)) {
 			setcurpl(player);
 	

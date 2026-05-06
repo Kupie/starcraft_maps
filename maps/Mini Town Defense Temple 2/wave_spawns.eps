@@ -41,7 +41,7 @@ function onPluginStart() {
 	startupGrace = 0;
 	common_vars.bossWaveActive = 0;
 	common_vars.finalWaveReached = 0;
-	SetCountdownTimer(SetTo, 225);
+	SetCountdownTimer(SetTo, 255);
 }
 
 function orderP8WaveUnits() {
@@ -77,7 +77,7 @@ function finishWaveRows() {
 }
 
 function resetCountdownForNextWave() {
-	SetCountdownTimer(SetTo, 210);
+	SetCountdownTimer(SetTo, 240);
 	ModifyUnitHitPoints(1, "Buildings", P7, "Temple", 100);
 	ModifyUnitShields(1, "Buildings", P7, "Temple", 100);
 	ModifyUnitShields(All, "Warbringer (Reaver)", P7, "Anywhere", 100);
@@ -85,9 +85,22 @@ function resetCountdownForNextWave() {
 	waitingForClear = 0;
 	roundArmed = 1;
 	common_vars.bossWaveActive = 0;
-	bwrite(0x58D3F7, 135);	// P8 Protoss Armor = 135 during training phase
+	bwrite(0x58D3F7, 135);	// P8 Protoss Armor = 135 during training phase	
 }
 
+function initTownRebuild () {
+	// ── Try to get CPU to rebuild town  ────────────────────────────
+	setcurpl(P7);
+	SetResources(P7, Add, 50000, OreAndGas);
+	RunAIScriptAt("TSUP", "whitebuild1");
+	RunAIScriptAt("TSUP", "whitebuild2");
+	RunAIScriptAt("TSUP", "whitebuild3");
+	RunAIScriptAt("TSUP", "whitebuild4");
+	RunAIScriptAt("TSUP", "whitebuild5");
+	RunAIScriptAt("TSUP", "whitebuild6");
+	RunAIScriptAt("TSUP", "whitebuild7");
+
+}
 function spawnCurrentRow() {
 	if (activeWaveRow >= activeWaveEnd) {
 		finishWaveRows();
@@ -174,7 +187,12 @@ function detectWaveClearAndResetTimer() {
 }
 
 function afterTriggerExec() {
+	const cp = getcurpl();
+	
 	detectCountdownWaveStart();
 	tickActiveWave();
 	detectWaveClearAndResetTimer();
+	initTownRebuild();
+	
+	setcurpl(cp);
 }

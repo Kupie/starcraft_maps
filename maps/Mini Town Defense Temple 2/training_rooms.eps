@@ -45,31 +45,31 @@ const exitLocs = list(
 );
 
 const archonLocs = list(
-	py_str("Location 82"), py_str("Location 83"), py_str("Location 84"),
-	py_str("Location 85"), py_str("Location 86"), py_str("Location 87"),
-	py_str("Location 83 2"), py_str("Location 85 2"), py_str("Location 87 2")
+	py_str("archon1"), py_str("archon2"), py_str("archon3"),
+	py_str("archon4"), py_str("archon5"), py_str("archon6")
 );
 const dragonLocs = list(
-	py_str("Location 76"), py_str("Location 77"), py_str("Location 78"),
-	py_str("Location 79"), py_str("Location 80"), py_str("Location 81")
+	py_str("Dragoon1"), py_str("Dragoon2"), py_str("Dragoon3"), 
+	py_str("Dragoon4"), py_str("Dragoon5"), py_str("Dragoon6"),
+	py_str("Dragoon7"), py_str("Dragoon8"), py_str("Dragoon9"),
 );
 const hydraLocs = list(
-	py_str("Location 57"), py_str("Location 58"), py_str("Location 59"),
-	py_str("Location 60"), py_str("Location 61"), py_str("Location 62"),
-	py_str("Location 61 2"), py_str("Location 59 2"), py_str("Location 57 2")
+	py_str("hydra1"), py_str("hydra2"), py_str("hydra3"),
+	py_str("hydra4"), py_str("hydra5"), py_str("hydra6"),
+	py_str("hydra7"), py_str("hydra8"), py_str("hydra9")
 );
 const ultraLocs = list(
-	py_str("Location 63"), py_str("Location 65"), py_str("Location 66"),
-	py_str("Location 67"), py_str("Location 68"), py_str("Location 69"),
-	py_str("Location 65 2"), py_str("Location 67 2"), py_str("Location 69 2")
+	py_str("Ultralisk1"), py_str("Ultralisk2"), py_str("Ultralisk3"), 
+	py_str("Ultralisk4"), py_str("Ultralisk5"), py_str("Ultralisk6")
 );
 const lurkerLocs = list(
-	py_str("Location 70"), py_str("Location 71"), py_str("Location 72"),
-	py_str("Location 73"), py_str("Location 74"), py_str("Location 75")
+	py_str("Lurker1"), py_str("Lurker2"), py_str("Lurker3"),
+	py_str("Lurker4"), py_str("Lurker5"), py_str("Lurker6"),
+	py_str("Lurker7"), py_str("Lurker8"), py_str("Lurker9")
 );
 const zerglingLocs = list(
-	py_str("Location 51"), py_str("Location 52"), py_str("Location 53"),
-	py_str("Location 54"), py_str("Location 55"), py_str("Location 56")
+	py_str("zergling1"), py_str("zergling2"), py_str("zergling3"), 
+	py_str("zergling4"), py_str("zergling5"), py_str("zergling6")
 );
 
 const despawnLocs = list(
@@ -126,7 +126,7 @@ function afterTriggerExec() {
 		}
 
 		// ── Archon training mob spawn (100% HP + 100% shield) ─────────────
-		foreach(i : py_range(9)) {
+		foreach(i : py_range(6)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", archonLocs[i]) &&
 				Bring(P8, Exactly, 0, "Protoss Archon", archonLocs[i])
@@ -137,7 +137,7 @@ function afterTriggerExec() {
 		}
 
 		// ── Dragoon training mob spawn (100% HP + 100% shield) ────────────
-		foreach(i : py_range(6)) {
+		foreach(i : py_range(9)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", dragonLocs[i]) &&
 				Bring(P8, Exactly, 0, "Protoss Dragoon", dragonLocs[i])
@@ -157,7 +157,7 @@ function afterTriggerExec() {
 		}
 
 		// ── Ultralisk training mob spawn (100% HP) ────────────────────────
-		foreach(i : py_range(9)) {
+		foreach(i : py_range(6)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", ultraLocs[i]) &&
 				Bring(P8, Exactly, 0, "Zerg Ultralisk", ultraLocs[i])
