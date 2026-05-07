@@ -4,10 +4,11 @@ Conditions:
 
 Actions:
 	Set Mission Objectives("Levels at 500, 1k, 2k, 3k, 5k, 7k, 10k, 15k, 20k, 25k, 35k, 50k, 75k, 100k, 130k, 170k, 220k, 280k, 350k, and 400k experience.\r\n\r\nRewards up to 20,000 minerals.");
-	Display Text Message(Always Display, "\x004Now \x006S\x004elect \x006Y\x004our \x006H\x004ero and get some cash!\r\n\r\n\r\n\r\n\r\n");
-	Wait(6000);
+	Center View("Temple");
 	Display Text Message(Always Display, "YOU MUST DEFEND THE TEMPLE.  Every round!");
+	Wait(6000);
 	Set Resources("Current Player", Add, 200, ore);
+	Display Text Message(Always Display, "\x004Now \x006S\x004elect \x006Y\x004our \x006H\x004ero and get some cash!\r\n\r\n\r\n\r\n\r\n");
 	Comment("Starting Triggers");
 	Minimap Ping("_Heropick");
 	Wait(1000);
@@ -25,11 +26,12 @@ Conditions:
 	Accumulate("Player 8", At most, 9, gas);
 
 Actions:
-	Set Countdown Timer(Set To, 210);
+	Set Countdown Timer(Set To, 240);
 	Modify Unit Hit Points("Player 7", "Buildings", 100, 1, "Temple");
 	Modify Unit Shield Points("Player 7", "Buildings", 100, 1, "Temple");
-	Modify Unit Shield Points("Player 7", "Warbringer (Reaver)", 100, All, "Anywhere");
-	Modify Unit Hit Points("Player 7", "Warbringer (Reaver)", 100, All, "Anywhere");
+	Modify Unit Shield Points("Player 7", "Warbringer (Reaver)", 100, All, "_area");
+	Modify Unit Hit Points("Player 7", "Warbringer (Reaver)", 100, 1, "_area");
+	Display Text Message(Always Display, "\x007 The temple has been healed");
 	Preserve Trigger();
 ;	Comment("Countdown Timer");
 }
@@ -47,6 +49,7 @@ Actions:
 	Move Unit("Heroes", "Men", All, "_Trainingpick", "_healing");
 	Preserve Trigger();
 ;	Comment("Countdown Timer");
+	Kill Unit At Location("Player 6", "Men", All, "_Alltraining");
 }
 
 //-----------------------------------------------------------------//
@@ -87,7 +90,7 @@ Actions:
 
 //-----------------------------------------------------------------//
 
-Trigger("v3.5 (rebalanced)"){
+Trigger("v0.8"){
 Conditions:
 	Always();
 
@@ -113,13 +116,30 @@ Actions:
 
 //-----------------------------------------------------------------//
 
+Trigger("Player 8"){
+Conditions:
+	Accumulate("Current Player", Exactly, 2, gas);
+
+Actions:
+	Create Unit("Player 8", "Zerg Zergling", 80, "Location 1");
+	Create Unit("Current Player", "Terran Marine", 10, "Location 1");
+	Create Unit("Current Player", "Zerg Hydralisk", 10, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Zerg Hydralisk", 20, "Location 1");
+	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
+	Create Unit("Current Player", "Terran Marine", 10, "Location 1");
+	Create Unit("Current Player", "Zerg Ultralisk", 1, "Location 1");
+	Comment("Level 1 Boss Attack\r\n\r\n");
+}
+
+//-----------------------------------------------------------------//
+
 Trigger("Heroes"){
 Conditions:
 	Bring("Current Player", "Men", "_healing", At least, 1);
 
 Actions:
 	Modify Unit Hit Points("Current Player", "Men", 100, All, "hero spawn");
-	Modify Unit Energy("Current Player", "Men", 100, All, "hero spawn");
 	Preserve Trigger();
 	Comment("Heal @ Inn");
 }
@@ -179,7 +199,7 @@ Conditions:
 	Bring("Current Player", "Men", "upgrades beacon 5", At least, 1);
 
 Actions:
-	Give Units to Player("Player 7", "Current Player", "Buildings", All, "upgrades 5");
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "EasyModeEnableLoc");
 	Preserve Trigger();
 	Comment("Terran Upgrade");
 }
@@ -191,7 +211,7 @@ Conditions:
 	Bring("Current Player", "Men", "upgrades beacon 5", Exactly, 0);
 
 Actions:
-	Give Units to Player("Current Player", "Player 7", "Buildings", All, "upgrades 5");
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "EasyModeEnableLoc");
 	Preserve Trigger();
 	Comment("Terran Upgrade Done");
 }
@@ -203,7 +223,7 @@ Conditions:
 	Bring("Current Player", "Men", "upgrades beacon 6", At least, 1);
 
 Actions:
-	Give Units to Player("Player 7", "Current Player", "Buildings", All, "upgrades 6");
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "Unused location (103)");
 	Preserve Trigger();
 	Comment("Terran Upgrade");
 }
@@ -215,7 +235,7 @@ Conditions:
 	Bring("Current Player", "Men", "upgrades beacon 6", Exactly, 0);
 
 Actions:
-	Give Units to Player("Current Player", "Player 7", "Buildings", All, "upgrades 6");
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "Unused location (103)");
 	Preserve Trigger();
 	Comment("Terran Upgrade Done");
 }
@@ -227,7 +247,7 @@ Conditions:
 	Bring("Current Player", "Men", "upgrades beacon 2", At least, 1);
 
 Actions:
-	Give Units to Player("Player 7", "Current Player", "Buildings", All, "upgrades 2");
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "DebugGiveShiz");
 	Preserve Trigger();
 	Comment("Protoss Upgrade");
 }
@@ -239,7 +259,7 @@ Conditions:
 	Bring("Current Player", "Men", "upgrades beacon 2", Exactly, 0);
 
 Actions:
-	Give Units to Player("Current Player", "Player 7", "Buildings", All, "upgrades 2");
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "DebugGiveShiz");
 	Preserve Trigger();
 	Comment("Protoss Upgrade Done");
 }
@@ -251,7 +271,7 @@ Conditions:
 	Bring("Current Player", "Men", "upgrades beacon 1", At least, 1);
 
 Actions:
-	Give Units to Player("Player 7", "Current Player", "Buildings", All, "upgrades 1");
+	Give Units to Player("Player 7", "Current Player", "Buildings", All, "Unused location (110)");
 	Preserve Trigger();
 	Comment("Protoss Upgrade");
 }
@@ -263,7 +283,7 @@ Conditions:
 	Bring("Current Player", "Men", "upgrades beacon 1", Exactly, 0);
 
 Actions:
-	Give Units to Player("Current Player", "Player 7", "Buildings", All, "upgrades 1");
+	Give Units to Player("Current Player", "Player 7", "Buildings", All, "Unused location (110)");
 	Preserve Trigger();
 	Comment("Protoss Upgrade Done");
 }
@@ -344,11 +364,9 @@ Conditions:
 Actions:
 	Set Deaths("Current Player", "Men", Subtract, 1);
 	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
-	Wait(900);
 	Set Score("Current Player", Subtract, 250, Custom);
 	Set Resources("Current Player", Subtract, 50, ore);
 	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
-	Wait(900);
 	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
 	Preserve Trigger();
 	Comment("Respawn Wait new");
@@ -363,11 +381,9 @@ Conditions:
 Actions:
 	Set Deaths("Current Player", "Men", Subtract, 1);
 	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
-	Wait(900);
 	Set Score("Current Player", Subtract, 250, Custom);
 	Set Resources("Current Player", Subtract, 50, ore);
 	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
-	Wait(900);
 	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
 	Preserve Trigger();
 	Comment("Respawn Wait new");
@@ -382,11 +398,9 @@ Conditions:
 Actions:
 	Set Deaths("Current Player", "Men", Subtract, 1);
 	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
-	Wait(900);
 	Set Score("Current Player", Subtract, 250, Custom);
 	Set Resources("Current Player", Subtract, 50, ore);
 	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
-	Wait(900);
 	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
 	Preserve Trigger();
 	Comment("Respawn Wait new");
@@ -401,11 +415,9 @@ Conditions:
 Actions:
 	Set Deaths("Current Player", "Men", Subtract, 1);
 	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
-	Wait(900);
 	Set Score("Current Player", Subtract, 250, Custom);
 	Set Resources("Current Player", Subtract, 50, ore);
 	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
-	Wait(900);
 	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
 	Preserve Trigger();
 	Comment("Respawn Wait new");
@@ -420,11 +432,9 @@ Conditions:
 Actions:
 	Set Deaths("Current Player", "Men", Subtract, 1);
 	Display Text Message(Always Display, "\x013\x006You Have Died! -250 Epxerience.  -50 Gold.");
-	Wait(900);
 	Set Score("Current Player", Subtract, 250, Custom);
 	Set Resources("Current Player", Subtract, 50, ore);
 	Display Text Message(Always Display, "\x013\x003Now Wait 3 Seconds To Be Respawned...");
-	Wait(900);
 	Create Unit with Properties("Current Player", "Terran Civilian", 1, "Location 14", 2);
 	Preserve Trigger();
 	Comment("Respawn Wait new");
@@ -441,6 +451,21 @@ Actions:
 	Create Unit("Current Player", "Terran Civilian", 1, "_Heropick");
 	Center View("_Heropick");
 	Preserve Trigger();
+	Comment("Re pick unit\r\n\r\n");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+	Bring("Current Player", "Any unit", "UnitPasserTown", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Any unit", 1, "UnitPasserTown");
+	Create Unit("Current Player", "Terran Civilian", 1, "UnitPasslocation");
+	Center View("UnitPasslocation");
+	Preserve Trigger();
+	Comment("UnitPassTown (Give unit to another player)\r\n\r\n");
 }
 
 //-----------------------------------------------------------------//
@@ -507,6 +532,20 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
+	Bring("Current Player", "Terran Engineering Bay", "upgrades 5", At least, 1);
+
+Actions:
+	Remove Unit At Location("All players", "Terran Engineering Bay", All, "upgrades 5");
+	Create Unit with Properties("Player 7", "Terran Engineering Bay", 1, "EasyModeEnableLoc", 1);
+	Display Text Message(Always Display, "\x013\x003You're Wasting Your Time!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Anti-Lift Terran Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
 	Bring("Current Player", "Terran Civilian", "Location 21", At least, 1);
 	Bring("Player 8", "Men", "_area", Exactly, 0);
 
@@ -565,6 +604,34 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
+	Bring("Current Player", "Terran Civilian", "Pickunit SCV", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Pickunit SCV");
+	Create Unit("Current Player", "Terran SCV", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("SCV Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Civilian", "Pickunit Probe", At least, 1);
+
+Actions:
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Pickunit Probe");
+	Create Unit("Current Player", "Protoss Probe", 1, "_healing");
+	Center View("_healing");
+	Preserve Trigger();
+	Comment("Probe Selected");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
 	Bring("Current Player", "Terran Civilian", "Location 24", At least, 1);
 
 Actions:
@@ -579,10 +646,10 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Terran Civilian", "Location 25", At least, 1);
+	Bring("Current Player", "Terran Civilian", "Location 28", At least, 1);
 
 Actions:
-	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 25");
+	Remove Unit At Location("Current Player", "Terran Civilian", 1, "Location 28");
 	Create Unit("Current Player", "Hunter Killer (Hydralisk)", 1, "_healing");
 	Center View("_healing");
 	Preserve Trigger();
@@ -680,11 +747,23 @@ Conditions:
 	Command("Current Player", "Protoss Zealot", At least, 1);
 
 Actions:
-	Create Unit with Properties("Current Player", "Terran Civilian", 1, "_Heropick", 2);
+	Create Unit with Properties("Current Player", "Terran Civilian", 1, "_Heropick", 5);
 	Remove Unit At Location("Current Player", "Protoss Zealot", 1, "Anywhere");
 	Display Text Message(Always Display, "\x013\x007Recruit Was A Success!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
 	Preserve Trigger();
 	Comment("Recruiting Effect");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
+Conditions:
+;	Command("Current Player", "Protoss Zealot", At least, 1);
+
+Actions:
+;	Create Unit with Properties("Current Player", "Terran Civilian", 1, "_Heropick", 2);
+;	Display Text Message(Always Display, "\x013\x007First recruit bonus! You get an extra unit!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Comment("Recruiting first purchase Bonus\r\n\r\n\r\n\r\n(disabled)\r\n");
 }
 
 //-----------------------------------------------------------------//
@@ -735,49 +814,27 @@ Actions:
 
 Trigger("Player 8"){
 Conditions:
-	Accumulate("Current Player", Exactly, 2, gas);
-
-Actions:
-	Create Unit("Player 8", "Zerg Zergling", 24, "Location 1");
-	Wait(1500);
-	Create Unit("Player 8", "Zerg Zergling", 14, "Location 1");
-	Wait(1500);
-	Create Unit("Player 8", "Zerg Zergling", 14, "Location 1");
-	Wait(1500);
-	Create Unit("Player 8", "Zerg Zergling", 14, "Location 1");
-	Wait(2500);
-	Create Unit("Player 8", "Zerg Zergling", 14, "Location 1");
-	Wait(2500);
-	Create Unit("Current Player", "Zerg Hydralisk", 20, "Location 1");
-	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
-	Create Unit("Current Player", "Zerg Ultralisk", 1, "Location 1");
-	Comment("Level 1 Boss Attack");
-}
-
-
-//-----------------------------------------------------------------//
-
-Trigger("Player 8"){
-Conditions:
 	Accumulate("Current Player", Exactly, 3, gas);
 
 Actions:
 	Create Unit("Current Player", "Zerg Zergling", 20, "Location 1");
-	Wait(1000);
+	Create Unit("Current Player", "Terran Marine", 15, "Location 1");
 	Create Unit("Current Player", "Zerg Zergling", 10, "Location 1");
-	Wait(1000);
+	Create Unit("Current Player", "Protoss Zealot", 10, "Location 1");
+	Create Unit("Current Player", "Zerg Broodling", 20, "Location 1");
 	Create Unit("Current Player", "Zerg Zergling", 10, "Location 1");
 	Wait(2000);
 	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
-	Wait(2500);
+	Create Unit("Current Player", "Terran Marine", 20, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
 	Wait(2500);
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
-	Wait(2500);
 	Create Unit("Current Player", "Zerg Broodling", 20, "Location 1");
+	Create Unit("Current Player", "Terran Marine", 20, "Location 1");
 	Wait(2500);
 	Create Unit("Current Player", "Zerg Ultralisk", 10, "Location 1");
-	Comment("Level 2 Boss Attack");
+	Comment("Level 2 Boss Attack\r\n\r\n");
+	Create Unit("Current Player", "Zerg Ultralisk", 10, "Location 1");
 }
 
 //-----------------------------------------------------------------//
@@ -788,30 +845,34 @@ Conditions:
 
 Actions:
 	Create Unit("Current Player", "Zerg Zergling", 24, "Location 1");
-	Wait(1000);
+	Create Unit("Current Player", "Protoss Zealot", 7, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 7, "Location 1");
 	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
+	Create Unit("Current Player", "Zerg Broodling", 24, "Location 1");
+	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
 	Wait(1500);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 5, "Location 1");
 	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
-	Wait(1500);
-	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
-	Wait(2500);
 	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
-	Wait(2500);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 5, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
 	Wait(2500);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 5, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
-	Wait(3000);
+;	Wait(3000);
 	Create Unit("Current Player", "Zerg Broodling", 24, "Location 1");
 	Wait(3000);
 	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
-	Wait(3000);
-	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
 	Create Unit("Current Player", "Alan Schezar (Goliath)", 5, "Location 1");
-	Wait(3000);
+	Wait(1500);
 	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
-	Wait(3000);
+	Create Unit("Current Player", "Protoss Zealot", 7, "Location 1");
 	Create Unit("Current Player", "Alan Schezar (Goliath)", 5, "Location 1");
-	Comment("Level 3 Boss Attack");
+;	Wait(3000);
+	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
+;	Wait(3000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 5, "Location 1");
+	Comment("Level 3 Boss Attack\r\n\r\n");
 }
 
 //-----------------------------------------------------------------//
@@ -822,35 +883,37 @@ Conditions:
 
 Actions:
 	Create Unit("Current Player", "Zerg Zergling", 24, "Location 1");
-	Wait(1000);
+	Create Unit("Current Player", "Protoss Zealot", 14, "Location 1");
+	Create Unit("Current Player", "Terran Marine", 14, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 14, "Location 1");
 	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
 	Wait(1500);
+	Create Unit("Current Player", "Terran Marine", 14, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
-	Wait(2500);
 	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
-	Wait(2500);
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
 	Wait(2500);
-	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
+	Create Unit("Current Player", "Zerg Broodling", 20, "Location 1");
+	Create Unit("Current Player", "Zerg Broodling", 20, "Location 1");
 	Wait(3000);
-	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
-	Wait(3000);
-	Create Unit("Current Player", "Zerg Broodling", 12, "Location 1");
-	Wait(3000);
+	Create Unit("Current Player", "Zerg Broodling", 20, "Location 1");
 	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
-	Wait(5000);
 	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
-	Wait(5000);
+	Wait(3000);
 	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
-	Wait(5000);
 	Create Unit("Current Player", "Protoss Dragoon", 4, "Location 1");
-	Create Unit("Current Player", "Alan Schezar (Goliath)", 3, "Location 1");
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
 	Wait(5000);
 	Create Unit("Current Player", "Protoss Dragoon", 7, "Location 1");
-	Create Unit("Current Player", "Alan Schezar (Goliath)", 2, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 14, "Location 1");
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 8, "Location 1");
 	Wait(5000);
-	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 5, "Location 1");
-	Comment("Level 4 Boss Attack");
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 13, "Location 1");
+	Wait(5000);
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 10, "Location 1");
+	Comment("Level 4 Boss Attack\r\n\r\n");
+	Wait(5000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
 }
 
 //-----------------------------------------------------------------//
@@ -861,26 +924,36 @@ Conditions:
 
 Actions:
 	Create Unit("Current Player", "Zerg Zergling", 24, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 18, "Location 1");
+	Create Unit("Current Player", "Terran Marine", 15, "Location 1");
 	Wait(1000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 15, "Location 1");
 	Create Unit("Current Player", "Zerg Zergling", 14, "Location 1");
 	Wait(2000);
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
 	Wait(2000);
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 15, "Location 1");
 	Wait(3000);
 	Create Unit("Current Player", "Zerg Broodling", 20, "Location 1");
 	Wait(2500);
-	Create Unit("Current Player", "Zerg Broodling", 15, "Location 1");
+	Create Unit("Current Player", "Terran Marine", 15, "Location 1");
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 15, "Location 1");
 	Wait(3500);
 	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
 	Wait(4500);
 	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 15, "Location 1");
 	Wait(4500);
-	Create Unit("Current Player", "Alan Schezar (Goliath)", 9, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 18, "Location 1");
+	Wait(4500);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 15, "Location 1");
+	Wait(2500);
+	Create Unit("Current Player", "Protoss Dark Templar", 8, "Location 1");
+	Create Unit("Current Player", "Zerg Ultralisk", 5, "Location 1");
+	Comment("Level 5 Boss Attack\r\n\r\n");
 	Wait(2500);
 	Create Unit("Current Player", "Protoss Dark Templar", 6, "Location 1");
-	Create Unit("Current Player", "Zerg Ultralisk", 5, "Location 1");
-	Comment("Level 5 Boss Attack");
 }
 
 //-----------------------------------------------------------------//
@@ -890,23 +963,32 @@ Conditions:
 	Accumulate("Current Player", Exactly, 7, gas);
 
 Actions:
+	Create Unit("Current Player", "Terran Marine", 24, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
 	Wait(2000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
 	Wait(3000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
 	Wait(4000);
+	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
 	Create Unit("Current Player", "Protoss Archon", 14, "Location 1");
 	Wait(4000);
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 10, "Location 1");
 	Create Unit("Current Player", "Protoss Archon", 14, "Location 1");
 	Wait(4000);
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 10, "Location 1");
 	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
 	Wait(5000);
+	Create Unit("Current Player", "Protoss Zealot", 20, "Location 1");
+	Wait(7000);
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 10, "Location 1");
 	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
 	Wait(5000);
-	Create Unit("Current Player", "Jim Raynor (Vulture)", 5, "Location 1");
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 8, "Location 1");
 	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 1, "Location 1");
-	Create Unit("Current Player", "Alexei Stukov (Ghost)", 1, "Location 1");
+	Create Unit("Current Player", "Alexei Stukov (Ghost)", 3, "Location 1");
 	Comment("Level 6 Boss Attack");
 }
 
@@ -917,21 +999,28 @@ Conditions:
 	Accumulate("Current Player", Exactly, 8, gas);
 
 Actions:
+	Create Unit("Current Player", "Terran Marine", 15, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 12, "Location 1");
 	Wait(1000);
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 8, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 14, "Location 1");
 	Wait(2000);
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 8, "Location 1");
 	Create Unit("Current Player", "Zerg Broodling", 24, "Location 1");
 	Wait(3000);
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 8, "Location 1");
 	Create Unit("Current Player", "Protoss Dragoon", 14, "Location 1");
-	Wait(4000);
+	Wait(2000);
 	Create Unit("Current Player", "Zerg Ultralisk", 14, "Location 1");
+	Create Unit("Current Player", "Edmund Duke (Siege Tank)", 8, "Location 1");
 	Wait(4000);
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 8, "Location 1");
 	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
 	Wait(4000);
 	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 25, "Location 1");
 	Wait(5000);
-	Create Unit("Current Player", "Alan Schezar (Goliath)", 10, "Location 1");
+	Create Unit("Current Player", "Jim Raynor (Vulture)", 10, "Location 1");
 	Create Unit("Current Player", "Protoss Dark Templar", 10, "Location 1");
 	Wait(5000);
 	Create Unit("Current Player", "Protoss Dark Templar", 6, "Location 1");
@@ -946,23 +1035,30 @@ Conditions:
 	Accumulate("Current Player", Exactly, 9, gas);
 
 Actions:
+	Create Unit("Current Player", "Protoss Zealot", 24, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
 	Wait(2000);
 	Create Unit("Current Player", "Protoss Dragoon", 15, "Location 1");
+	Create Unit("Current Player", "Alexei Stukov (Ghost)", 6, "Location 1");
 	Wait(4000);
+	Create Unit("Current Player", "Samir Duran (Ghost)", 6, "Location 1");
 	Create Unit("Current Player", "Zerg Ultralisk", 14, "Location 1");
 	Wait(4000);
+	Create Unit("Current Player", "Alexei Stukov (Ghost)", 6, "Location 1");
 	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
 	Wait(4000);
 	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
+	Create Unit("Current Player", "Alexei Stukov (Ghost)", 6, "Location 1");
 	Wait(5000);
+	Create Unit("Current Player", "Samir Duran (Ghost)", 6, "Location 1");
 	Create Unit("Current Player", "Protoss Archon", 15, "Location 1");
 	Wait(5000);
 	Create Unit("Current Player", "Alexei Stukov (Ghost)", 6, "Location 1");
 	Create Unit("Current Player", "Samir Duran (Ghost)", 6, "Location 1");
 	Wait(5000);
-	Create Unit("Current Player", "Infested Duran", 6, "Location 1");
-	Create Unit("Current Player", "Samir Duran (Ghost)", 6, "Location 1");
+	Create Unit("Current Player", "Infested Duran", 8, "Location 1");
+	Create Unit("Current Player", "Samir Duran (Ghost)", 8, "Location 1");
+	Create Unit("Current Player", "Terran Marine", 15, "Location 1");
 	Comment("Level 8 Boss Attack");
 }
 
@@ -974,63 +1070,57 @@ Conditions:
 
 Actions:
 	Create Unit("Current Player", "Zerg Hydralisk", 12, "Location 1");
+	Create Unit("Current Player", "Zeratul (Dark Templar)", 15, "Location 1");
 	Wait(1000);
+	Create Unit("Current Player", "Zeratul (Dark Templar)", 15, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
 	Wait(1000);
+	Create Unit("Current Player", "Zeratul (Dark Templar)", 15, "Location 1");
 	Create Unit("Current Player", "Zerg Hydralisk", 24, "Location 1");
 	Wait(2000);
+	Create Unit("Current Player", "Protoss Zealot", 20, "Location 1");
+	Create Unit("Current Player", "Zeratul (Dark Templar)", 15, "Location 1");
+	Wait(5000);
 	Create Unit("Current Player", "Jim Raynor (Vulture)", 20, "Location 1");
-	Wait(3000);
+	Create Unit("Current Player", "Protoss Zealot", 20, "Location 1");
+	Wait(5000);
 	Create Unit("Current Player", "Jim Raynor (Vulture)", 20, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 20, "Location 1");
 	Wait(5000);
 	Create Unit("Current Player", "Jim Raynor (Vulture)", 10, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 20, "Location 1");
 	Create Unit("Current Player", "Alexei Stukov (Ghost)", 14, "Location 1");
 	Wait(4000);
 	Create Unit("Current Player", "Zeratul (Dark Templar)", 15, "Location 1");
-	Wait(3000);
+	Create Unit("Current Player", "Protoss Zealot", 20, "Location 1");
+	Wait(10000);
 	Create Unit("Current Player", "Jim Raynor (Vulture)", 20, "Location 1");
+	Create Unit("Current Player", "Protoss Zealot", 20, "Location 1");
 	Comment("Level 9 Boss Attack");
 }
 
 //-----------------------------------------------------------------//
 
-Trigger("Player 8"){
+Trigger("Heroes"){
 Conditions:
-	Deaths("Player 8", "Terran Valkyrie", Exactly, 1);
+	Bring("Current Player", "Men", "nexus beacon", At least, 1);
 
 Actions:
-	Create Unit("Current Player", "Alexei Stukov (Ghost)", 15, "Location 1");
-	Wait(3000);
-	Create Unit("Current Player", "Zeratul (Dark Templar)", 15, "Location 1");
-	Wait(3000);
+	Order("Current Player", "Men", "nexus beacon", "_healing", move);
+	Center View("Temple");
+	Transmission(Always Display, "\x013\x004Our Town Is In Need Of Defense While We Thrive In This Land.\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Nexus", "Temple", Set To, 4000, "220 dmg", 480);
+	Center View("hero spawn");
+	Transmission(Always Display, "\x013\x004You May Sleep At Our Inn For Free!\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Fleet Beacon", "Anywhere", Set To, 4000, "220 dmg", 480);
+	Center View("EasyModeEnableLoc");
+	Transmission(Always Display, "\x013\x004Our Blacksmiths Are Ready To Improve Your Weapons.\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Terran Engineering Bay", "EasyModeEnableLoc", Set To, 4000, "220 dmg", 480);
+	Center View("to training");
+	Transmission(Always Display, "\x013\x004You Can Train At This Center For Free!\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Cybernetics Core", "Anywhere", Set To, 4000, "220 dmg", 480);
+	Center View("control 1");
+	Transmission(Always Display, "\x013\x004And Finally, You May Recruit More Forces Here!\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Gateway", "Anywhere", Set To, 4000, "220 dmg", 480);
+	Center View("_healing");
+	Transmission(Always Display, "\x013\x004Good Luck, And Thank You.\r\n\r\n\r\n\r\n\r\n\r\n\r\n", "Protoss Gateway", "Anywhere", Set To, 4000, "220 dmg", 480);
 	Preserve Trigger();
-	Comment("Encore");
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Heroes"){
-Conditions:
-	Deaths("Player 7", "Protoss Temple", At least, 1);
-	Deaths("Player 8", "Terran Valkyrie", Exactly, 0);
-
-Actions:
-	Display Text Message(Always Display, "\x013\x007Game Over\r\n\x013\x0062high   @useast - 2014\r\n\r\n\r\n\r\n\r\n");
-	Defeat();
-	Comment("Defeat");
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Heroes"){
-Conditions:
-	Deaths("Player 7", "Protoss Temple", At least, 1);
-	Deaths("Player 8", "Terran Valkyrie", Exactly, 1);
-
-Actions:
-	Display Text Message(Always Display, "\x013\x007Victory!\r\n\x013\x0062high   @useast - 2014\r\n\r\n\r\n\r\n\r\n");
-	Victory();
-	Comment("victory");
+	Comment("Town Hall Talk");
 }
 
 //-----------------------------------------------------------------//
@@ -1042,11 +1132,13 @@ Conditions:
 	Bring("Current Player", "Men", "_area", At least, 1);
 
 Actions:
-	Center View("_Trainingpick");
+	Minimap Ping("_Trainingpick");
 	Move Unit("Current Player", "Men", All, "to training", "Location 32");
 	Display Text Message(Always Display, "\x013\x005Select A Monster To Train Against.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
 	Preserve Trigger();
 	Comment("Enter Training");
+	Minimap Ping("_Trainingpick");
+	Center View("_Trainingpick");
 }
 
 //-----------------------------------------------------------------//
@@ -1241,50 +1333,12 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Heroes", "Men", "despawn bastards 1", Exactly, 0);
-	Bring("Player 6", "Men", "despawn bastards 1", At least, 1);
+	Bring("Current Player", "Men", "archon1", At least, 1);
+	Bring("Player 6", "Protoss Archon", "archon1", Exactly, 0);
 
 Actions:
-	Remove Unit At Location("Player 6", "Men", All, "despawn bastards 1");
-	Preserve Trigger();
-	Comment("despawn 1");
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Heroes"){
-Conditions:
-	Bring("Heroes", "Men", "despawn bastards 2", Exactly, 0);
-	Bring("Player 6", "Men", "despawn bastards 2", At least, 1);
-
-Actions:
-	Remove Unit At Location("Player 6", "Men", All, "despawn bastards 2");
-	Preserve Trigger();
-	Comment("despawn 2");
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Heroes"){
-Conditions:
-	Bring("Heroes", "Men", "despawn bastards 3", Exactly, 0);
-	Bring("Player 6", "Men", "despawn bastards 3", At least, 1);
-
-Actions:
-	Remove Unit At Location("Player 6", "Men", All, "despawn bastards 3");
-	Preserve Trigger();
-	Comment("despawn 3");
-}
-
-//-----------------------------------------------------------------//
-
-Trigger("Heroes"){
-Conditions:
-	Bring("Current Player", "Men", "Location 82", At least, 1);
-	Bring("Player 6", "Protoss Archon", "Location 82", Exactly, 0);
-
-Actions:
-	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 82", 3);
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "archon1", 6);
+	Order("Player 6", "Protoss Archon", "archon1", "archon1", patrol);
 	Preserve Trigger();
 	Comment("Archon Training 1");
 }
@@ -1293,11 +1347,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 83", At least, 1);
-	Bring("Player 6", "Protoss Archon", "Location 83", Exactly, 0);
+	Bring("Current Player", "Men", "archon2", At least, 1);
+	Bring("Player 6", "Protoss Archon", "archon2", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 83", 6);
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "archon2", 6);
 	Preserve Trigger();
 	Comment("Archon Training 2");
 }
@@ -1306,11 +1360,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 84", At least, 1);
-	Bring("Player 6", "Protoss Archon", "Location 84", Exactly, 0);
+	Bring("Current Player", "Men", "archon3", At least, 1);
+	Bring("Player 6", "Protoss Archon", "archon3", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 84", 7);
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "archon3", 7);
 	Preserve Trigger();
 	Comment("Archon Training 3");
 }
@@ -1319,11 +1373,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 85", At least, 1);
-	Bring("Player 6", "Protoss Archon", "Location 85", Exactly, 0);
+	Bring("Current Player", "Men", "archon4", At least, 1);
+	Bring("Player 6", "Protoss Archon", "archon4", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 85", 8);
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "archon4", 8);
 	Preserve Trigger();
 	Comment("Archon Training 4");
 }
@@ -1332,11 +1386,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 86", At least, 1);
-	Bring("Player 6", "Protoss Archon", "Location 86", Exactly, 0);
+	Bring("Current Player", "Men", "archon5", At least, 1);
+	Bring("Player 6", "Protoss Archon", "archon5", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 86", 9);
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "archon5", 9);
 	Preserve Trigger();
 	Comment("Archon Training 5");
 }
@@ -1345,11 +1399,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 87", At least, 1);
-	Bring("Player 6", "Protoss Archon", "Location 87", Exactly, 0);
+	Bring("Current Player", "Men", "archon6", At least, 1);
+	Bring("Player 6", "Protoss Archon", "archon6", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Archon", 5, "Location 87", 10);
+	Create Unit with Properties("Player 6", "Protoss Archon", 5, "archon6", 10);
 	Preserve Trigger();
 	Comment("Archon Training 6");
 }
@@ -1358,11 +1412,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 76", At least, 1);
-	Bring("Player 6", "Protoss Dragoon", "Location 76", Exactly, 0);
+	Bring("Current Player", "Men", "Dragoon1", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon1", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 76", 11);
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon1", 11);
 	Preserve Trigger();
 	Comment("Dragoon Training 1");
 }
@@ -1371,11 +1425,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 77", At least, 1);
-	Bring("Player 6", "Protoss Dragoon", "Location 77", Exactly, 0);
+	Bring("Current Player", "Men", "Dragoon2", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon2", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 77", 12);
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon2", 12);
 	Preserve Trigger();
 	Comment("Dragoon Training 2");
 }
@@ -1384,11 +1438,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 78", At least, 1);
-	Bring("Player 6", "Protoss Dragoon", "Location 78", Exactly, 0);
+	Bring("Current Player", "Men", "Dragoon3", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon3", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 78", 13);
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon3", 13);
 	Preserve Trigger();
 	Comment("Dragoon Training 3");
 }
@@ -1397,11 +1451,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 79", At least, 1);
-	Bring("Player 6", "Protoss Dragoon", "Location 79", Exactly, 0);
+	Bring("Current Player", "Men", "Dragoon4", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon4", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 79", 14);
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon4", 14);
 	Preserve Trigger();
 	Comment("Dragoon Training 4");
 }
@@ -1410,11 +1464,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 80", At least, 1);
-	Bring("Player 6", "Protoss Dragoon", "Location 80", Exactly, 0);
+	Bring("Current Player", "Men", "Dragoon5", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon5", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 80", 11);
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon5", 15);
 	Preserve Trigger();
 	Comment("Dragoon Training 5");
 }
@@ -1423,11 +1477,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 81", At least, 1);
-	Bring("Player 6", "Protoss Dragoon", "Location 81", Exactly, 0);
+	Bring("Current Player", "Men", "Dragoon6", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon6", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Location 81", 16);
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon6", 16);
 	Preserve Trigger();
 	Comment("Dragoon Training 6");
 }
@@ -1436,11 +1490,50 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 57", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 57", Exactly, 0);
+	Bring("Current Player", "Men", "Dragoon7", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon7", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 57", 17);
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon7", 12);
+	Preserve Trigger();
+	Comment("Dragoon Training 7\r\n");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Dragoon8", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon8", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon8", 14);
+	Preserve Trigger();
+	Comment("Dragoon Training 8\r\n\r\n");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Dragoon9", At least, 1);
+	Bring("Player 6", "Protoss Dragoon", "Dragoon9", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Protoss Dragoon", 5, "Dragoon9", 15);
+	Preserve Trigger();
+	Comment("Dragoon Training 9\r\n\r\n");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "hydra1", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra1", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra1", 17);
 	Preserve Trigger();
 	Comment("Hydralisk Training 1");
 }
@@ -1449,11 +1542,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 58", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 58", Exactly, 0);
+	Bring("Current Player", "Men", "hydra2", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra2", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 58", 17);
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra2", 17);
 	Preserve Trigger();
 	Comment("Hydralisk Training 2");
 }
@@ -1462,11 +1555,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 59", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 59", Exactly, 0);
+	Bring("Current Player", "Men", "hydra3", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra3", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 59", 19);
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra3", 19);
 	Preserve Trigger();
 	Comment("Hydralisk Training 3");
 }
@@ -1475,11 +1568,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 60", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 60", Exactly, 0);
+	Bring("Current Player", "Men", "hydra4", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra4", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 60", 20);
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra4", 20);
 	Preserve Trigger();
 	Comment("Hydralisk Training 4");
 }
@@ -1488,11 +1581,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 61", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 61", Exactly, 0);
+	Bring("Current Player", "Men", "hydra5", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra5", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 61", 21);
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra5", 21);
 	Preserve Trigger();
 	Comment("Hydralisk Training 5");
 }
@@ -1501,11 +1594,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 62", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 62", Exactly, 0);
+	Bring("Current Player", "Men", "hydra6", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra6", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 62", 22);
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra6", 22);
 	Preserve Trigger();
 	Comment("Hydralisk Training 6");
 }
@@ -1514,11 +1607,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 61 2", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 61 2", Exactly, 0);
+	Bring("Current Player", "Men", "hydra9", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra9", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 61 2", 42);
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra9", 42);
 	Preserve Trigger();
 	Comment("Hydralisk Training 7");
 }
@@ -1527,11 +1620,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 59 2", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 59 2", Exactly, 0);
+	Bring("Current Player", "Men", "hydra8", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra8", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 59 2", 43);
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra8", 43);
 	Preserve Trigger();
 	Comment("Hydralisk Training 8");
 }
@@ -1540,11 +1633,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 57 2", At least, 1);
-	Bring("Player 6", "Zerg Hydralisk", "Location 57 2", Exactly, 0);
+	Bring("Current Player", "Men", "hydra7", At least, 1);
+	Bring("Player 6", "Zerg Hydralisk", "hydra7", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "Location 57 2", 44);
+	Create Unit with Properties("Player 6", "Zerg Hydralisk", 5, "hydra7", 44);
 	Preserve Trigger();
 	Comment("Hydralisk Training 9");
 }
@@ -1553,11 +1646,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 63", At least, 1);
-	Bring("Player 6", "Zerg Ultralisk", "Location 63", Exactly, 0);
+	Bring("Current Player", "Men", "Ultralisk1", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Ultralisk1", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 63", 29);
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Ultralisk1", 29);
 	Preserve Trigger();
 	Comment("Ultralisk Training 1");
 }
@@ -1566,11 +1659,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 65", At least, 1);
-	Bring("Player 6", "Zerg Ultralisk", "Location 65", Exactly, 0);
+	Bring("Current Player", "Men", "Ultralisk2", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Ultralisk2", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 65", 30);
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Ultralisk2", 30);
 	Preserve Trigger();
 	Comment("Ultralisk Training 2");
 }
@@ -1579,11 +1672,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 66", At least, 1);
-	Bring("Player 6", "Zerg Ultralisk", "Location 66", Exactly, 0);
+	Bring("Current Player", "Men", "Ultralisk3", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Ultralisk3", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 66", 31);
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Ultralisk3", 31);
 	Preserve Trigger();
 	Comment("Ultralisk Training 3");
 }
@@ -1592,11 +1685,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 67", At least, 1);
-	Bring("Player 6", "Zerg Ultralisk", "Location 67", Exactly, 0);
+	Bring("Current Player", "Men", "Ultralisk4", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Ultralisk4", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 67", 32);
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Ultralisk4", 32);
 	Preserve Trigger();
 	Comment("Ultralisk Training 4");
 }
@@ -1605,11 +1698,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 68", At least, 1);
-	Bring("Player 6", "Zerg Ultralisk", "Location 68", Exactly, 0);
+	Bring("Current Player", "Men", "Ultralisk5", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Ultralisk5", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 68", 33);
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Ultralisk5", 33);
 	Preserve Trigger();
 	Comment("Ultralisk Training 5");
 }
@@ -1618,11 +1711,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 69", At least, 1);
-	Bring("Player 6", "Zerg Ultralisk", "Location 69", Exactly, 0);
+	Bring("Current Player", "Men", "Ultralisk6", At least, 1);
+	Bring("Player 6", "Zerg Ultralisk", "Ultralisk6", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Location 69", 34);
+	Create Unit with Properties("Player 6", "Zerg Ultralisk", 5, "Ultralisk6", 34);
 	Preserve Trigger();
 	Comment("Ultralisk Training 6");
 }
@@ -1631,11 +1724,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 51", At least, 1);
-	Bring("Player 6", "Zerg Zergling", "Location 51", Exactly, 0);
+	Bring("Current Player", "Men", "zergling1", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "zergling1", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 51", 35);
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "zergling1", 35);
 	Preserve Trigger();
 	Comment("Zergling Training 1");
 }
@@ -1644,11 +1737,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 52", At least, 1);
-	Bring("Player 6", "Zerg Zergling", "Location 52", Exactly, 0);
+	Bring("Current Player", "Men", "zergling2", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "zergling2", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 52", 36);
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "zergling2", 36);
 	Preserve Trigger();
 	Comment("Zergling Training 2");
 }
@@ -1657,11 +1750,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 53", At least, 1);
-	Bring("Player 6", "Zerg Zergling", "Location 53", Exactly, 0);
+	Bring("Current Player", "Men", "zergling3", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "zergling3", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 53", 37);
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "zergling3", 37);
 	Preserve Trigger();
 	Comment("Zergling Training 3");
 }
@@ -1670,11 +1763,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 54", At least, 1);
-	Bring("Player 6", "Zerg Zergling", "Location 54", Exactly, 0);
+	Bring("Current Player", "Men", "zergling4", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "zergling4", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 54", 38);
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "zergling4", 38);
 	Preserve Trigger();
 	Comment("Zergling Training 4");
 }
@@ -1683,11 +1776,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 55", At least, 1);
-	Bring("Player 6", "Zerg Zergling", "Location 55", Exactly, 0);
+	Bring("Current Player", "Men", "zergling5", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "zergling5", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 55", 39);
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "zergling5", 39);
 	Preserve Trigger();
 	Comment("Zergling Training 5");
 }
@@ -1696,11 +1789,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 56", At least, 1);
-	Bring("Player 6", "Zerg Zergling", "Location 56", Exactly, 0);
+	Bring("Current Player", "Men", "zergling6", At least, 1);
+	Bring("Player 6", "Zerg Zergling", "zergling6", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "Location 56", 40);
+	Create Unit with Properties("Player 6", "Zerg Zergling", 5, "zergling6", 40);
 	Preserve Trigger();
 	Comment("Zergling Training 6");
 }
@@ -1827,11 +1920,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 70", At least, 1);
-	Bring("Player 6", "Zerg Lurker", "Location 70", Exactly, 0);
+	Bring("Current Player", "Men", "Lurker1", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker1", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 70", 23);
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker1", 23);
 	Preserve Trigger();
 	Comment("Lurker Training 1");
 }
@@ -1840,11 +1933,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 71", At least, 1);
-	Bring("Player 6", "Zerg Lurker", "Location 71", Exactly, 0);
+	Bring("Current Player", "Men", "Lurker2", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker2", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 71", 25);
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker2", 25);
 	Preserve Trigger();
 	Comment("Lurker Training 2");
 }
@@ -1853,11 +1946,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 72", At least, 1);
-	Bring("Player 6", "Zerg Lurker", "Location 72", Exactly, 0);
+	Bring("Current Player", "Men", "Lurker3", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker3", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 72", 26);
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker3", 26);
 	Preserve Trigger();
 	Comment("Lurker Training 3");
 }
@@ -1866,11 +1959,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 73", At least, 1);
-	Bring("Player 6", "Zerg Lurker", "Location 73", Exactly, 0);
+	Bring("Current Player", "Men", "Lurker4", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker4", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 73", 27);
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker4", 27);
 	Preserve Trigger();
 	Comment("Lurker Training 4");
 }
@@ -1879,11 +1972,11 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 74", At least, 1);
-	Bring("Player 6", "Zerg Lurker", "Location 74", Exactly, 0);
+	Bring("Current Player", "Men", "Lurker5", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker5", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 74", 28);
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker5", 28);
 	Preserve Trigger();
 	Comment("Lurker Training 5");
 }
@@ -1892,13 +1985,52 @@ Actions:
 
 Trigger("Heroes"){
 Conditions:
-	Bring("Current Player", "Men", "Location 75", At least, 1);
-	Bring("Player 6", "Zerg Lurker", "Location 75", Exactly, 0);
+	Bring("Current Player", "Men", "Lurker6", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker6", Exactly, 0);
 
 Actions:
-	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Location 75", 41);
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker6", 41);
 	Preserve Trigger();
 	Comment("Lurker Training 6");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Lurker7", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker7", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker7", 23);
+	Preserve Trigger();
+	Comment("Lurker Training 7\r\n");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Lurker8", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker8", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker8", 25);
+	Preserve Trigger();
+	Comment("Lurker Training 8\r\n");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "Lurker9", At least, 1);
+	Bring("Player 6", "Zerg Lurker", "Lurker9", Exactly, 0);
+
+Actions:
+	Create Unit with Properties("Player 6", "Zerg Lurker", 5, "Lurker9", 26);
+	Preserve Trigger();
+	Comment("Lurker Training 9\r\n");
 }
 
 //-----------------------------------------------------------------//
@@ -1909,10 +2041,9 @@ Conditions:
 	Bring("Player 8", "Men", "_area", Exactly, 0);
 
 Actions:
-	Display Text Message(Always Display, "\x013\x007Thanks For Playing!  You Won! Now survive for as long as you can on the endless bonus round! Goodluck!\r\n\x013\x0062high - 2014\r\n\r\n\r\n\r\n\r\n\r\n");
-	Wait(5000);
-	Set Deaths("Player 8", "Terran Valkyrie", Set To, 1);
-	Comment("Victory*");
+	Display Text Message(Always Display, "\x013\x007Thanks For Playing!  You Won!\r\n\x013\x0062high - 2017\r\n\r\n\r\n\r\n\r\n\r\n");
+	Victory();
+	Comment("Victory*\r\n\r\n\r\n");
 }
 
 //-----------------------------------------------------------------//
@@ -2525,6 +2656,140 @@ Actions:
 
 //-----------------------------------------------------------------//
 
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Terran Engineering Bay", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Terran Engineering Bay", 1, "EasyModeEnableLoc");
+	Create Unit("Player 7", "Terran Engineering Bay", 1, "Unused location (103)");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Terran Engineering Bay", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Terran Engineering Bay", 1, "EasyModeEnableLoc");
+	Create Unit("Player 7", "Terran Engineering Bay", 1, "Unused location (103)");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Zerg Evolution Chamber", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Zerg Evolution Chamber", 1, "upgrades 4");
+	Create Unit("Player 7", "Zerg Evolution Chamber", 1, "upgrades 3");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Zerg Evolution Chamber", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Zerg Evolution Chamber", 1, "upgrades 4");
+	Create Unit("Player 7", "Zerg Evolution Chamber", 1, "upgrades 3");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Forge", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Forge", 1, "upgrades 2");
+	Create Unit("Player 7", "Protoss Forge", 1, "upgrades 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Forge", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Forge", 1, "upgrades 2");
+	Create Unit("Player 7", "Protoss Forge", 1, "upgrades 1");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Gateway", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Gateway", 1, "Unused location (97)");
+	Create Unit("Player 7", "Protoss Gateway", 1, "Unused location (99)");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Gateway", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Gateway", 1, "Unused location (97)");
+	Create Unit("Player 7", "Protoss Gateway", 1, "Unused location (99)");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Pylon", Exactly, 0);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (96)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (98)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (100)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (108)");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Pylon", Exactly, 1);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (96)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (98)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (100)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (108)");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
 Trigger("Player 1", "Player 2", "Player 3", "Player 4", "Player 5"){
 Conditions:
 	Score("Current Player", Custom, At least, 35000);
@@ -2585,13 +2850,244 @@ Actions:
 
 //-----------------------------------------------------------------//
 
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Pylon", Exactly, 2);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (96)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (98)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (100)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (108)");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Command("All players", "Protoss Pylon", Exactly, 3);
+
+Actions:
+	Wait(1000);
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (96)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (98)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (100)");
+	Create Unit("Player 7", "Protoss Pylon", 1, "Unused location (108)");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Deaths("Player 7", "Protoss Temple", At least, 1);
+
+Actions:
+	Display Text Message(Always Display, "\x013\x007Game Over\r\n\x013\x0062high    - 2017\r\n\r\n\x013\x006Join our discord: https://discord.gg/f7C7Qcy\r\n\r\n\r\n");
+	Defeat();
+	Comment("Defeat*\r\n\r\n\r\n");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Terran Engineering Bay", "upgrades 6", At least, 1);
+
+Actions:
+	Remove Unit At Location("All players", "Terran Engineering Bay", All, "upgrades 6");
+	Create Unit with Properties("Player 7", "Terran Engineering Bay", 1, "Unused location (103)", 0);
+	Display Text Message(Always Display, "\x013\x003You're Wasting Your Time!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	Preserve Trigger();
+	Comment("Anti-Lift Terran Upgrade");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+;	Bring("Player 12", "Men", "Anywhere", At least, 1);
+;	Bring("Player 12", "Infested Duran", "Anywhere", Exactly, 0);
+
+Actions:
+;	Kill Unit At Location("Player 12", "Men", 1, "Anywhere");
+;	Create Unit with Properties("Current Player", "Terran Civilian", 1, "UnitPasslocation", 4);
+;	Give Units to Player("Player 12", "Player 7", "Buildings", All, "_area");
+	Comment("If player leaves, distribute units and give buildings back to white\r\n\r\n\r\n(disabled)");
+;	Display Text Message(Don't Always Display, "A play has left. -- -     The Player in the top game slot has received +1 unit to distribute");
+;	Minimap Ping("UnitPasslocation");
+;	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+;	Bring("Player 12", "Men", "Anywhere", At least, 1);
+;	Bring("Player 12", "Infested Duran", "Anywhere", Exactly, 0);
+;	Bring("Player 1", "Flag", "Anywhere", Exactly, 0);
+
+Actions:
+;	Kill Unit At Location("Player 12", "Men", 1, "Anywhere");
+;	Create Unit with Properties("Current Player", "Terran Civilian", 1, "UnitPasslocation", 4);
+;	Give Units to Player("Player 12", "Player 7", "Buildings", All, "_area");
+	Comment("If player leaves, distribute units and give buildings back to white\r\n\r\n\r\ndifferent for each player\r\n(disabled)");
+;	Display Text Message(Don't Always Display, "A play has left. -- -     The Player in the top game slot has received +1 unit to distribute");
+;	Minimap Ping("UnitPasslocation");
+;	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+;	Bring("Player 12", "Men", "Anywhere", At least, 1);
+;	Bring("Player 12", "Infested Duran", "Anywhere", Exactly, 0);
+;	Bring("Player 1", "Flag", "Anywhere", Exactly, 0);
+;	Bring("Player 2", "Flag", "Anywhere", Exactly, 0);
+
+Actions:
+;	Kill Unit At Location("Player 12", "Men", 1, "Anywhere");
+;	Create Unit with Properties("Current Player", "Terran Civilian", 1, "UnitPasslocation", 4);
+;	Give Units to Player("Player 12", "Player 7", "Buildings", All, "_area");
+	Comment("If player leaves, distribute units and give buildings back to white\r\n\r\n\r\ndifferent for each player\r\n(disabled)");
+;	Display Text Message(Don't Always Display, "A play has left. -- -     The Player in the top game slot has received +1 unit to distribute");
+;	Minimap Ping("UnitPasslocation");
+;	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+;	Bring("Player 12", "Men", "Anywhere", At least, 1);
+;	Bring("Player 12", "Infested Duran", "Anywhere", Exactly, 0);
+;	Bring("Player 1", "Flag", "Anywhere", Exactly, 0);
+;	Bring("Player 2", "Flag", "Anywhere", Exactly, 0);
+;	Bring("Player 3", "Flag", "Anywhere", Exactly, 0);
+
+Actions:
+;	Kill Unit At Location("Player 12", "Men", 1, "Anywhere");
+;	Create Unit with Properties("Current Player", "Terran Civilian", 1, "UnitPasslocation", 4);
+;	Give Units to Player("Player 12", "Player 7", "Buildings", All, "_area");
+	Comment("If player leaves, distribute units and give buildings back to white\r\n\r\n\r\ndifferent for each player\r\n(disabled)");
+;	Display Text Message(Don't Always Display, "A play has left. -- -     The Player in the top game slot has received +1 unit to distribute");
+;	Minimap Ping("UnitPasslocation");
+;	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+;	Bring("Player 12", "Men", "Anywhere", At least, 1);
+;	Bring("Player 12", "Infested Duran", "Anywhere", Exactly, 0);
+;	Bring("Player 1", "Flag", "Anywhere", Exactly, 0);
+;	Bring("Player 2", "Flag", "Anywhere", Exactly, 0);
+;	Bring("Player 3", "Flag", "Anywhere", Exactly, 0);
+;	Bring("Player 4", "Flag", "Anywhere", Exactly, 0);
+
+Actions:
+;	Kill Unit At Location("Player 12", "Men", 1, "Anywhere");
+;	Create Unit with Properties("Current Player", "Terran Civilian", 1, "UnitPasslocation", 4);
+;	Give Units to Player("Player 12", "Player 7", "Buildings", All, "_area");
+	Comment("If player leaves, distribute units and give buildings back to white\r\n\r\n\r\ndifferent for each player\r\n(disabled)");
+;	Display Text Message(Don't Always Display, "A play has left. -- -     The Player in the top game slot has received +1 unit to distribute");
+;	Minimap Ping("UnitPasslocation");
+;	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
 Trigger("Heroes"){
 Conditions:
 	Bring("Player 12", "Men", "Anywhere", At least, 1);
 
 Actions:
+	Give Units to Player("Player 12", "Current Player", "Infested Duran", All, "Anywhere");
+	Comment("If the Player with the ban unit leaves - first give ban unit\r\n\r\n\r\n");
+;	Give Units to Player("Player 12", "Current Player", "Men", 1, "Anywhere");
+	Display Text Message(Don't Always Display, "A play has left. -- -     The Banner unit has been passed to the next player in line");
 	Preserve Trigger();
 	Kill Unit("Player 12", "Men");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 1"){
+Conditions:
+	Bring("Heroes", "Men", "UnitPassP1", At least, 1);
+
+Actions:
+	Give Units to Player("Player 12", "Current Player", "Infested Duran", 1, "Anywhere");
+	Preserve Trigger();
+	Comment("UnitPass Current Player\r\n\r\n\r\n\r\n\r\n");
+	Create Unit with Properties("Current Player", "Hunter Killer (Hydralisk)", 1, "_repick", 4);
+	Display Text Message(Don't Always Display, "You have received a unit!");
+	Minimap Ping("UnitPasslocation");
+	Remove Unit At Location("Heroes", "Terran Civilian", 1, "UnitPassP1");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 5"){
+Conditions:
+	Bring("Heroes", "Men", "UnitPassP5", At least, 1);
+
+Actions:
+	Preserve Trigger();
+	Comment("UnitPass Current Player\r\n\r\n\r\n\r\n\r\n");
+	Create Unit with Properties("Current Player", "Hunter Killer (Hydralisk)", 1, "_repick", 4);
+	Display Text Message(Don't Always Display, "You have received a unit!");
+	Minimap Ping("UnitPasslocation");
+	Remove Unit At Location("Heroes", "Terran Civilian", 1, "UnitPassP5");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 4"){
+Conditions:
+	Bring("Heroes", "Men", "UnitPassP4", At least, 1);
+
+Actions:
+	Preserve Trigger();
+	Comment("UnitPass Current Player\r\n\r\n\r\n\r\n\r\n");
+	Create Unit with Properties("Current Player", "Hunter Killer (Hydralisk)", 1, "_repick", 4);
+	Display Text Message(Don't Always Display, "You have received a unit!");
+	Minimap Ping("UnitPasslocation");
+	Remove Unit At Location("Heroes", "Terran Civilian", 1, "UnitPassP4");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 3"){
+Conditions:
+	Bring("Heroes", "Men", "UnitPassP3", At least, 1);
+
+Actions:
+	Preserve Trigger();
+	Comment("UnitPass Current Player\r\n\r\n\r\n\r\n\r\n");
+	Create Unit with Properties("Current Player", "Hunter Killer (Hydralisk)", 1, "_repick", 4);
+	Display Text Message(Don't Always Display, "You have received a unit!");
+	Minimap Ping("UnitPasslocation");
+	Remove Unit At Location("Heroes", "Terran Civilian", 1, "UnitPassP3");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 2"){
+Conditions:
+	Bring("Heroes", "Men", "UnitPassP2", At least, 1);
+
+Actions:
+	Preserve Trigger();
+	Comment("UnitPass Current Player\r\n\r\n\r\n\r\n\r\n");
+	Create Unit with Properties("Current Player", "Hunter Killer (Hydralisk)", 1, "_repick", 4);
+	Display Text Message(Don't Always Display, "You have received a unit!");
+	Minimap Ping("UnitPasslocation");
+	Remove Unit At Location("Heroes", "Terran Civilian", 1, "UnitPassP2");
 }
 
 //-----------------------------------------------------------------//
@@ -2968,7 +3464,6 @@ Conditions:
 
 Actions:
 	Modify Unit Hit Points("Heroes", "Men", 100, All, "_area");
-	Modify Unit Energy("Heroes", "Men", 100, All, "_area");
 	Move Unit("Player 7", "Men", 1, "walker turf", "walker1");
 	Order("Player 7", "Men", "walker1", "walker2", move);
 	Set Resources("Player 7", Add, 300, ore and gas);
@@ -3007,11 +3502,10 @@ Actions:
 
 Trigger("Player 7"){
 Conditions:
-	Countdown Timer(Exactly, 200);
+	Countdown Timer(Exactly, 239);
 
 Actions:
-	Run AI Script("TSUx");
-	Preserve Trigger();
+	Run AI Script("TSUP");
 }
 
 //-----------------------------------------------------------------//
@@ -3497,6 +3991,65 @@ Actions:
 	Set Deaths("Player 7", "Floor Hatch (UNUSED)", Add, 1);
 	Preserve Trigger();
 	Comment("timer x2");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Always();
+	Countdown Timer(Exactly, 238);
+
+Actions:
+	Set Resources("Player 7", Add, 10000, ore and gas);
+	Run AI Script At Location("TSUP", "whitebuild1");
+	Run AI Script At Location("TSUP", "whitebuild2");
+	Run AI Script At Location("TSUP", "whitebuild3");
+	Run AI Script At Location("TSUP", "whitebuild4");
+	Run AI Script At Location("TSUP", "whitebuild5");
+	Run AI Script At Location("TSUP", "whitebuild6");
+	Run AI Script At Location("TSUP", "whitebuild7");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Player 7"){
+Conditions:
+	Always();
+	Countdown Timer(Exactly, 5);
+
+Actions:
+	Set Resources("Player 7", Add, 10000, ore and gas);
+	Run AI Script At Location("TSUP", "whitebuild4");
+	Run AI Script At Location("TSUP", "whitebuild5");
+	Run AI Script At Location("TSUP", "whitebuild6");
+	Run AI Script At Location("TSUP", "whitebuild8");
+	Preserve Trigger();
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Buildings", "EnemySpawn2", At least, 1);
+
+Actions:
+	Kill Unit At Location("Current Player", "Buildings", All, "EnemySpawn2");
+	Preserve Trigger();
+	Comment("Lift Off prevention");
+}
+
+//-----------------------------------------------------------------//
+
+Trigger("Heroes"){
+Conditions:
+	Bring("Current Player", "Men", "UnitPasslocation", At least, 1);
+
+Actions:
+	Preserve Trigger();
+	Minimap Ping("UnitPasslocation");
+	Comment("UnitPass Minimap ping\r\n\r\n");
 }
 
 //-----------------------------------------------------------------//

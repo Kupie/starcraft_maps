@@ -16,6 +16,10 @@ var introTimer = 256;
 var townAttackWarnShown = 0;
 
 function onPluginStart() {
+	
+	// set game speed to 1.25x by default (30 fps)
+	dwwrite(0x5124F0, 34);
+	 
 	const cp = getcurpl();
 
 	// ── Alliance setup ──────────────────────────────────────────────────────
@@ -25,7 +29,11 @@ function onPluginStart() {
 	}
 	setcurpl(P7);
 	SetAllianceStatus(P8, Enemy);
-
+	SetAllianceStatus(P9, Ally);
+	SetAllianceStatus(P10, Ally);
+	SetAllianceStatus(P11, Ally);
+	SetAllianceStatus(P12, Ally);
+	
 	setcurpl(P8);
 	SetAllianceStatus(P7, Enemy);
 	foreach(player : EUDLoopPlayer("Human", Force1)) {
@@ -60,7 +68,7 @@ function onPluginStart() {
 	}
 
 	// ── Mission objectives ──────────────────────────────────────────────────
-	SetMissionObjectivesAll("Levels at 500, 1k, 2k, 3k, 5k, 7k, 10k, 15k, 20k, 25k, 35k, 50k, 75k, 100k, 130k, 170k, 220k, 280k, 350k, and 400k experience. Rewards up to 20,000 minerals.\r\n\r\n\x04open source: github @Kupie/starcraft_maps");
+	SetMissionObjectivesAll("\x04Levels at 500, 1k, 2k, 3k, 5k, 7k, 10k, 15k, 20k, 25k, 35k, 50k, 75k, 100k, 130k, 170k, 220k, 280k, 350k, and 400k experience. Rewards up to 20,000 minerals.\r\n\r\n\x04open source: github @Kupie/starcraft_maps");
 
 	introTimer = 256;
 	
@@ -78,7 +86,13 @@ function onPluginStart() {
 	SetMemory(0x6641A8, Add, 0x400000); // units:Special Ability Flags  index:74 (Dark Templar Hero) enable permanent cloaking
 
 	// Set pauses to 200
-	dwwrite(0x0058d718, 200);
+	// dwwrite(0x0058d718, 200);
+	
+	// Initialize centerViewEnabled
+	foreach(i : py_range(7)) {
+		common_vars.centerViewEnabled[i]= 1;
+	}
+	
 	
 	setcurpl(cp);
 	
@@ -149,9 +163,10 @@ function afterTriggerExec() {
 		//	printAllAt(3, "");
 			printAllAt(4, "\x13\x12Gameplay changes:");
 			printAllAt(5, "\x13\x12- Marine/Firebat heroes permastimmed");
-			printAllAt(6, "\x13\x12- Firebat slightly nerfed");
+		//	printAllAt(6, "\x13\x12- Firebat slightly nerfed");
 			printAllAt(7, "\x13\x12- Zerg heroes share the same attack upgrade");
 			printAllAt(8, "\x13\x12- Upgrades/Recruit available at every upgrade building");
+			printAllAt(9, "\x13\x12- Default game speed is set to 1.25x");
 		//	PlayWAVAll("sound/misc/transmission.wav");
 			//Order("Dark Templar (Hero)",P7,"Anywhere",1,"Anywhere");
 		}
@@ -169,9 +184,10 @@ function afterTriggerExec() {
 		//	printAllAt(3, "");
 			printAllAt(4, "\x13\x12Gameplay changes:");
 			printAllAt(5, "\x13\x12- Marine/Firebat heroes permastimmed");
-			printAllAt(6, "\x13\x12- Firebat slightly nerfed");
+		//	printAllAt(6, "\x13\x12- Firebat slightly nerfed");
 			printAllAt(7, "\x13\x12- Zerg heroes share the same attack upgrade");
 			printAllAt(8, "\x13\x12- Upgrades/Recruit available at every upgrade building");
+			printAllAt(9, "\x13\x12- Default game speed is set to 1.25x");
 		//	PlayWAVAll("sound/misc/transmission.wav");
 		}
 	}
@@ -235,6 +251,6 @@ function afterTriggerExec() {
 		SetMemoryX(dtStatusFlagAddr, SetTo, 0, 0x00000300);	// clears bits 0x100, 0x200, 0x800
 		
 	}
-
+	
 	setcurpl(cp);
 }

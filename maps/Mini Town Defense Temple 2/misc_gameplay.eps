@@ -39,7 +39,46 @@ function onPluginStart() {
 	setcurpl(cp);
 }
 
+function checkGameSpeedChanger() {
+	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1x")) {
+		dwwrite(0x5124F0, 42);
+		DisplayTextAll("\x13\x07Speed set to Regular");
+		MoveUnit(1, "Infested Duran", P1, "Speed 1x", "SpeedArea");
+	}
+	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.25x")) {
+	 dwwrite(0x5124F0, 34);
+	DisplayTextAll("\x13\x07Speed set to 1.25x");
+	MoveUnit(1, "Infested Duran", P1, "Speed 1.25x", "SpeedArea");
+	}
+	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.5x")) {
+		dwwrite(0x5124F0, 28);
+		DisplayTextAll("\x13\x07Speed set to 1.5x");
+	 MoveUnit(1, "Infested Duran", P1, "Speed 1.5x", "SpeedArea");
+	}
+	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.75x")) {
+		dwwrite(0x5124F0, 24);
+		DisplayTextAll("\x13\x07Speed set to 1.75x");
+	 MoveUnit(1, "Infested Duran", P1, "Speed 1.75x", "SpeedArea");
+	}
+	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 2x")) {
+		dwwrite(0x5124F0, 21);
+		DisplayTextAll("\x13\x07Speed set to 2x");
+	 MoveUnit(1, "Infested Duran", P1, "Speed 2x", "SpeedArea");
+	}
+	
+	
+	//speeds: fastest: 42;
+	//speeds: 1x:   36
+	//speeds: 1.25: 34 // also 30fps
+	//speeds: 1.5:  28
+	//speeds: 1.75: 24
+	//speeds: 2:    21
+	
+	
+	
+}
 function afterTriggerExec() {
+	
 	const cp = getcurpl();
 
 	foreach(player : EUDLoopPlayer("Human", Force1)) {
@@ -260,8 +299,8 @@ function afterTriggerExec() {
 		DisplayTextAll("DEBUG MODE ENABLED");
 		f_bwrite(0x65FEDC, 255);        // Jim Raynor armor
 		f_dwwrite(0x6623A0, 2147483647); // Jim Raynor HP
-		f_wwrite(0x656EB0, 65535);      // Gauss Rifle damage
-		f_wwrite(0x657678, 65535);      // Gauss Rifle bonus
+		f_wwrite(0x656EB2, 40000);      // Gauss Rifle damage
+		f_wwrite(0x65767A, 0);      // Gauss Rifle bonus
 		
 		// Player 1 normal upgrades (0-45), base 0x58D2B0, stride 46 bytes
 		dwwrite(0x58D2B0, 0xFFFFFFFF);  // upgrades 0-3
@@ -311,12 +350,16 @@ function afterTriggerExec() {
 	ModifyUnitHitPoints(All, "(men)", P12, "Anywhere", 100);
 	
 	// remove flags, just cleans up flag beacons
-	RemoveUnitAt(All,"Flag","Anywhere",Force1);
+	// new Temple2 version doesn't use flag beacons so this is commented out
+	// RemoveUnitAt(All,"Flag","Anywhere",Force1);
 	
 	// Set numPlayers to currently active player amount
 	common_vars.numPlayers = 0;
 	foreach(player : EUDLoopPlayer("Human")) {
 		common_vars.numPlayers++;
 	}
+	
+	checkGameSpeedChanger();
+	
 	setcurpl(cp);
 }

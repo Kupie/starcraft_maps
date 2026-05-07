@@ -12,10 +12,6 @@ import common_vars;
 //   1000 kills bracket (1000–1999): -1000 kills, +200 XP, +40 ore
 //   2000+ kills bracket (2000+): -2000 kills, +400 XP, +80 ore
 //
-// NOTE: P1's triggers did NOT have "Set Resources(P7, Add, N, ore and gas)" —
-// only P2–P6 did. This may have been an oversight in the original map.
-// We replicate exact original behavior: P7 gets resources only from P2–P6.
-//
 // IMPORTANT: These must fire multiple times per frame if kills are high,
 // since each trigger fires once per frame. With hyper triggers in EUD mode,
 // each afterTriggerExec runs every frame. Multiple brackets can apply in one

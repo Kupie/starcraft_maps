@@ -7,7 +7,7 @@
 // CreateUnit(count, unitType, location, player)
 // CenterView(location) -- desync, acts on CurrentPlayer
 
-				   
+import common_vars;
 
 const heroPickLocs = list(
 	py_str("Location 21"),
@@ -90,7 +90,7 @@ function afterTriggerExec() {
 					}
 					
 					setcurpl(player);
-					CenterView("_healing");
+					if (common_vars.centerViewEnabled[player]) {CenterView("_healing"); }
 				}
 			}
 			if (heroPickNoBoss[i] == 0) {
@@ -101,7 +101,8 @@ function afterTriggerExec() {
 						stimRefreshTimer = 1;
 					}
 					setcurpl(player);
-					CenterView("_healing");
+					if (common_vars.centerViewEnabled[player]) {CenterView("_healing"); }
+
 				}
 			}
 		}
@@ -114,7 +115,8 @@ function afterTriggerExec() {
 			RemoveUnitAt(1, "(men)", "_repick", player);
 			CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", player, UnitProperty(invincible = True));
 			setcurpl(player);
-			CenterView("_Heropick");
+			if (common_vars.centerViewEnabled[player]) {CenterView("_Heropick"); }
+
 		}
 
 		// ── Recruit effect ────────────────────────────────────────────────
@@ -122,10 +124,66 @@ function afterTriggerExec() {
 			CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", player, UnitProperty(invincible = True));
 			RemoveUnit("Protoss Zealot", player);
 			setcurpl(player);
-			DisplayText("\x13\x07Recruit Was A Success!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+			DisplayText("\x13\x07Recruit Was A Success!");
+			if (common_vars.centerViewEnabled[player]) {
+				CenterView("_Heropick"); 
+				common_vars.centerViewEnabled[player] = 0;
+				DisplayText("\x13\x07Your camera will no longer jump around when entering/exiting areas");
+				}
+			
+			
 		}
+		
+		
+		
+		
 	}
 
+	// ── Hero pass system ─────────────────────────────────────────────────────
+	// Any unit entering a UnitPassPX location gets removed and gives that
+	// player a Terran Civilian at _Heropick so they can pick a new hero.
+	if (Bring(AllPlayers, AtLeast, 1, "(men)", "UnitPassP1") && playerexist(P1)) {
+		RemoveUnitAt(1, "(men)", "UnitPassP1", AllPlayers);
+		setcurpl(P1);
+		CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", CurrentPlayer, UnitProperty(invincible = True));
+		DisplayText("\x04You have received a unit!");
+		PlayWAV("sound/misc/transmission.wav");
+	}
+	if (Bring(AllPlayers, AtLeast, 1, "(men)", "UnitPassP2") && playerexist(P2)) {
+		RemoveUnitAt(1, "(men)", "UnitPassP2", AllPlayers);
+		setcurpl(P2);
+		CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", CurrentPlayer, UnitProperty(invincible = True));
+		DisplayText("\x04You have received a unit!");
+		PlayWAV("sound/misc/transmission.wav");
+	}
+	if (Bring(AllPlayers, AtLeast, 1, "(men)", "UnitPassP3") && playerexist(P3)) {
+		RemoveUnitAt(1, "(men)", "UnitPassP3", AllPlayers);
+		setcurpl(P3);
+		CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", CurrentPlayer, UnitProperty(invincible = True));
+		DisplayText("\x04You have received a unit!");
+		PlayWAV("sound/misc/transmission.wav");
+	}
+	if (Bring(AllPlayers, AtLeast, 1, "(men)", "UnitPassP4") && playerexist(P4)) {
+		RemoveUnitAt(1, "(men)", "UnitPassP4", AllPlayers);
+		setcurpl(P4);
+		CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", CurrentPlayer, UnitProperty(invincible = True));
+		DisplayText("\x04You have received a unit!");
+		PlayWAV("sound/misc/transmission.wav");
+	}
+	if (Bring(AllPlayers, AtLeast, 1, "(men)", "UnitPassP5") && playerexist(P5)) {
+		RemoveUnitAt(1, "(men)", "UnitPassP5", AllPlayers);
+		setcurpl(P5);
+		CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", CurrentPlayer, UnitProperty(invincible = True));
+		DisplayText("\x04You have received a unit!");
+		PlayWAV("sound/misc/transmission.wav");
+	}
+	if (Bring(AllPlayers, AtLeast, 1, "(men)", "UnitPassP6") && playerexist(P6)) {
+		RemoveUnitAt(1, "(men)", "UnitPassP6", AllPlayers);
+		setcurpl(P6);
+		CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", CurrentPlayer, UnitProperty(invincible = True));
+		DisplayText("\x04You have received a unit!");
+		PlayWAV("sound/misc/transmission.wav");
+	}
 	applySpeedCooldownFlags();
 
 	setcurpl(cp);

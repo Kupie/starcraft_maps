@@ -10,9 +10,6 @@
 
 import common_vars;
 
-const prop_lurker = UnitProperty(hitpoint = 100, burrowed = True);
-const prop_shield = UnitProperty(hitpoint = 100, shield = 100);
-
 const trainEntryLocs = list(
 	py_str("Location 38"),
 	py_str("Location 37"),
@@ -89,7 +86,8 @@ function afterTriggerExec() {
 		) {
 			MoveUnit(All, "(men)", player, "to training", "Location 32");
 			setcurpl(player);
-			CenterView("_Trainingpick");
+			if (common_vars.centerViewEnabled[player]) {CenterView("_Trainingpick"); }
+			MinimapPing("_Trainingpick");
 			DisplayText("\x13\x05Select A Monster To Train Against.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
 		}
 
@@ -101,7 +99,8 @@ function afterTriggerExec() {
 			) {
 				MoveUnit(All, "(men)", player, trainEntryLocs[i], trainDestLocs[i]);
 				setcurpl(player);
-				CenterView(trainDestLocs[i]);
+				if (common_vars.centerViewEnabled[player]) {CenterView(trainDestLocs[i]); }
+				MinimapPing(trainDestLocs[i]);
 				DisplayText(trainMessages[i]);
 			}
 			if (
@@ -110,7 +109,8 @@ function afterTriggerExec() {
 			) {
 				MoveUnit(All, "(men)", player, trainEntryLocs[i], trainDestLocs[i]);
 				setcurpl(player);
-				CenterView(trainDestLocs[i]);
+			//	CenterView(trainDestLocs[i]);
+				MinimapPing(trainDestLocs[i]);
 				DisplayText(trainMessages[i]);
 			}
 		}
@@ -120,7 +120,7 @@ function afterTriggerExec() {
 			if (Bring(player, AtLeast, 1, "(men)", exitLocs[i])) {
 				MoveUnit(All, "(men)", player, exitLocs[i], "_healing");
 				setcurpl(player);
-				CenterView("_healing");
+				if (common_vars.centerViewEnabled[player]) {CenterView("_healing"); }
 				DisplayText("\x13\x05You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
 			}
 		}
@@ -131,7 +131,7 @@ function afterTriggerExec() {
 				Bring(player, AtLeast, 1, "(men)", archonLocs[i]) &&
 				Bring(P8, Exactly, 0, "Protoss Archon", archonLocs[i])
 			) {
-				CreateUnitWithProperties(5, "Protoss Archon", archonLocs[i], P8, prop_shield);
+				CreateUnitWithProperties(5, "Protoss Archon", archonLocs[i], P8, UnitProperty(hitpoint = 100, shield = 100));
 				Order("(men)", P8, archonLocs[i], Patrol, archonLocs[i]);
 			}
 		}
@@ -142,7 +142,7 @@ function afterTriggerExec() {
 				Bring(player, AtLeast, 1, "(men)", dragonLocs[i]) &&
 				Bring(P8, Exactly, 0, "Protoss Dragoon", dragonLocs[i])
 			) {
-				CreateUnitWithProperties(5, "Protoss Dragoon", dragonLocs[i], P8, prop_shield);
+				CreateUnitWithProperties(5, "Protoss Dragoon", dragonLocs[i], P8, UnitProperty(hitpoint = 100, shield = 100));
 			}
 		}
 
@@ -168,12 +168,12 @@ function afterTriggerExec() {
 		}
 
 		// ── Lurker training mob spawn (100% HP, burrowed) ─────────────────
-		foreach(i : py_range(6)) {
+		foreach(i : py_range(9)) {
 			if (
 				Bring(player, AtLeast, 1, "(men)", lurkerLocs[i]) &&
 				Bring(P8, Exactly, 0, "Zerg Lurker", lurkerLocs[i])
 			) {
-				CreateUnitWithProperties(5, "Zerg Lurker", lurkerLocs[i], P8, prop_lurker);
+				CreateUnitWithProperties(5, "Zerg Lurker", lurkerLocs[i], P8, UnitProperty(burrowed = True));
 			}
 		}
 

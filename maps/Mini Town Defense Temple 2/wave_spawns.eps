@@ -10,7 +10,6 @@
 //   2. Spawn each CSV row after that row's WaveDelayMS.
 //   3. After each CreateUnit batch, issue one patrol order from Location 1 to Temple.
 //   4. When all rows are spawned and P8 has no men left in _area, reset countdown to 210.
-
 import common_vars;
 import wave_spawns_array;
 
@@ -20,9 +19,11 @@ var activeWaveRow = 0;
 var activeWaveEnd = 0;
 var waveDelay = 0;
 var waitingForClear = 0;
+var patrolTimer = 0;
+var moveTimer = 0;
 var roundArmed = 0;
 var startupGrace = 0;
-
+var whiteBuildOrdered = 0;
 var setHitPointsTo = EUDVariable(100);
 
 const waveStarted = EUDArray(wave_spawns_array.NUM_WAVES + 1);
@@ -39,13 +40,15 @@ function onPluginStart() {
 	waitingForClear = 0;
 	roundArmed = 1;
 	startupGrace = 0;
+	patrolTimer = 0;
+	moveTimer = 0;
 	common_vars.bossWaveActive = 0;
 	common_vars.finalWaveReached = 0;
 	SetCountdownTimer(SetTo, 255);
 }
 
 function orderP8WaveUnits() {
-	Order("(men)", P8, "Location 1", Patrol, "Temple");
+	Order("(any unit)", P8, "EnemyPatrolSpawn", Patrol, "Temple");
 }
 
 function startWave(waveNumber) {
@@ -85,36 +88,53 @@ function resetCountdownForNextWave() {
 	waitingForClear = 0;
 	roundArmed = 1;
 	common_vars.bossWaveActive = 0;
-	bwrite(0x58D3F7, 135);	// P8 Protoss Armor = 135 during training phase	
+	bwrite(0x58D3F7, 135);	// P8 Protoss Armor = 135 during training phase
 }
 
-function initTownRebuild () {
-	// ── Try to get CPU to rebuild town  ────────────────────────────
-	setcurpl(P7);
-	SetResources(P7, Add, 50000, OreAndGas);
-	RunAIScriptAt("TSUP", "whitebuild1");
-	RunAIScriptAt("TSUP", "whitebuild2");
-	RunAIScriptAt("TSUP", "whitebuild3");
-	RunAIScriptAt("TSUP", "whitebuild4");
-	RunAIScriptAt("TSUP", "whitebuild5");
-	RunAIScriptAt("TSUP", "whitebuild6");
-	RunAIScriptAt("TSUP", "whitebuild7");
-
+function initTownRebuild() {
+	// ── Try to get CPU to rebuild town ────────────────────────────
+	if (CountdownTimer(Exactly, 230) && (whiteBuildOrdered == 0)) {
+		setcurpl(P7);
+		SetResources(P7, SetTo, 50000, OreAndGas);
+		RunAIScriptAt("TSUP", "whitebuild1");
+		RunAIScriptAt("TSUP", "whitebuild2");
+		RunAIScriptAt("TSUP", "whitebuild3");
+		RunAIScriptAt("TSUP", "whitebuild4");
+		RunAIScriptAt("TSUP", "whitebuild5");
+		RunAIScriptAt("TSUP", "whitebuild6");
+		RunAIScriptAt("TSUP", "whitebuild7");
+		RunAIScriptAt("TSUP", "whitebuild8");
+		whiteBuildOrdered = 1;
+	} else if (CountdownTimer(Exactly, 225)) {
+		whiteBuildOrdered = 0;
+	}
 }
+
+// Move units from staging area to patrol spawn, max once every ~5 seconds.
+function moveSpawnedUnitsFromWaiting() {
+	if (moveTimer >= 1) {
+		moveTimer--;
+	}
+	if (moveTimer == 0) {
+		if (Bring(P8, AtLeast, 1, "(any unit)", "Location 1")) {
+			MoveUnit(All, "(men)", P8, "Location 1", "EnemyPatrolSpawn");
+			Order("(any unit)", P8, "EnemyPatrolSpawn", Patrol, "Temple");
+		}
+		moveTimer = 30;	// every ~5 seconds at turbo speed
+	}
+}
+
 function spawnCurrentRow() {
 	if (activeWaveRow >= activeWaveEnd) {
 		finishWaveRows();
 		return;
 	}
 
-
-
 	var hpPercent = 100;
 	if (common_vars.EasyModeEnable == 2) {
-		hpPercent = common_vars.numPlayers * 100 / 6;
- 
-		if (hpPercent < 15)  { hpPercent = 15; }   // minimum 15%
-		if (hpPercent > 100) { hpPercent = 100; }  // maximum 100%
+		hpPercent = common_vars.numPlayers * 100 / 5;
+		if (hpPercent < 20)  { hpPercent = 20; }	// minimum 20%
+		if (hpPercent > 100) { hpPercent = 100; }	// maximum 100%
 	}
 
 	foreach(unitIndex : py_range(0, wave_spawns_array.NUM_WAVE_UNITS)) {
@@ -124,7 +144,6 @@ function spawnCurrentRow() {
 			if (common_vars.EasyModeEnable == 2) {
 				ModifyUnitHitPoints(All, "(men)", P8, "Location 1", hpPercent);
 			}
-			
 		}
 	}
 
@@ -134,8 +153,6 @@ function spawnCurrentRow() {
 	if (activeWaveRow >= activeWaveEnd) {
 		if (activeWave == wave_spawns_array.NUM_WAVES) {
 			// Endless bonus round: loop the final wave forever.
-			// Use the final row's delay as the delay before the next loop,
-			// matching the old Encore trigger's wait after Zeratul spawned.
 			waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveEnd - 1];
 			activeWaveRow = wave_spawns_array.waveSpawnFirstRow[activeWave];
 		} else {
@@ -162,12 +179,10 @@ function tickActiveWave() {
 	if (activeWave == 0) {
 		return;
 	}
-
 	if (startupGrace > 0) {
 		startupGrace -= 1;
 		return;
 	}
-
 	if (waveDelay > 0) {
 		waveDelay -= 1;
 	} else {
@@ -186,13 +201,26 @@ function detectWaveClearAndResetTimer() {
 	}
 }
 
+// Force patrol every ~5 seconds in case units get stuck
+function patrolEnemySpawn() {
+	if (patrolTimer >= 1) {
+		patrolTimer--;
+	}
+	if (patrolTimer == 0) {
+		Order("(any unit)", P8, "EnemyPatrolSpawn", Patrol, "Temple");
+		patrolTimer = 30;	// every ~5 seconds at turbo speed
+	}
+}
+
 function afterTriggerExec() {
 	const cp = getcurpl();
-	
+
 	detectCountdownWaveStart();
 	tickActiveWave();
 	detectWaveClearAndResetTimer();
 	initTownRebuild();
-	
+	moveSpawnedUnitsFromWaiting();
+	patrolEnemySpawn();
+
 	setcurpl(cp);
 }
