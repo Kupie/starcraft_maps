@@ -39,6 +39,18 @@ function onPluginStart() {
 	setcurpl(cp);
 }
 
+
+function setGameSpeedMultiplier(frametime) {
+	dwwrite(0x5124D8, frametime);
+	dwwrite(0x5124DC, frametime);
+	dwwrite(0x5124E0, frametime);
+	dwwrite(0x5124E4, frametime);
+	dwwrite(0x5124E8, frametime);
+	dwwrite(0x5124EC, frametime);
+	dwwrite(0x5124F0, frametime);
+	
+}
+
 function checkGameSpeedChanger() {
 	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1x")) {
 		dwwrite(0x5124F0, 42);
@@ -46,30 +58,35 @@ function checkGameSpeedChanger() {
 		MoveUnit(1, "Infested Duran", P1, "Speed 1x", "SpeedArea");
 	}
 	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.25x")) {
-	 dwwrite(0x5124F0, 34);
-	DisplayTextAll("\x13\x07Speed set to 1.25x");
-	MoveUnit(1, "Infested Duran", P1, "Speed 1.25x", "SpeedArea");
+		dwwrite(0x5124F0, 33);
+		DisplayTextAll("\x13\x07Speed set to 1.25x. Also closest to 30fps!");
+		MoveUnit(1, "Infested Duran", P1, "Speed 1.25x", "SpeedArea");
 	}
 	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.5x")) {
 		dwwrite(0x5124F0, 28);
 		DisplayTextAll("\x13\x07Speed set to 1.5x");
-	 MoveUnit(1, "Infested Duran", P1, "Speed 1.5x", "SpeedArea");
+		MoveUnit(1, "Infested Duran", P1, "Speed 1.5x", "SpeedArea");
 	}
 	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.75x")) {
 		dwwrite(0x5124F0, 24);
 		DisplayTextAll("\x13\x07Speed set to 1.75x");
-	 MoveUnit(1, "Infested Duran", P1, "Speed 1.75x", "SpeedArea");
+		MoveUnit(1, "Infested Duran", P1, "Speed 1.75x", "SpeedArea");
 	}
 	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 2x")) {
 		dwwrite(0x5124F0, 21);
 		DisplayTextAll("\x13\x07Speed set to 2x");
-	 MoveUnit(1, "Infested Duran", P1, "Speed 2x", "SpeedArea");
+		MoveUnit(1, "Infested Duran", P1, "Speed 2x", "SpeedArea");
+	}
+	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 2.5x")) {
+		dwwrite(0x5124F0, 17);
+		DisplayTextAll("\x13\x07Speed set to 2.5x. Holy shit 60 fps!");
+		MoveUnit(1, "Infested Duran", P1, "Speed 2.5x", "SpeedArea");
 	}
 	
 	
 	//speeds: fastest: 42;
 	//speeds: 1x:   36
-	//speeds: 1.25: 34 // also 30fps
+	//speeds: 1.25: 33 // also 30fps
 	//speeds: 1.5:  28
 	//speeds: 1.75: 24
 	//speeds: 2:    21
