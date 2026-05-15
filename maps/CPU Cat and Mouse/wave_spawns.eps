@@ -78,7 +78,10 @@ function placeSpawnerBeacons(left, top) {
 
 var beaconString = 0;
 function onPluginStart() {
+	var savedCp = getcurpl();
 	beaconString = GetMapStringAddr($T("2 = Ban"));
+	
+	setcurpl(savedCp);
 }
 
 function afterTriggerExec() {

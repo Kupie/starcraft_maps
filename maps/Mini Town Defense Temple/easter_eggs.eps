@@ -19,29 +19,31 @@
 //   64    = cheat f
 //   32    = cheat e
 //   16    = cheat d
-//   8     = cheat c
-//   4     = cheat b
-//   2     = "power overwhelming"
+//   8     = "the gathering"      (infinite energy toggle)
+//   4     = "food for thought"   (supply used zeroing toggle)
+//   2     = "power overwhelming" (god mode toggle)
+//
+// Supply used addresses (per-player, 4 bytes each, players 1-8):
+//   Zerg:    0x582174..0x582190
+//   Terran:  0x582204..0x582220
+//   Protoss: 0x582294..0x5822B0
 //
 // RULE: save getcurpl() at top, restore at very bottom only.
+
+import common_vars;
 
 const chatFlag = PVariable();
 EUDRegisterObjectToNamespace("chatFlag", chatFlag);
 
-var easterEggTriggered1 = 0;	// state for "power overwhelming" (0/1/2)
-
-function debugPrintChatVar() {
-	var chatVal = bread(0x58D900);
-	if (chatVal >= 1) {
-		eprintAll("0x58D900 = {}", chatVal);
-	}
-}
+var cheatGodActive    = 0;	// "power overwhelming" toggle (0=off, 1=on)
+var cheatFoodActive   = 0;	// "food for thought" toggle   (0=off, 1=on)
+var cheatEnergyActive = 0;	// "the gathering" toggle      (0=off, 1=on)
 
 function afterTriggerExec() {
-//	debugPrintChatVar(); // DEBUG ONLY
 	const cp = getcurpl();
 
-	foreach(player : EUDLoopPlayer(None)) {
+	// ── Chat detection ────────────────────────────────────────────────────
+	foreach(player : EUDLoopPlayer("Human")) {
 		if (chatFlag[player] >= 1) {
 			var flagCheck = chatFlag[player];
 			chatFlag[player] = 0;
@@ -100,37 +102,67 @@ function afterTriggerExec() {
 				flagCheck = flagCheck - 16;
 			}
 			if (flagCheck >= 8) {
-				DisplayTextAll("\x07cheat c detected");
+				// ── "the gathering" toggle ────────────────────────────────
+				if (cheatEnergyActive == 0) {
+					cheatEnergyActive = 1;
+					DisplayTextAll("\x04The Gathering: ON. All Wizards Have Prune Juice.");
+				} else {
+					cheatEnergyActive = 0;
+					DisplayTextAll("\x07The Gathering: OFF. Wizards Have Run Out of Prune Juice.");
+				}
 				flagCheck = flagCheck - 8;
 			}
 			if (flagCheck >= 4) {
-				DisplayTextAll("\x07cheat b detected");
+				// ── "food for thought" toggle ─────────────────────────────
+				if (cheatFoodActive == 0) {
+					cheatFoodActive = 1;
+					DisplayTextAll("\x04Food for Thought: ON. Supply? Never Heard of It.");
+				} else {
+					cheatFoodActive = 0;
+					DisplayTextAll("\x07Food for Thought: OFF. Pay Your Supply Debt.");
+				}
 				flagCheck = flagCheck - 4;
 			}
 			if (flagCheck >= 2) {
-				// ── "power overwhelming" ──────────────────────────────────
-				if (easterEggTriggered1 == 0) {
-					SetResources(Force1, Add, 10, Ore);
-					DisplayTextAll("\x07Nice try! Here's 10 minerals for the trouble.");
-					easterEggTriggered1 = 1;
-				} else if (easterEggTriggered1 == 1) {
-					DisplayTextAll("\x07Go ahead, try it one more time");
-					easterEggTriggered1 = 2;
-				} else if (easterEggTriggered1 == 2) {
-					setcurpl(player);
-					DisplayTextAll("\x06I warned ya!");
-					DisplayText("\x06I warned ya!");
-					DisplayText("\x06I warned ya!");
-					DisplayText("\x06I warned ya!");
-					DisplayText("\x06I warned ya!");
-					SetInvincibility(Disable, "(men)", player, "Anywhere");
-					SetInvincibility(Enable, "Infested Duran", player, "Anywhere");
-					MoveUnit(All, "(men)", player, "Anywhere", "KillBox");
-					MoveUnit(All, "Infested Duran", player, "Anywhere", "BanArea");
+				// ── "power overwhelming" toggle ───────────────────────────
+				if (cheatGodActive == 0) {
+					cheatGodActive = 1;
+					DisplayTextAll("\x06Power Overwhelming: ON. Absolute Spineless Worm.");
+				} else {
+					cheatGodActive = 0;
+					DisplayTextAll("\x07Power Overwhelming: OFF. Welcome Back to Mortality.");
 				}
 				flagCheck = flagCheck - 2;
 			}
 			// flagCheck should be 0 here if all bits accounted for
+		}
+	}
+
+	// ── Per-frame: god mode ───────────────────────────────────────────────
+	if (cheatGodActive == 1) {
+		foreach(player : EUDLoopPlayer("Human")) {
+			ModifyUnitHitPoints(All, AllUnits, player, Anywhere, 100);
+		}
+	}
+
+	// ── Per-frame: infinite energy ────────────────────────────────────────
+	if (cheatEnergyActive == 1) {
+		foreach(player : EUDLoopPlayer(None)) {
+			ModifyUnitEnergy(All, AllUnits, player, Anywhere, 100);
+		}
+	}
+
+	// ── Per-frame: supply zeroing ─────────────────────────────────────────
+	// Zeroes supply used for human players only, all three races.
+	// Base addresses confirmed from in-game trigger format (decimal -> hex):
+	//   Zerg    base: 5775732 = 0x582174  (+ player*4 per player)
+	//   Terran  base: 5775876 = 0x582204  (+ player*4 per player)
+	//   Protoss base: 5776020 = 0x582294  (+ player*4 per player)
+	if (cheatFoodActive == 1) {
+		foreach(player : EUDLoopPlayer("Human")) {
+			dwwrite(0x582174 + player * 4, 0);  // Zerg Control Used
+			dwwrite(0x582204 + player * 4, 0);  // Terran Supply Used
+			dwwrite(0x582294 + player * 4, 0);  // Protoss Psi Used
 		}
 	}
 

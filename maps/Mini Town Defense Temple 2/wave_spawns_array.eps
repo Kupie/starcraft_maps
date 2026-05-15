@@ -2,8 +2,8 @@
 // Source: wave_spawns.csv
 // WaveDelayMS is converted to Brood War frames at 24 frames/sec.
 
-const NUM_WAVES = 9;
-const NUM_WAVE_ROWS = 67;
+const NUM_WAVES = 10;
+const NUM_WAVE_ROWS = 76;
 const NUM_WAVE_UNITS = 16;
 
 // Unit integer IDs in CSV column order.
@@ -27,7 +27,7 @@ const waveSpawnUnitIndex = EUDVArray(16)(list(
 ));
 
 // First flattened row index for each wave. Index 0 is unused.
-const waveSpawnFirstRow = EUDVArray(10)(list(
+const waveSpawnFirstRow = EUDVArray(11)(list(
 	0,  // unused
 	0,  // Wave 1
 	2,  // Wave 2
@@ -37,11 +37,12 @@ const waveSpawnFirstRow = EUDVArray(10)(list(
 	32,  // Wave 6
 	41,  // Wave 7
 	50,  // Wave 8
-	58  // Wave 9
+	58,  // Wave 9
+	67  // Wave 10
 ));
 
 // Number of flattened rows in each wave. Index 0 is unused.
-const waveSpawnRowCount = EUDVArray(10)(list(
+const waveSpawnRowCount = EUDVArray(11)(list(
 	0,  // unused
 	2,  // Wave 1
 	4,  // Wave 2
@@ -51,11 +52,12 @@ const waveSpawnRowCount = EUDVArray(10)(list(
 	9,  // Wave 6
 	9,  // Wave 7
 	8,  // Wave 8
-	9  // Wave 9
+	9,  // Wave 9
+	9  // Wave 10
 ));
 
 // Delay before each flattened spawn row, in frames.
-const waveSpawnDelayFrames = EUDVArray(67)(list(
+const waveSpawnDelayFrames = EUDVArray(76)(list(
 	0,  // row 0, wave 1, 0ms
 	60,  // row 1, wave 1, 2500ms
 	0,  // row 2, wave 2, 0ms
@@ -122,11 +124,20 @@ const waveSpawnDelayFrames = EUDVArray(67)(list(
 	120,  // row 63, wave 9, 5000ms
 	120,  // row 64, wave 9, 5000ms
 	96,  // row 65, wave 9, 4000ms
-	240  // row 66, wave 9, 10000ms
+	240,  // row 66, wave 9, 10000ms
+	0,  // row 67, wave 10, 0ms
+	24,  // row 68, wave 10, 1000ms
+	24,  // row 69, wave 10, 1000ms
+	48,  // row 70, wave 10, 2000ms
+	120,  // row 71, wave 10, 5000ms
+	120,  // row 72, wave 10, 5000ms
+	120,  // row 73, wave 10, 5000ms
+	96,  // row 74, wave 10, 4000ms
+	240  // row 75, wave 10, 10000ms
 ));
 
 // Spawn counts by flattened row and unit index.
-const waveSpawnCounts = EUDVArray(67, EUDVArray(16))(list(
+const waveSpawnCounts = EUDVArray(76, EUDVArray(16))(list(
 	VArray(80, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 10,  0),  // row 0, wave 1: 80x Zerg Zergling, 10x Zerg Hydralisk, 10x Terran Marine
 	VArray( 0, 20, 12,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 10,  0),  // row 1, wave 1: 20x Zerg Hydralisk, 12x Zerg Broodling, 1x Zerg Ultralisk, 10x Terran Marine
 	VArray(40,  0, 20,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 15, 10),  // row 2, wave 2: 40x Zerg Zergling, 20x Zerg Broodling, 15x Terran Marine, 10x Protoss Zealot
@@ -193,5 +204,14 @@ const waveSpawnCounts = EUDVArray(67, EUDVArray(16))(list(
 	VArray( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 20,  0,  0,  0,  0, 20),  // row 63, wave 9: 20x Jim Raynor (Vulture), 20x Protoss Zealot
 	VArray( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 10, 14,  0,  0,  0, 20),  // row 64, wave 9: 10x Jim Raynor (Vulture), 14x Alexei Stukov (Ghost), 20x Protoss Zealot
 	VArray( 0,  0,  0,  0,  0,  0,  0, 15,  0,  0,  0,  0,  0,  0,  0, 20),  // row 65, wave 9: 15x Zeratul (Dark Templar), 20x Protoss Zealot
-	VArray( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 20,  0,  0,  0,  0, 20)  // row 66, wave 9: 20x Jim Raynor (Vulture), 20x Protoss Zealot
+	VArray( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 20,  0,  0,  0,  0, 20),  // row 66, wave 9: 20x Jim Raynor (Vulture), 20x Protoss Zealot
+	VArray( 0, 12,  0,  0,  0,  0,  0, 15,  0,  0,  0,  0,  0,  0,  0,  0),  // row 67, wave 10: 12x Zerg Hydralisk, 15x Zeratul (Dark Templar)
+	VArray( 0, 24,  0,  0,  0,  0,  0, 15,  0,  0,  0,  0,  0,  0,  0,  0),  // row 68, wave 10: 24x Zerg Hydralisk, 15x Zeratul (Dark Templar)
+	VArray( 0, 24,  0,  0,  0,  0,  0, 15,  0,  0,  0,  0,  0,  0,  0,  0),  // row 69, wave 10: 24x Zerg Hydralisk, 15x Zeratul (Dark Templar)
+	VArray( 0,  0,  0,  0,  0,  0,  0, 15,  0,  0,  0,  0,  0,  0,  0, 20),  // row 70, wave 10: 15x Zeratul (Dark Templar), 20x Protoss Zealot
+	VArray( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 20,  0,  0,  0,  0, 20),  // row 71, wave 10: 20x Jim Raynor (Vulture), 20x Protoss Zealot
+	VArray( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 20,  0,  0,  0,  0, 20),  // row 72, wave 10: 20x Jim Raynor (Vulture), 20x Protoss Zealot
+	VArray( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 10, 14,  0,  0,  0, 20),  // row 73, wave 10: 10x Jim Raynor (Vulture), 14x Alexei Stukov (Ghost), 20x Protoss Zealot
+	VArray( 0,  0,  0,  0,  0,  0,  0, 15,  0,  0,  0,  0,  0,  0,  0, 20),  // row 74, wave 10: 15x Zeratul (Dark Templar), 20x Protoss Zealot
+	VArray( 0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 20,  0,  0,  0,  0, 20)  // row 75, wave 10: 20x Jim Raynor (Vulture), 20x Protoss Zealot
 ));

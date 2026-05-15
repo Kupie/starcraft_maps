@@ -84,7 +84,7 @@ function notifyHardExtras(round) {
 	}
 }
 
-function beforeTriggerExec() {
+function afterTriggerExec() {
 	// Normal wave notification fires as soon as currentRound increments (step 0).
 	if (roundsNotified < common_vars.currentRound) {
 		//debug only printAll("notifying round {}, was notified {}", common_vars.currentRound, roundsNotified);

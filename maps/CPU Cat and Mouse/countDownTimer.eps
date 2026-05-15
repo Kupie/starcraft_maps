@@ -4,9 +4,11 @@ var lastTick      = 0;
 var realCountdown = 0;
 
 function onPluginStart() {
+	var savedCp = getcurpl();
 	PauseTimer();
 	// multiply by 4/3 using integer math to approximate 1.3333
 	realCountdown = common_vars.realTimeSecondsPerRound * 4 / 3;
+	setcurpl(savedCp);
 }
 
 function afterTriggerExec() {

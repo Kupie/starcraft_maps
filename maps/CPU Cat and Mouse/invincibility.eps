@@ -17,13 +17,16 @@ function _rescueImpl(player, isPerm) {
 }
 
 function onPluginStart() {
+	var savedCp = getcurpl();
 	foreach(i : py_range(7)) {
 		tempInvul[i] = 0;
 		permInvul[i] = 0;
 	}
+	setcurpl(savedCp);
 }
 
 function afterTriggerExec() {
+	var savedCp = getcurpl();
 	if (!Switch("GameStarted", Set)) {
 		return;
 	}
@@ -40,7 +43,6 @@ function afterTriggerExec() {
 	// ── Move probe to getprobe each frame ─────────────────────────
 	MoveUnit(All, "Any unit", AllPlayers, "pSpawn", "getprobe");
 
-	var savedCp = getcurpl();
 	foreach(player : EUDLoopPlayer(None, Force1)) {
 		setcurpl(player);
 

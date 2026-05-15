@@ -1,0 +1,188 @@
+// game_flow.eps
+// Handles: one-time init, split/difficulty UI, game-start transition, BS-ban messages
+// Load order: FIRST (before misc.eps) so GameStarted switch is set before misc.eps reads it
+import common_vars;
+
+// Per-player color-coded ban messages matching original trigger text
+const bsBanMessages = list(
+	$T("\x13\x06Player 1\x06 Is now banned for trying to BS."),
+	$T("\x13\x0ePlayer 2\x0e Is now banned for trying to BS."),
+	$T("\x13\x0fPlayer 3\x0f Is now banned for trying to BS."),
+	$T("\x13\x10Player 4\x10 Is now banned for trying to BS."),
+	$T("\x13\x11Player 5\x11 Is now banned for trying to BS."),
+	$T("\x13\x15Player 6\x15 Is now banned for trying to BS."),
+	$T("\x13\x16Player 7\x16 Is now banned for trying to BS."),
+);
+
+// One entry per mice slot — set to 1 once the ban message for that player has displayed
+const banMsgShown = EUDArray(7);
+
+// Set to 1 once starting probes have been spawned (one-shot gate)
+var probeSpawned = 0;
+
+// ── Helper: CenterView("Start") for all human players + P8 ───────────────
+function centerViewStart() {
+	foreach(i : py_range(7)) {
+		if (playerexist(common_vars.micePlayers[i])) {
+			var savedCp = getcurpl();
+			setcurpl(common_vars.micePlayers[i]);
+			CenterView("Start");
+			setcurpl(savedCp);
+		}
+	}
+	var savedCp2 = getcurpl();
+	setcurpl(P8);
+	CenterView("Start");
+	setcurpl(savedCp2);
+}
+
+function onPluginStart() {
+	var savedCp = getcurpl();
+
+	foreach(i : py_range(7)) {
+		banMsgShown[i] = 0;
+	}
+	probeSpawned = 0;
+
+
+	// Classic: "Mices Always no-Preserve" — vision AI script for mice
+	setcurpl(P1);
+	RunAIScriptAt("+Vi7", "Anywhere");
+	setcurpl(savedCp);
+	LeaderBoardKills("(any unit)", "Most Cats Slain");
+	LeaderBoardComputerPlayers(Disable);
+	
+	
+	// Give choice civ to first active player and give vision of P8
+	foreach(player : EUDLoopPlayer("Human", Force1)) {
+		GiveUnits(All, "(any unit)", P12, "DifficultyBox", player);
+		setcurpl(player);
+		RunAIScript("+Vi7");
+	}
+	
+	// Classic: "Mices Always no-Preserve" — initial split-mode choice prompt
+	DisplayTextAll("\x13\x04Spawn 1/7 of normal cats for each player?\r\n\x13\x04<----- Yes | No ----->\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	setcurpl(savedCp);
+}
+
+function keepP8OutOfTopBox() {
+	MoveUnit(All, "Magellan (Science Vessel)", P8, "noair2", "Start");
+	MoveUnit(All, "Yggdrasill (Overlord)", P8, "noair2", "Start");
+	MoveUnit(All, "Magellan (Science Vessel)", P8, "noair", "Start");
+	MoveUnit(All, "Yggdrasill (Overlord)", P8, "noair", "Start");
+
+}
+function afterTriggerExec() {
+	var savedCp = getcurpl();
+
+	// ── Pre-game camera: keep all mice players looking at choice area ─────
+	// Classic: "Mices !DifficultyChosen Preserve → CenterView(DifficultyBox)"
+	if (!Switch("DifficultyChosen", Set)) {
+		foreach(i : py_range(7)) {
+			if (playerexist(common_vars.micePlayers[i])) {
+				var savedCp = getcurpl();
+				setcurpl(common_vars.micePlayers[i]);
+				CenterView("DifficultyBox");
+				setcurpl(savedCp);
+			}
+		}
+	}
+
+	// ── Split mode: ENABLED (Easy Mode civilian present, choice not yet made) ──
+	// Classic: "Mices Bring(Mices,Civil,EasyMode,>=1) + !SplitModeChoiceMade → no-Preserve"
+	if (
+		Bring(Force1, AtLeast, 1, "Terran Civilian", "Easy Mode") &&
+		!Switch("SplitModeChoiceMade", Set)
+	) {
+		DisplayTextAll("\x13\x02Split Spawns: ENABLED\r\n\x13\x04Each player triggers 1/7 of normal spawns.");
+		SetSwitch("ReduceSpawnsForNumPlayers", Set);
+		SetSwitch("SplitModeChoiceMade", Set);
+		MoveUnit(1, "Terran Civilian", Force1, "Easy Mode", "DifficultyBox");
+		DisplayTextAll("\r\n\r\n\x13\x04Choose Difficulty!\r\n\x13\x04<----- Easy (v9-like) | Hard (v10-like) ----->\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	}
+
+	// ── Split mode: DISABLED (Hard Mode civilian, choice not yet made) ────
+	// Classic: "Mices Bring(Mices,Civil,HardMode,>=1) + !SplitModeChoiceMade → no-Preserve"
+	if (
+		Bring(Force1, AtLeast, 1, "Terran Civilian", "Hard Mode") &&
+		!Switch("SplitModeChoiceMade", Set)
+	) {
+		DisplayTextAll("\x13\x06Split Spawns: DISABLED\r\n\x13\x04Normal spawn amounts will be used.");
+		SetSwitch("ReduceSpawnsForNumPlayers", Clear);
+		SetSwitch("SplitModeChoiceMade", Set);
+		MoveUnit(1, "Terran Civilian", Force1, "Hard Mode", "DifficultyBox");
+		DisplayTextAll("\r\n\r\n\x13\x04Choose Difficulty!\r\n\x13\x04<----- Easy (v9-like) | Hard (v10-like) ----->\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+	}
+
+	// ── Difficulty: EASY (split mode already decided, difficulty not chosen) ─
+	// Classic: "Mices Bring(Mices,Civil,EasyMode,>=1) + SplitModeChoiceMade → no-Preserve"
+	if (
+		Bring(Force1, AtLeast, 1, "Terran Civilian", "Easy Mode") &&
+		Switch("SplitModeChoiceMade", Set) &&
+		!Switch("DifficultyChosen", Set)
+	) {
+		DisplayTextAll("\x13\x04Easy Mode Selected");
+		SetResources(Force1, Add, 50, Gas);
+		SetSwitch("HardModeEnabled", Clear);
+		SetSwitch("EasyModeEnabled", Set);
+		SetSwitch("DifficultyChosen", Set);
+		RemoveUnitAt(All, "(any unit)", "DifficultyBox", AllPlayers);
+		centerViewStart();
+	}
+
+	// ── Difficulty: HARD (split mode already decided, difficulty not chosen) ─
+	// Classic: "Mices Bring(Mices,Civil,HardMode,>=1) + SplitModeChoiceMade → no-Preserve"
+	if (
+		Bring(Force1, AtLeast, 1, "Terran Civilian", "Hard Mode") &&
+		Switch("SplitModeChoiceMade", Set) &&
+		!Switch("DifficultyChosen", Set)
+	) {
+		DisplayTextAll("\x13\x04Hard Mode Selected");
+		SetSwitch("HardModeEnabled", Set);
+		SetSwitch("DifficultyChosen", Set);
+		RemoveUnitAt(All, "(any unit)", "DifficultyBox", AllPlayers);
+		centerViewStart();
+	}
+
+	// ── Game start transition ──────────────────────────────────────────────
+	// Classic: "All players DifficultyChosen+Set, GameStarted+NotSet, EUDUnitsPlaced+Set"
+	// SetCountdownTimer(80) intentionally omitted — countDownTimer.eps resets to 60 and takes over
+	if (
+		Switch("DifficultyChosen", Set) &&
+		!Switch("GameStarted", Set) &&
+		Switch("EUDUnitsPlaced", Set)
+	) {
+		SetSwitch("GameStarted", Set);
+		SetSwitch("dt counter", Set);
+		SetSwitch("Rescue", Set);
+		SetSwitch("AntiBS", Set);
+		SetSwitch("Ban", Set);
+		SetSwitch("pylon invuln", Set);
+		centerViewStart();
+
+		// Classic: "Mices GameStarted+Set no-Preserve → CreateUnit(CP, Probe, 1, Start)"
+		// One probe per connected mice player at game start
+		probeSpawned = 1;
+		foreach(i : py_range(7)) {
+			if (playerexist(common_vars.micePlayers[i])) {
+				CreateUnit(1, "Protoss Probe", "Start", common_vars.micePlayers[i]);
+			}
+		}
+	}
+
+	// ── AntiBS ban message display ─────────────────────────────────────────
+	// Classic: "Mices Kill(Pi,Probe,Exactly 1) + Switch(Ban,Set) → DisplayTextAll, no-Preserve"
+	// Fires once per player the first time their probe kill count reaches exactly 1.
+	// Unit ID 64 = Protoss Probe (integer required — Kills() does not accept string names)
+	if (Switch("Ban", Set)) {
+		foreach(i : py_range(7)) {
+			if (!banMsgShown[i] && Kills(common_vars.micePlayers[i], Exactly, 1, 64)) {
+				banMsgShown[i] = 1;
+				DisplayTextAll(bsBanMessages[i]);
+			}
+		}
+	}
+	keepP8OutOfTopBox();
+	
+	setcurpl(savedCp);
+}

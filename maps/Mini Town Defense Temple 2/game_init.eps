@@ -94,6 +94,9 @@ function onPluginStart() {
 	}
 	
 	
+	// Delete "Mineral Field (Type 2)" as I use it to draw on pre-game minimap
+	RemoveUnitAt(All,"Mineral Field (Type 2)","Anywhere",AllPlayers);
+	
 	setcurpl(cp);
 	
 }
@@ -158,7 +161,7 @@ function afterTriggerExec() {
 		// ── Phase 3a: Changelog first display (t=80) ─────────────────────
 		if (introTimer == 80) {
 			printAllAt(0, "\x13\x12Map revamped with EUD + Turbo triggers by Kupie 2026");
-			printAllAt(1, "\x13\x12Testing version 1");
+			printAllAt(1, "\x13\x12Ver: Test2");
 			printAllAt(2, "\x13\x12open source: https://github.com/Kupie/starcraft_maps");
 		//	printAllAt(3, "");
 			printAllAt(4, "\x13\x12Gameplay changes:");
@@ -179,7 +182,7 @@ function afterTriggerExec() {
 		// ── Phase 3b: Changelog re-display (t=0) — refreshes before expiry
 		if (introTimer == 0) {
 			printAllAt(0, "\x13\x12Map revamped with EUD + Turbo triggers by Kupie 2026");
-			printAllAt(1, "\x13\x12Testing version 1");
+			printAllAt(1, "\x13\x12Ver: Test2");
 			printAllAt(2, "\x13\x12open source: https://github.com/Kupie/starcraft_maps");
 		//	printAllAt(3, "");
 			printAllAt(4, "\x13\x12Gameplay changes:");

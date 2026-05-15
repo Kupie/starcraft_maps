@@ -1,0 +1,109 @@
+// misc_gameplay.eps
+// Heal at Inn, teleports, splash ban, P1 ban triggers, boss bonuses,
+// walker heal+reset.
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+// ModifyUnitHitPoints(count, unitType, player, area, percent)
+// ModifyUnitEnergy(count, unitType, player, area, percent)
+// MoveUnit(count, unitType, player, startArea, targetLocation)
+// KillUnit(unitType, player)
+// Order(unitType, player, startArea, order, targetLocation)  -- Move/Patrol are bare constants
+// Defeat()/Victory() act on CurrentPlayer
+
+import common_vars;
+
+
+
+// Scrolling text for gasTankString — ping-pong right then left
+// Full text: "Reduce EnemyHP by number of players" (35 chars, window 30)
+// 10 frames: positions 0-5 right, 5-1 back left
+
+var scrollIdx = 0;
+var scrollTimer = 0;
+const SCROLL_SPEED = 10;	// frames per scroll step (~1 second at fastest)
+var gasTankString = 0;
+
+function updateScrollText() {
+	if (scrollTimer >= 1) {
+		scrollTimer--;
+	}
+	if (scrollTimer == 0) {
+		if      (scrollIdx == 0) { dbstr_print(gasTankString, "Reduce EnemyHP by number of pl"); }
+		else if (scrollIdx == 1) { dbstr_print(gasTankString, "educe EnemyHP by number of pla"); }
+		else if (scrollIdx == 2) { dbstr_print(gasTankString, "duce EnemyHP by number of play"); }
+		else if (scrollIdx == 3) { dbstr_print(gasTankString, "uce EnemyHP by number of playe"); }
+		else if (scrollIdx == 4) { dbstr_print(gasTankString, "ce EnemyHP by number of player"); }
+		else if (scrollIdx == 5) { dbstr_print(gasTankString, "e EnemyHP by number of players"); }
+		else if (scrollIdx == 6) { dbstr_print(gasTankString, "ce EnemyHP by number of player"); }
+		else if (scrollIdx == 7) { dbstr_print(gasTankString, "uce EnemyHP by number of playe"); }
+		else if (scrollIdx == 8) { dbstr_print(gasTankString, "duce EnemyHP by number of play"); }
+		else if (scrollIdx == 9) { dbstr_print(gasTankString, "educe EnemyHP by number of pla"); }
+
+		scrollIdx++;
+		if (scrollIdx >= 10) {
+			scrollIdx = 0;
+		}
+		scrollTimer = SCROLL_SPEED;
+	}
+}
+
+function onPluginStart() {
+	gasTankString = GetMapStringAddr($T("ReduceEnemyHPText"));
+	//dbstr_print(gasTankString, "2 = Ban\0");
+}
+
+function afterTriggerExec() {
+	
+	const cp = getcurpl();
+
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "NormalHPHeroesDifficulty")) {
+		f_dwwrite(0x662428, 460800); // Devouring One
+		f_dwwrite(0x662424, 384000); // Hunter Killer
+		f_dwwrite(0x66241C, 460800); // Zerg Kerri
+		f_dwwrite(0x662410, 460800); // Torrasque
+		f_dwwrite(0x662378, 384000); // Gui Montag
+		f_dwwrite(0x6623A0, 384000); // Raynor (Marine)
+		f_dwwrite(0x662390, 384000); // Sarah Kerrigan (Ghost)
+		f_dwwrite(0x662478, 460800); // Dark Templar (Hero)
+		f_dwwrite(0x662484, 460800); // Fenix Zealot
+		f_dwwrite(0x662488, 384000); // Fenix Dragoon
+		f_dwwrite(0x662480, 384000); // Archon Hero
+
+		DisplayTextAll("\x13\x07Difficulty set to Normal (What \"Edited More HP\" version has (Default))");
+		MoveUnit(1, "Infested Duran", P1, "P1DuranArea", "BanArea");
+	}
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "HardHPHeroesDifficulty")) {
+		f_dwwrite(0x662428, 320000); // Devouring One
+		f_dwwrite(0x662424, 256000); // Hunter Killer
+		f_dwwrite(0x66241C, 320000); // Zerg Kerri
+		f_dwwrite(0x662410, 320000); // Torrasque
+		f_dwwrite(0x662378, 307200); // Gui Montag
+		f_dwwrite(0x6623A0, 256000); // Raynor (Marine)
+		f_dwwrite(0x662390, 320000); // Sarah Kerrigan (Ghost)
+		f_dwwrite(0x662478, 320000); // Dark Templar (Hero)
+		f_dwwrite(0x662484, 320000); // Fenix Zealot
+		f_dwwrite(0x662488, 256000); // Fenix Dragoon
+		f_dwwrite(0x662480, 307200); // Archon Hero
+
+		DisplayTextAll("\x13\x07Difficulty set to Hard (What this map was before \"Edited More HP\" version)");
+		MoveUnit(1, "Infested Duran", P1, "P1DuranArea", "BanArea");
+	}
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "EasyHPHeroesDifficulty")) {
+		f_dwwrite(0x662428, 601600); // Devouring One
+		f_dwwrite(0x662424, 512000); // Hunter Killer
+		f_dwwrite(0x66241C, 601600); // Zerg Kerri
+		f_dwwrite(0x662410, 601600); // Torrasque
+		f_dwwrite(0x662378, 460800); // Gui Montag
+		f_dwwrite(0x6623A0, 512000); // Raynor (Marine)
+		f_dwwrite(0x662390, 448000); // Sarah Kerrigan (Ghost)
+		f_dwwrite(0x662478, 601600); // Dark Templar (Hero)
+		f_dwwrite(0x662484, 601600); // Fenix Zealot
+		f_dwwrite(0x662488, 512000); // Fenix Dragoon
+		f_dwwrite(0x662480, 460800); // Archon Hero
+		
+		DisplayTextAll("\x13\x07Difficulty set to EASY (Even more HP than \"Edited More HP\" version)");
+		MoveUnit(1, "Infested Duran", P1, "P1DuranArea", "BanArea");
+	}
+	updateScrollText();
+	setcurpl(cp);
+}

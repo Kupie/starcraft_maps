@@ -1,4 +1,5 @@
 function afterTriggerExec() {
+	var savedCp = getcurpl();
 	foreach(player : EUDLoopPlayer()) {
 		if (Kills(player, AtLeast, 1, 93)) {  // Scantid X2
 			var savedCp = getcurpl();
@@ -6,7 +7,6 @@ function afterTriggerExec() {
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 2 Bonus!");
-			setcurpl(savedCp);
 			CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 93);
 		}
@@ -16,7 +16,6 @@ function afterTriggerExec() {
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 1 Bonus!");
-			setcurpl(savedCp);
 			CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 94);
 		}
@@ -26,7 +25,6 @@ function afterTriggerExec() {
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 1 Bonus!");
-			setcurpl(savedCp);
 			CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 99);
 		}
@@ -36,7 +34,6 @@ function afterTriggerExec() {
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 3 Bonus!");
-			setcurpl(savedCp);
 			CreateUnitWithProperties(3, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 96);
 		}
@@ -46,7 +43,6 @@ function afterTriggerExec() {
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 2 Bonus!");
-			setcurpl(savedCp);
 			CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 95);
 		}
@@ -56,7 +52,6 @@ function afterTriggerExec() {
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 2 Bonus!");
-			setcurpl(savedCp);
 			CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 89);
 		}
@@ -66,9 +61,19 @@ function afterTriggerExec() {
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 1 Bonus!");
-			setcurpl(savedCp);
 			CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 90);
 		}
+		if (Kills(player, AtLeast, 1, 39)) {  // Ultralisk
+			SetResources(player, Add, 2, Gas);		
+			DisplayText("Killed cat, +2 gas!");
+			SetKills(player, Subtract, 1, 39);
+		}
+		if (Kills(player, AtLeast, 1, 48)) {  // Torrasque aka cat upgraded
+			SetResources(player, Add, 20, Gas);	
+			DisplayText("Killed upgraded cat, +20 gas!");
+			SetKills(player, Subtract, 1, 48);
+		}
 	}
+	setcurpl(savedCp);
 }

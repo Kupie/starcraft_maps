@@ -1,20 +1,37 @@
+// Shared variables and constants imported by all modules
+// NOT listed in .edd — import only
+
 var currentRound = 0;
 
-var delayBetweenSpawns = EUDVariable(64); // How many frames between spawning units
+var delayBetweenSpawns = 64;  // BUGFIX: was EUDVariable(64) — var already creates EUDVariable
 
-var realTimeSecondsPerRound = 45; // How many seconds should each round last, when running on "fastest" speed
+var realTimeSecondsPerRound = 45;  // Seconds per round at "fastest" speed
 
-var hardRoll = 0; // Set by wave_spawns.eps at step 1; read by wave_spawns_notifications.eps
+var hardRoll = 0;  // Set by wave_spawns.eps at step 1; read by wave_spawns_notifications.eps
 
-const tempInvulFrameAmount = 1072; // 23.81 frames per real-life second
+const tempInvulFrameAmount = 1428;  // 23.81 frames per real-life second
 
-var roundPylonsBecomeVulnerable = 70; // Round where pylons stop being invincible
+var roundPylonsBecomeVulnerable = 70;  // Round where pylons stop being invincible
 
 const micePlayers = list(P1, P2, P3, P4, P5, P6, P7);
 
-const aiNudgeTimerSeconds = 3; // How often to order AI to "go attack", aka nudge them
+const aiNudgeTimerSeconds = 3;  // How often (seconds) to nudge AI to attack
 
-function beforeTriggerExec() {
+// ── Shared per-player location name arrays ────────────────────────────────
+// Used by unit_tracking.eps (MoveLocation) and misc.eps (shield battery respawn)
 
-	
-}
+const nexusLocs = list(
+	py_str("nexus1"), py_str("nexus2"), py_str("nexus3"),
+	py_str("nexus4"), py_str("nexus5"), py_str("nexus6"), py_str("nexus7"),
+);
+
+const afterlifeLocs = list(
+	py_str("afterlife1"), py_str("afterlife2"), py_str("afterlife3"),
+	py_str("afterlife4"), py_str("afterlife5"), py_str("afterlife6"), py_str("afterlife7"),
+);
+
+const pylonLocs = list(
+	py_str("Pylon1"), py_str("Pylon2"), py_str("Pylon3"),
+	py_str("Pylon4"), py_str("Pylon5"), py_str("Pylon6"), py_str("Pylon7"),
+);
+// REMOVED: empty beforeTriggerExec() — dead code; this file is not in .edd

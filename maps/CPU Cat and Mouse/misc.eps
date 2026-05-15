@@ -1,3 +1,7 @@
+// misc.eps
+// Handles: patrol units, ban logic, AI nudge, death/respawn, victory/defeat,
+//          shield battery probe-respawn, P12 unit distribution, P9 cleanup,
+//          noair zone flushing, energy refill, flag cleanup, build placement
 import common_vars;
 
 const deathDelayTimer = EUDArray(7);
@@ -22,7 +26,7 @@ const patrolUnits = list(
 // Per-unit patrol timers, staggered so they don't all move at once
 const patrolTimers = EUDArray(7);
 
-// Ban locations and messages per player slot
+// Ban locations and messages per player slot (Bring-based ban mechanic)
 const banLocs = list(
 	py_str("ban1"), py_str("ban2"), py_str("ban3"), py_str("ban4"),
 	py_str("ban5"), py_str("ban6"), py_str("ban7"),
@@ -40,30 +44,28 @@ const banMessages = list(
 
 
 function onPluginStart() {
+	var savedCp = getcurpl();
 	foreach(i : py_range(7)) {
 		deathDelayTimer[i] = 0;
 		patrolTimers[i] = 80 + i * 13;
 	}
 
-	// Set cat to ally P9/10/11/12
-	var savedCp = getcurpl();
+	// Set cat to ally P9/P10/P11/P12
 	setcurpl(P8);
-	SetAllianceStatus(P9, Ally);
+	SetAllianceStatus(P9,  Ally);
 	SetAllianceStatus(P10, Ally);
 	SetAllianceStatus(P11, Ally);
 	SetAllianceStatus(P12, Ally);
-	setcurpl(savedCp);
 
-	// Set pauses to 200
+	// Set pauses to 200 frames
 	dwwrite(0x0058d718, 200);
 	
-	
+	setcurpl(savedCp);
 }
 
-// ── Generic patrol unit handler — keeps 2 of each unit on the map ─────────
+// ── Generic patrol unit handler — keeps 1 of each critter on the map ──────
 function handlePatrolUnit() {
 	foreach(i : py_range(7)) {
-		// Spawn if fewer than 1 exist
 		if (Command(P9, AtMost, 0, patrolUnits[i])) {
 			var spawnIdx = f_rand() % 8;
 			foreach(j : py_range(8)) {
@@ -74,7 +76,6 @@ function handlePatrolUnit() {
 			}
 		}
 
-		// Patrol
 		patrolTimers[i] -= 1;
 		if (patrolTimers[i] == 0) {
 			patrolTimers[i] = 80;
@@ -95,7 +96,7 @@ function handlePatrolUnit() {
 	}
 }
 
-// ── Ban logic ─────────────────────────────────────────────────────────────
+// ── Bring-based ban logic (separate from game_flow.eps Kill-based messages) ──
 function handleBans() {
 	foreach(i : py_range(7)) {
 		if (playerexist(common_vars.micePlayers[i])) {
@@ -114,7 +115,7 @@ function handleBans() {
 	}
 }
 
-// ── AI nudging to go attack/move around ───────────────────────────────────
+// ── AI nudge: periodically order cat AI to attack ─────────────────────────
 var aiNudgeTimer = common_vars.aiNudgeTimerSeconds * 2381 / 100;
 function nudgeAIToAttack() {
 	aiNudgeTimer--;
@@ -127,6 +128,7 @@ function nudgeAIToAttack() {
 	}
 }
 
+// ── Death + delayed respawn logic ─────────────────────────────────────────
 function handleDeaths() {
 	foreach(player : EUDLoopPlayer(None, Force1)) {
 		if (
@@ -141,53 +143,203 @@ function handleDeaths() {
 			DisplayText("\x06- You have died!");
 			setcurpl(savedCp);
 			KillUnitAt(All, "(buildings)", "playground", player);
-			KillUnitAt(All, "Terran SCV", "playground", player);
+			KillUnitAt(All, "Terran SCV",  "playground", player);
 			deathDelayTimer[player] = 48;
 		}
 
 		if (deathDelayTimer[player] > 0) {
 			deathDelayTimer[player] -= 1;
 			if (deathDelayTimer[player] == 2) {
-				KillUnitAt(All, "Men", "playground", player);
+				KillUnitAt(All, "Men",  "playground", player);
 				CreateUnit(1, "Flag", "Start", player);
 			}
 		}
 	}
 }
 
-function beforeTriggerExec() {
+// ── Shield battery probe-respawn ──────────────────────────────────────────
+// Classic: "Player N Command(CP,Probe,==0) + Command(CP,ShieldBattery,>=1) Preserve"
+// When a mouse has no probe but has a shield battery (their respawn anchor),
+// respawn the probe at the battery's tracked location then remove the battery.
+function handleShieldBatteryRespawn() {
+	foreach(i : py_range(7)) {
+		var player = common_vars.micePlayers[i];
+		if (
+			Command(player, Exactly,  0, "Protoss Probe") &&
+			Command(player, AtLeast, 1, "Protoss Shield Battery")
+		) {
+			KillUnitAt(1, "Flag",                    "Start",                       player);
+			CreateUnit(1, "Protoss Probe",            common_vars.afterlifeLocs[i],  player);
+			KillUnitAt(1, "Protoss Shield Battery",   common_vars.afterlifeLocs[i],  player);
+		}
+	}
+}
+
+// ── P12 unit distribution ─────────────────────────────────────────────────
+// Classic: "Mices Command(P12,Men,>=1) Preserve → GiveUnits P12→CP at playground/HeroConvert/DifficultyBox"
+// Classic: "Mices Command(P12,Buildings,>=1) Preserve → GiveUnits P12→CP at playground"
+// Classic: "Mices Always Preserve → KillUnitAt(P12, Flag, 1, Start)"
+// P12 acts as the hero-selector host — units pooled there get distributed to each mice player
+function handleP12Units() {
+	// Always clean up any stray P12 flags at Start
+	KillUnitAt(1, "Flag", "Start", P12);
+
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		if (Command(P12, AtLeast, 1, "Men")) {
+			GiveUnits(1, "Men",       P12, "playground",   player);
+			GiveUnits(1, "Men",       P12, "Hero Convert",  player);
+			GiveUnits(1, "(any unit)", P12, "DifficultyBox", player);
+		}
+		if (Command(P12, AtLeast, 1, "Buildings")) {
+			GiveUnits(1, "Buildings", P12, "playground", player);
+		}
+	}
+}
+
+// ── P9 playground cleanup ─────────────────────────────────────────────────
+// Classic: "All players Always Preserve → KillUnitAt P9 probe/buildings/flags at playground"
+// P9 is the "neutral threat" player; stray units in playground staging area must be culled
+function handleP9Cleanup() {
+	KillUnitAt(All, "Protoss Probe", "playground", P9);
+	KillUnitAt(All, "Buildings",     "playground", P9);
+	KillUnitAt(All, "Flag",          "playground", P9);
+}
+
+// ── Noair zone flushing (GameStarted only) ────────────────────────────────
+// Classic: "Mices GameStarted Preserve → MoveUnit(CP, any unit, All, noair, Start)"
+// Classic: "Cats  GameStarted Preserve → MoveUnit(CP, any unit, All, noair, Start) + P9"
+// Keeps the noair staging corridor clear of stray units during gameplay
+function handleNoairFlush() {
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		MoveUnit(All, "(any unit)", player, "noair", "Start");
+	}
+	MoveUnit(All, "(any unit)", P8, "noair", "Start");
+	MoveUnit(All, "(any unit)", P9, "noair", "Start");
+}
+
+// ── Misc per-player cleanup ───────────────────────────────────────────────
+// Classic: "Mices Command(CP,Probe,>=1) Preserve → KillUnit(CP, Flag)"
+//          "Mices Bring(CP,Flag,Start,>=1) + Bring(CP,Probe,Start,>=1) → RemoveUnit(Mices,Flag)"
+// Ensures flags (death markers) are cleaned up when the probe is alive
+function handleFlagCleanup() {
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		if (Command(player, AtLeast, 1, "Protoss Probe")) {
+			KillUnit("Flag", player);
+		}
+		if (
+			Bring(player, AtLeast, 1, "Flag",         "Start") &&
+			Bring(player, AtLeast, 1, "Protoss Probe", "Start")
+		) {
+			RemoveUnit("Flag", Force1);
+		}
+	}
+}
+
+// ── Energy refill for support units ──────────────────────────────────────
+// Classic: "Mices Always Preserve → ModifyUnitEnergy(CP, Medic/ShieldBattery, 100, All, playground)"
+// Keeps medics and shield batteries at full energy while in the playground staging zone
+// ⚠ VERIFY parameter order at compile time: (count, unit, amount%, player, location)
+function handleEnergyRefill() {
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		ModifyUnitEnergy(All, "Terran Medic",player,"playground",100);
+		ModifyUnitEnergy(All,"Protoss Shield Battery",player,"playground",100);
+	}
+}
+
+// ── Build placement helpers ───────────────────────────────────────────────
+// Classic: "Mices Command(CP,Cocoon,>=1) Preserve"
+//          When a unit morphs into a Cocoon (e.g. Defiler ability), snap Pylon1 location
+//          to the cocoon, destroy any existing pylon there, then remove the cocoon.
+//          This acts as a placement trigger for the cocoon-based building system.
+// Classic: "Mices Command(CP,LurkerEgg,>=1) Preserve"
+//          Lurker can't be built directly — route through egg placement trick.
+// Classic: "Mices Command(CP,ZergEgg,>=1) Preserve"
+//          Drone starport build trick — eggs placed via starport become drones.
+//
+// MoveLocation(locationToMove, unit, player, Source Location) — no setcurpl needed
+function handleBuildPlacement() {
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		// Cocoon placement (e.g. Defiler ability, pylon remover)
+		if (Command(player, AtLeast, 1, "Cocoon")) {
+			MoveLocation("Pylon1", "Cocoon", player, "Anywhere" );
+			KillUnitAt(All, "Protoss Pylon", "Pylon1", player   );
+			RemoveUnitAt(All, "Cocoon",      "Pylon1", player   );
+		}
+
+		// Lurker egg → Lurker build trick
+		if (Command(player, AtLeast, 1, "Zerg Lurker Egg")) {
+			MoveLocation("Pylon2", "Zerg Lurker Egg",player, "Anywhere");
+			RemoveUnitAt(1, "Zerg Lurker Egg",     "Pylon2", player);
+			CreateUnit(1, "Zerg Lurker",           "Pylon2", player);
+		}
+
+		// Zerg egg → Drone build trick (starport drone purchase)
+		if (Command(player, AtLeast, 1, "Zerg Egg")) {
+			MoveLocation("Pylon3", "Zerg Egg",    player, "Anywhere");
+			RemoveUnitAt(1, "Zerg Egg",                 "Pylon3",   player);
+			CreateUnit(1, "Zerg Drone",                 "Pylon3",   player);
+		}
+	}
+}
+
+function handleComputerVisionObserver() {
+	setcurpl(P8);
+	if (Command(P8, AtLeast, 1, "Protoss Observer")) {
+		RunAIScriptAt("+Vi0", "Anywhere");
+		RunAIScriptAt("+Vi1", "Anywhere");
+		RunAIScriptAt("+Vi2", "Anywhere");
+		RunAIScriptAt("+Vi3", "Anywhere");
+		RunAIScriptAt("+Vi4", "Anywhere");
+		RunAIScriptAt("+Vi5", "Anywhere");
+		RunAIScriptAt("+Vi6", "Anywhere");
+	} else {
+		RunAIScriptAt("-Vi0", "Anywhere");
+		RunAIScriptAt("-Vi1", "Anywhere");
+		RunAIScriptAt("-Vi2", "Anywhere");
+		RunAIScriptAt("-Vi3", "Anywhere");
+		RunAIScriptAt("-Vi4", "Anywhere");
+		RunAIScriptAt("-Vi5", "Anywhere");
+		RunAIScriptAt("-Vi6", "Anywhere");
+	}
+	
+}
+function afterTriggerExec() {
+	var savedCp = getcurpl();
+	
+	// ── Always-running sections (no GameStarted gate) ─────────────────────
+	handleP9Cleanup();
+	handleP12Units();
+	handleFlagCleanup();
+	handleShieldBatteryRespawn();
+	handleBuildPlacement();
+	handleEnergyRefill();
+
 	if (!Switch("GameStarted", Set)) {
 		return;
 	}
 
-	// ── Dying logic ───────────────────────────────────────────────────────
+	// ── GameStarted-only sections ─────────────────────────────────────────
+	handleNoairFlush();
 	handleDeaths();
-	
-	// ── Patrol units ──────────────────────────────────────────────────────
 	handlePatrolUnit();
-
-	// ── AI nudge ──────────────────────────────────────────────────────────
 	nudgeAIToAttack();
-
-	// ── Ban logic ─────────────────────────────────────────────────────────
 	handleBans();
+	handleComputerVisionObserver();
 
-	// ── Victory/Defeat Logic ──────────────────────────────────────────────
-	// All cat units gone — Force1 wins
-	if (common_vars.currentRound >= 2 &&
-		Command(P8, Exactly, 0, "Any unit")
+	// ── Victory: all cat units gone after round 4+ ────────────────────────
+	if (
+		common_vars.currentRound >= 4 &&
+		Command(P8, Exactly, 0, "(any unit)")
 	) {
 		common_vars.currentRound = 0;
 		DisplayTextAll("\x13\x07 The cats have been defeated. You WIN! Now go touch some grass");
 		foreach(player : EUDLoopPlayer(None, Force1)) {
-			var savedCp = getcurpl();
 			setcurpl(player);
 			Victory();
-			setcurpl(savedCp);
 		}
 	}
 
-	// All mice dead — Force1 loses
+	// ── Defeat: all mice dead after round 2+ ──────────────────────────────
 	if (
 		common_vars.currentRound >= 2 &&
 		Command(Force1, Exactly, 0, "Protoss Probe") &&
@@ -197,10 +349,9 @@ function beforeTriggerExec() {
 		common_vars.currentRound = 0;
 		DisplayTextAll("\x13\x06 All the mice are dead. You LOSE! Git gud.");
 		foreach(player : EUDLoopPlayer(None, Force1)) {
-			var savedCp = getcurpl();
 			setcurpl(player);
 			Defeat();
-			setcurpl(savedCp);
 		}
 	}
+	setcurpl(savedCp);
 }

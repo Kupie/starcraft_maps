@@ -1,0 +1,356 @@
+// easter_eggs.eps
+// Chat command detection via chatEvent + MSQC sync using PVariable.
+//
+// chatFlag[player] gets written by MSQC with the sum of all active chat bits.
+// flagCheck decodes from highest bit to lowest, firing each active cheat
+// and subtracting its value so lower bits still fire correctly.
+//
+// Chat map:
+//   65536 = cheat p
+//   32768 = cheat o
+//   16384 = cheat n
+//   8192  = "black sheep wall" (full vision toggle)
+//   4096  = "stackshit" (building stacking toggle)
+//   2048  = cheat k
+//   1024  = cheat j
+//   512   = cheat i
+//   256   = "whats mine is mine"  (+500 minerals)
+//   128   = "breathe deep"        (+500 gas)
+//   64    = cheat f
+//   32    = cheat e
+//   16    = cheat d
+//   8     = "the gathering"      (infinite energy toggle)
+//   4     = "food for thought"   (supply used zeroing toggle)
+//   2     = "power overwhelming" (god mode toggle)
+//
+// Supply MAX addresses (per-player, 4 bytes each, stride = player*4):
+//   Zerg    max: 0x5821A4  (EUD book: 5821A4)
+//   Terran  max: 0x582234  (EUD book: 582234)
+//   Protoss max: 0x5822C4  (EUD book: 5822C4)
+// NOTE: BW stores supply doubled internally (200 cap = 400 in memory).
+//   Writing 1998 displays as 999. Write 1998 to display 1998.
+//   Default restore value: 400 (= 200 displayed cap).
+//
+// RULE: save getcurpl() at top, restore at very bottom only.
+
+
+const chatFlag = EUDArray(8);
+EUDRegisterObjectToNamespace("chatFlag", chatFlag);
+
+var cheatGodActive    = 0;	// "power overwhelming" toggle (0=off, 1=on)
+var cheatFoodActive   = 0;	// "food for thought" toggle   (0=off, 1=on)
+var cheatEnergyActive = 0;	// "the gathering" toggle      (0=off, 1=on)
+var cheatStackActive  = 0;	// "stackshit" toggle           (0=off, 1=on)
+var cheatVisionActive = 0;  // black sheep wall
+const visionShare = list("+Vi0","+Vi1","+Vi2","+Vi3","+Vi4","+Vi5","+Vi6","+Vi7");
+const visionShareDisable = list("-Vi0","-Vi1","-Vi2","-Vi3","-Vi4","-Vi5","-Vi6","-Vi7");
+
+function afterTriggerExec() {
+	const cp = getcurpl();
+
+	// ── Chat detection ────────────────────────────────────────────────────
+	foreach(player : EUDLoopPlayer("Human")) {
+		if (chatFlag[player] >= 1) {
+			setcurpl(player);
+			var flagCheck = chatFlag[player];
+			chatFlag[player] = 0;
+
+			// ── Decode from highest bit to lowest ─────────────────────────
+			if (flagCheck >= 65536) {
+				eprintAll("\x04cheat p detected");
+				flagCheck = flagCheck - 65536;
+			}
+			if (flagCheck >= 32768) {
+				eprintAll("\x04cheat o detected");
+				flagCheck = flagCheck - 32768;
+			}
+			if (flagCheck >= 16384) {
+				eprintAll("\x04cheat n detected");
+				flagCheck = flagCheck - 16384;
+			}
+			if (flagCheck >= 8192) {
+					// ── "black sheep wall" vision toggle ──────────────────────────────────
+					// Uses +Vi0..+Vi7 / -Vi0..-Vi7 AI scripts to add/remove vision sharing.
+					// py_range(8) is compile-time unrolled, so i is a compile-time constant
+					// each iteration. GetPlayerInfo(i).type lets us check at compile time
+					// which player slots are human (0x06). On DISABLE we skip -ViN for any
+					// human-typed slot so we don't clobber human<->human vision that was
+					// established by the map's force/alliance setup.
+					if (cheatVisionActive == 0) {
+						cheatVisionActive = 1;
+						eprintAll("\x04Vision cheat ON. Too lazy to spy yourself?");
+						// Give all human players vision of every player (0-7).
+						// Including other humans is safe — it's additive.
+						foreach(p : EUDLoopPlayer("Human")) {
+							setcurpl(p);
+							foreach(i : py_range(8)) {
+								RunAIScript(visionShare[i]);
+							}
+						}
+					} else {
+						cheatVisionActive = 0;
+						eprintAll("\x04Vision cheat OFF. You'll still feel bad.");
+						// Remove vision of non-human players only.
+						// GetPlayerInfo(i).type is compile-time: slots typed 0x06 (Human)
+						// are silently skipped so human<->human vision is preserved.
+						foreach(p : EUDLoopPlayer("Human")) {
+							setcurpl(p);
+							foreach(i : py_range(8)) {
+								if (GetPlayerInfo(i).type != 0x06) {
+									RunAIScript(visionShareDisable[i]);
+								}
+							}
+						}
+					}
+					flagCheck = flagCheck - 8192;
+				}
+			if (flagCheck >= 4096) {
+				// ── "stackshit" toggle ────────────────────────────────────────────────
+				// Modifies StarEdit Placement Box Height for units.dat to enable/disable
+				// building stacking. Enable subtracts to bring values to 1.
+				// Disable adds back to restore originals (96 or 64 in high word).
+				// Values are packed in the high 16 bits of each dword:
+				//   6225920 = 96 << 16 - 1 << 16 = 0x5F0000 (96 -> 1)
+				//   4128768 = 64 << 16 - 1 << 16 = 0x3F0000 (64 -> 1)
+				if (cheatStackActive == 0) {
+					cheatStackActive = 1;
+					eprintAll("\x04Stackshit: ON. Build Anywhere, You Degenerate.");
+					SetMemory(0x662A08, Subtract, 6225920);	// 106: Terran Command Center
+					SetMemory(0x662A0C, Subtract, 4128768);	// 107: Terran Comsat Station
+					SetMemory(0x662A10, Subtract, 4128768);	// 108: Terran Nuclear Silo
+					SetMemory(0x662A14, Subtract, 4128768);	// 109: Terran Supply Depot
+					SetMemory(0x662A1C, Subtract, 6225920);	// 111: Terran Barracks
+					SetMemory(0x662A20, Subtract, 4128768);	// 112: Terran Academy
+					SetMemory(0x662A24, Subtract, 6225920);	// 113: Terran Factory
+					SetMemory(0x662A28, Subtract, 6225920);	// 114: Terran Starport
+					SetMemory(0x662A2C, Subtract, 4128768);	// 115: Terran Control Tower
+					SetMemory(0x662A30, Subtract, 6225920);	// 116: Terran Science Facility
+					SetMemory(0x662A34, Subtract, 4128768);	// 117: Terran Covert Ops
+					SetMemory(0x662A38, Subtract, 4128768);	// 118: Terran Physics Lab
+					SetMemory(0x662A40, Subtract, 4128768);	// 120: Terran Machine Shop
+					SetMemory(0x662A48, Subtract, 6225920);	// 122: Terran Engineering Bay
+					SetMemory(0x662A4C, Subtract, 4128768);	// 123: Terran Armory
+					SetMemory(0x662A50, Subtract, 4128768);	// 124: Terran Missile Turret
+					SetMemory(0x662A54, Subtract, 4128768);	// 125: Terran Bunker
+					SetMemory(0x662A68, Subtract, 6225920);	// 130: Infested Command Center
+					SetMemory(0x662A6C, Subtract, 6225920);	// 131: Zerg Hatchery
+					SetMemory(0x662A70, Subtract, 6225920);	// 132: Zerg Lair
+					SetMemory(0x662A74, Subtract, 6225920);	// 133: Zerg Hive
+					SetMemory(0x662A78, Subtract, 4128768);	// 134: Zerg Nydus Canal
+					SetMemory(0x662A7C, Subtract, 4128768);	// 135: Zerg Hydralisk Den
+					SetMemory(0x662A80, Subtract, 4128768);	// 136: Zerg Defiler Mound
+					SetMemory(0x662A84, Subtract, 4128768);	// 137: Zerg Greater Spire
+					SetMemory(0x662A88, Subtract, 4128768);	// 138: Zerg Queen's Nest
+					SetMemory(0x662A8C, Subtract, 4128768);	// 139: Zerg Evolution Chamber
+					SetMemory(0x662A90, Subtract, 4128768);	// 140: Zerg Ultralisk Cavern
+					SetMemory(0x662A94, Subtract, 4128768);	// 141: Zerg Spire
+					SetMemory(0x662A98, Subtract, 4128768);	// 142: Zerg Spawning Pool
+					SetMemory(0x662A9C, Subtract, 4128768);	// 143: Zerg Creep Colony
+					SetMemory(0x662AA0, Subtract, 4128768);	// 144: Zerg Spore Colony
+					SetMemory(0x662AA8, Subtract, 4128768);	// 146: Zerg Sunken Colony
+					SetMemory(0x662AC8, Subtract, 6225920);	// 154: Protoss Nexus
+					SetMemory(0x662ACC, Subtract, 4128768);	// 155: Protoss Robotics Facility
+					SetMemory(0x662AD0, Subtract, 4128768);	// 156: Protoss Pylon
+					SetMemory(0x662ADC, Subtract, 4128768);	// 159: Protoss Observatory
+					SetMemory(0x662AE0, Subtract, 6225920);	// 160: Protoss Gateway
+					SetMemory(0x662AE8, Subtract, 4128768);	// 162: Protoss Photon Cannon
+					SetMemory(0x662AEC, Subtract, 4128768);	// 163: Protoss Citadel of Adun
+					SetMemory(0x662AF0, Subtract, 4128768);	// 164: Protoss Cybernetics Core
+					SetMemory(0x662AF4, Subtract, 4128768);	// 165: Protoss Templar Archives
+					SetMemory(0x662AF8, Subtract, 4128768);	// 166: Protoss Forge
+					SetMemory(0x662AFC, Subtract, 6225920);	// 167: Protoss Stargate
+					SetMemory(0x662B04, Subtract, 4128768);	// 169: Protoss Fleet Beacon
+					SetMemory(0x662B08, Subtract, 4128768);	// 170: Protoss Arbiter Tribunal
+					SetMemory(0x662B0C, Subtract, 4128768);	// 171: Protoss Robotics Support Bay
+					SetMemory(0x662B10, Subtract, 4128768);	// 172: Protoss Shield Battery
+				} else {
+					cheatStackActive = 0;
+					eprintAll("\x04Stackshit OFF. Welcome back to walls existing.");
+					SetMemory(0x662A08, Add, 6225920);	// 106: Terran Command Center
+					SetMemory(0x662A0C, Add, 4128768);	// 107: Terran Comsat Station
+					SetMemory(0x662A10, Add, 4128768);	// 108: Terran Nuclear Silo
+					SetMemory(0x662A14, Add, 4128768);	// 109: Terran Supply Depot
+					SetMemory(0x662A1C, Add, 6225920);	// 111: Terran Barracks
+					SetMemory(0x662A20, Add, 4128768);	// 112: Terran Academy
+					SetMemory(0x662A24, Add, 6225920);	// 113: Terran Factory
+					SetMemory(0x662A28, Add, 6225920);	// 114: Terran Starport
+					SetMemory(0x662A2C, Add, 4128768);	// 115: Terran Control Tower
+					SetMemory(0x662A30, Add, 6225920);	// 116: Terran Science Facility
+					SetMemory(0x662A34, Add, 4128768);	// 117: Terran Covert Ops
+					SetMemory(0x662A38, Add, 4128768);	// 118: Terran Physics Lab
+					SetMemory(0x662A40, Add, 4128768);	// 120: Terran Machine Shop
+					SetMemory(0x662A48, Add, 6225920);	// 122: Terran Engineering Bay
+					SetMemory(0x662A4C, Add, 4128768);	// 123: Terran Armory
+					SetMemory(0x662A50, Add, 4128768);	// 124: Terran Missile Turret
+					SetMemory(0x662A54, Add, 4128768);	// 125: Terran Bunker
+					SetMemory(0x662A68, Add, 6225920);	// 130: Infested Command Center
+					SetMemory(0x662A6C, Add, 6225920);	// 131: Zerg Hatchery
+					SetMemory(0x662A70, Add, 6225920);	// 132: Zerg Lair
+					SetMemory(0x662A74, Add, 6225920);	// 133: Zerg Hive
+					SetMemory(0x662A78, Add, 4128768);	// 134: Zerg Nydus Canal
+					SetMemory(0x662A7C, Add, 4128768);	// 135: Zerg Hydralisk Den
+					SetMemory(0x662A80, Add, 4128768);	// 136: Zerg Defiler Mound
+					SetMemory(0x662A84, Add, 4128768);	// 137: Zerg Greater Spire
+					SetMemory(0x662A88, Add, 4128768);	// 138: Zerg Queen's Nest
+					SetMemory(0x662A8C, Add, 4128768);	// 139: Zerg Evolution Chamber
+					SetMemory(0x662A90, Add, 4128768);	// 140: Zerg Ultralisk Cavern
+					SetMemory(0x662A94, Add, 4128768);	// 141: Zerg Spire
+					SetMemory(0x662A98, Add, 4128768);	// 142: Zerg Spawning Pool
+					SetMemory(0x662A9C, Add, 4128768);	// 143: Zerg Creep Colony
+					SetMemory(0x662AA0, Add, 4128768);	// 144: Zerg Spore Colony
+					SetMemory(0x662AA8, Add, 4128768);	// 146: Zerg Sunken Colony
+					SetMemory(0x662AC8, Add, 6225920);	// 154: Protoss Nexus
+					SetMemory(0x662ACC, Add, 4128768);	// 155: Protoss Robotics Facility
+					SetMemory(0x662AD0, Add, 4128768);	// 156: Protoss Pylon
+					SetMemory(0x662ADC, Add, 4128768);	// 159: Protoss Observatory
+					SetMemory(0x662AE0, Add, 6225920);	// 160: Protoss Gateway
+					SetMemory(0x662AE8, Add, 4128768);	// 162: Protoss Photon Cannon
+					SetMemory(0x662AEC, Add, 4128768);	// 163: Protoss Citadel of Adun
+					SetMemory(0x662AF0, Add, 4128768);	// 164: Protoss Cybernetics Core
+					SetMemory(0x662AF4, Add, 4128768);	// 165: Protoss Templar Archives
+					SetMemory(0x662AF8, Add, 4128768);	// 166: Protoss Forge
+					SetMemory(0x662AFC, Add, 6225920);	// 167: Protoss Stargate
+					SetMemory(0x662B04, Add, 4128768);	// 169: Protoss Fleet Beacon
+					SetMemory(0x662B08, Add, 4128768);	// 170: Protoss Arbiter Tribunal
+					SetMemory(0x662B0C, Add, 4128768);	// 171: Protoss Robotics Support Bay
+					SetMemory(0x662B10, Add, 4128768);	// 172: Protoss Shield Battery
+				}
+				flagCheck = flagCheck - 4096;
+			}
+			if (flagCheck >= 2048) {
+				// ── "speed 1.5 / speed 1.5x" ─────────────────────────────────────────
+				dwwrite(0x5124F0, 28);
+				eprintAll("\x04Speed set to 1.5x");
+				flagCheck = flagCheck - 2048;
+			}
+			if (flagCheck >= 1024) {
+				// ── "speed 1.25 / speed 1.25x" ───────────────────────────────────────
+				dwwrite(0x5124F0, 33);
+				eprintAll("\x04Speed set to 1.25x");
+				flagCheck = flagCheck - 1024;
+			}
+			if (flagCheck >= 512) {
+				// ── "speed normal / speed 1x" ─────────────────────────────────────────
+				dwwrite(0x5124F0, 42);
+				eprintAll("\x04Speed set to Normal");
+				flagCheck = flagCheck - 512;
+			}
+			if (flagCheck >= 256) {
+				// ── "whats mine is mine" ──────────────────────────────────────────────
+				foreach(p2 : EUDLoopPlayer("Human")) {
+					SetResources(p2, Add, 500, Ore);
+				}
+				eprintAll("\x04500 Rocks. Congrats I Guess.");
+				flagCheck = flagCheck - 256;
+			}
+			if (flagCheck >= 128) {
+				// ── "breathe deep" ────────────────────────────────────────────────────
+				foreach(p2 : EUDLoopPlayer("Human")) {
+					SetResources(p2, Add, 500, Gas);
+				}
+				eprintAll("\x04Huffing Vespene Like a Crackhead Overlord.");
+				flagCheck = flagCheck - 128;
+			}
+			if (flagCheck >= 64) {
+				// ── "there is no cow level" ───────────────────────────────────────────────────
+				eprintAll("\x04Hope you feel good about yourself");
+				foreach(p2 : EUDLoopPlayer("Human")) {
+					setcurpl(p2);
+					Victory();
+				}
+				flagCheck = flagCheck - 64;
+			}
+			if (flagCheck >= 32) {
+				// ── "game over man" ───────────────────────────────────────────────────
+				eprintAll("\x04You Did This To Yourself.");
+				foreach(p2 : EUDLoopPlayer("Human")) {
+					setcurpl(p2);
+					Defeat();
+				}
+				flagCheck = flagCheck - 32;
+			}
+			if (flagCheck >= 16) {
+				// ── "show me the money" ───────────────────────────────────────────────
+				foreach(p2 : EUDLoopPlayer("Human")) {
+					SetResources(p2, Add, 10000, OreAndGas);
+				}
+				eprintAll("\x04You dirty fucking cuck, here you go.");
+				flagCheck = flagCheck - 16;
+			}
+			if (flagCheck >= 8) {
+				// ── "the gathering" toggle ────────────────────────────────
+				if (cheatEnergyActive == 0) {
+					cheatEnergyActive = 1;
+					eprintAll("\x04Cheat ENABLED. All Wizards Have Prune Juice.");
+				} else {
+					cheatEnergyActive = 0;
+					eprintAll("\x04Cheat DISABLED. Wizards Have Run Out of Prune Juice.");
+				}
+				flagCheck = flagCheck - 8;
+			}
+			if (flagCheck >= 4) {
+				// ── "food for thought" toggle ─────────────────────────────
+				// Writes max supply for all human players on toggle.
+				// BW stores supply doubled: 400 = 200 cap, 1998 = 999 displayed.
+				// Adjust 1998 -> 1998 below if you want 1998 displayed.
+				if (cheatFoodActive == 0) {
+					cheatFoodActive = 1;
+					eprintAll("\x04Cheat ENABLED. Supply? Never Heard of It.");
+					foreach(p2 : EUDLoopPlayer("Human")) {
+						dwwrite(0x582144 + p2 * 4, dwread(0x582144 + p2 * 4) + 1998);
+						dwwrite(0x5821D4 + p2 * 4, dwread(0x5821D4 + p2 * 4) + 1998);
+						dwwrite(0x582264 + p2 * 4, dwread(0x582264 + p2 * 4) + 1998);
+					}
+				} else {
+					cheatFoodActive = 0;
+					eprintAll("\x04Cheat DISABLED. Ethiopian Diet is back!");
+					foreach(p2 : EUDLoopPlayer("Human")) {
+						dwwrite(0x582144 + p2 * 4, dwread(0x582144 + p2 * 4) - 1998);
+						dwwrite(0x5821D4 + p2 * 4, dwread(0x5821D4 + p2 * 4) - 1998);
+						dwwrite(0x582264 + p2 * 4, dwread(0x582264 + p2 * 4) - 1998);
+					}
+				}
+				flagCheck = flagCheck - 4;
+			}
+			if (flagCheck >= 2) {
+				// ── "power overwhelming" toggle ───────────────────────────
+				if (cheatGodActive == 0) {
+					cheatGodActive = 1;
+					eprintAll("\x04Power Overwhelming: ON. Absolute Spineless Worm.");
+				} else {
+					cheatGodActive = 0;
+					eprintAll("\x04Power Overwhelming: OFF. Welcome Back to Mortality.");
+				}
+				flagCheck = flagCheck - 2;
+			}
+			// flagCheck should be 0 here if all bits accounted for
+		}
+	}
+
+	// ── Per-frame: god mode ───────────────────────────────────────────────
+	if (cheatGodActive == 1) {
+		foreach(player : EUDLoopPlayer("Human")) {
+			ModifyUnitHitPoints(All, "(any unit)", player, 64, 100);
+		}
+	}
+
+	// ── Per-frame: infinite energy ────────────────────────────────────────
+	if (cheatEnergyActive == 1) {
+		foreach(player : EUDLoopPlayer(None)) {
+			ModifyUnitEnergy(All, "(any unit)", player, 64, 100);
+		}
+	}
+
+	// ── Per-frame: supply max ─────────────────────────────────────────────
+	// Writes max supply every frame while active so nothing can reduce it.
+	// BW stores supply doubled: 400 = 200 displayed, 1998 = 999 displayed.
+	if (cheatFoodActive == 1) {
+		foreach(player : EUDLoopPlayer("Human")) {
+			dwwrite(0x5821A4 + player * 4, 1998);	// Zerg 
+			dwwrite(0x582234 + player * 4, 1998);	// Terran 
+			dwwrite(0x5822C4 + player * 4, 1998);	// Protoss 
+		}
+	}
+
+	setcurpl(cp);
+}

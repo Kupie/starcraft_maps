@@ -95,7 +95,7 @@ function initTownRebuild() {
 	// ── Try to get CPU to rebuild town ────────────────────────────
 	if (CountdownTimer(Exactly, 230) && (whiteBuildOrdered == 0)) {
 		setcurpl(P7);
-		SetResources(P7, SetTo, 50000, OreAndGas);
+		SetResources(P7, SetTo, 9999999, OreAndGas);
 		RunAIScriptAt("TSUP", "whitebuild1");
 		RunAIScriptAt("TSUP", "whitebuild2");
 		RunAIScriptAt("TSUP", "whitebuild3");

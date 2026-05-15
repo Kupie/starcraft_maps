@@ -1,0 +1,72 @@
+// shop.eps
+// Handles: all shop purchases (civilian-cost items) for mice players
+// Units are created at "transporter" location; unit_tracking.eps delivers them to nexusN
+import common_vars;
+
+// Parallel arrays — index corresponds across all four lists
+// Items that require probe ownership (all except getminerals)
+const shopLocs = list(
+	py_str("getmojo"),         // 0
+	py_str("getlings"),        // 1
+	py_str("getbattlecruiser"),// 2
+	py_str("getmarine"),       // 3
+	py_str("getfirebat"),      // 4
+	py_str("getdragoon"),      // 5
+	py_str("getcorsair"),      // 6
+	py_str("getdefiler"),      // 7
+	py_str("gethydra"),        // 8
+	py_str("Get BigBoss"),     // 9
+	py_str("getgol"),          // 10
+);
+
+const shopUnits = list(
+	py_str("Mojo (Scout)"),             // 0
+	py_str("Devouring One (Zergling)"), // 1
+	py_str("Hyperion (Battlecruiser)"), // 2
+	py_str("Jim Raynor (Marine)"),      // 3
+	py_str("Gui Montag (Firebat)"),     // 4
+	py_str("Fenix (Dragoon)"),          // 5
+	py_str("Protoss Corsair"),          // 6
+	py_str("Zerg Defiler"),             // 7
+	py_str("Hunter Killer (Hydralisk)"),// 8
+	py_str("Tassadar/Zeratul (Archon)"),// 9
+	py_str("Alan Schezar (Goliath)"),   // 10
+);
+
+const shopCosts   = list(2, 1, 2, 2, 1, 1, 1, 2, 1, 3, 2);  // Civilian cost per item
+const shopAmounts = list(1, 3, 1, 1, 1, 1, 1, 1, 2, 1, 1);  // Units created per purchase
+
+function afterTriggerExec() {
+
+	// ── Unit purchases (all require probe ownership) ───────────────────────
+	// Classic: "Mices Bring(CP,Civil,<loc>,>=cost) + Command(CP,Probe,>=1) Preserve"
+	// Loop over each mice player, then each shop item
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		if (Command(player, AtLeast, 1, "Protoss Probe")) {
+			foreach(i : py_range(11)) {
+				// shopCosts[i] and shopAmounts[i] are compile-time from py_range
+				if (Bring(player, AtLeast, shopCosts[i], "Terran Civilian", shopLocs[i])) {
+					CreateUnit(shopAmounts[i], shopUnits[i], "transporter", player);
+					KillUnitAt(shopCosts[i], "Terran Civilian", shopLocs[i], player);
+				}
+			}
+		}
+
+		// ── Gas purchase (requires probe) ────────────────────────────────────
+		// Classic: "Mices Bring(CP,Civil,getgas,>=1) + Command(CP,Probe,>=1)"
+		if (
+			Bring(player, AtLeast, 1, "Terran Civilian", "getgas") &&
+			Command(player, AtLeast, 1, "Protoss Probe")
+		) {
+			KillUnitAt(1, "Terran Civilian", "getgas", player);
+			SetResources(player, Add, 400, Gas);
+		}
+
+		// ── Mineral purchase (NO probe requirement) ───────────────────────────
+		// Classic: "Mices Bring(CP,Civil,getminerals,>=1)" — no Command(Probe) condition
+		if (Bring(player, AtLeast, 1, "Terran Civilian", "getminerals")) {
+			KillUnitAt(1, "Terran Civilian", "getminerals", player);
+			SetResources(player, Add, 500, Ore);
+		}
+	}
+}

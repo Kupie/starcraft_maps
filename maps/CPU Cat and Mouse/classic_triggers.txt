@@ -807,7 +807,7 @@ Conditions:
 Actions:
 	Comment("Economy: modify player resources");
 	Kill Unit At Location("Current Player", "Terran Civilian", 1, "getgas");
-	Set Resources("Current Player", Add, 200, gas);
+	Set Resources("Current Player", Add, 400, gas);
 	Preserve Trigger();
 }
 
@@ -1799,6 +1799,7 @@ Actions:
 	Comment("Ongoing: persistent state check");
 	Preserve Trigger();
 	Modify Unit Energy("Current Player", "Terran Medic", 100, All, "playground");
+	Modify Unit Energy("Current Player", "Protoss Shield Battery", 100, All, "playground");
 }
 
 //-----------------------------------------------------------------//

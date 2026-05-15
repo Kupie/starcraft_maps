@@ -23,6 +23,7 @@ var bossBonus8Done = 0;
 var gameEndDone = 0;
 var debugTriggered = 0;
 
+var healFrameCount = 0;
 
 function onPluginStart() {
 	const cp = getcurpl();
@@ -52,32 +53,32 @@ function setGameSpeedMultiplier(frametime) {
 }
 
 function checkGameSpeedChanger() {
-	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1x")) {
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "Speed 1x")) {
 		dwwrite(0x5124F0, 42);
 		DisplayTextAll("\x13\x07Speed set to Regular");
 		MoveUnit(1, "Infested Duran", P1, "Speed 1x", "SpeedArea");
 	}
-	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.25x")) {
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "Speed 1.25x")) {
 		dwwrite(0x5124F0, 33);
 		DisplayTextAll("\x13\x07Speed set to 1.25x. Also closest to 30fps!");
 		MoveUnit(1, "Infested Duran", P1, "Speed 1.25x", "SpeedArea");
 	}
-	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.5x")) {
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "Speed 1.5x")) {
 		dwwrite(0x5124F0, 28);
 		DisplayTextAll("\x13\x07Speed set to 1.5x");
 		MoveUnit(1, "Infested Duran", P1, "Speed 1.5x", "SpeedArea");
 	}
-	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 1.75x")) {
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "Speed 1.75x")) {
 		dwwrite(0x5124F0, 24);
 		DisplayTextAll("\x13\x07Speed set to 1.75x");
 		MoveUnit(1, "Infested Duran", P1, "Speed 1.75x", "SpeedArea");
 	}
-	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 2x")) {
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "Speed 2x")) {
 		dwwrite(0x5124F0, 21);
 		DisplayTextAll("\x13\x07Speed set to 2x");
 		MoveUnit(1, "Infested Duran", P1, "Speed 2x", "SpeedArea");
 	}
-	if (Bring(P1, Exactly, 1, "Infested Duran", "Speed 2.5x")) {
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "Speed 2.5x")) {
 		dwwrite(0x5124F0, 17);
 		DisplayTextAll("\x13\x07Speed set to 2.5x. Holy shit 60 fps!");
 		MoveUnit(1, "Infested Duran", P1, "Speed 2.5x", "SpeedArea");
@@ -155,6 +156,15 @@ function afterTriggerExec() {
 		setcurpl(P6);
 		Defeat();
 	}
+	
+	// Easter egg if someone hacks in being a human town, kek
+	if (Bring(P7,AtLeast,1,"Terran SCV","SecretHumanTown")) {
+		GiveUnits(All, "Infested Duran", P1, "P1DuranArea", P7);
+		MoveUnit(1, "(men)", P7, "SecretHumanTown", "hero spawn");
+		CreateUnit(1,"Protoss Probe","hero spawn",P7);
+		CreateUnitWithProperties(1, "Terran Civilian", "_Heropick", P7, UnitProperty(invincible = True));
+	}
+
 
 	// ── Boss bonuses ──────────────────────────────────────────────────────
 	if (bossBonus1Done == 0 && Deaths(P8, AtLeast, 10, "Zerg Broodling")) {
@@ -251,17 +261,14 @@ function afterTriggerExec() {
 	}
 
 	// ── Walker heal + reset ───────────────────────────────────────────────
-	if (
-		Bring(Force1, AtLeast, 1, "(men)", "_area") &&
-		Bring(P7, AtLeast, 1, "(men)", "walker2")
-	) {
-		foreach(player : EUDLoopPlayer("Human", Force1)) {
-			ModifyUnitHitPoints(All, "(men)", player, "_area", 100);
-			ModifyUnitEnergy(All, "(men)", player, "_area", 100);
-		}
+	if (healFrameCount == 0) {
+		ModifyUnitHitPoints(All, "(men)", Force1, "_area", 100);
+		ModifyUnitEnergy(All, "(men)", Force1, "_area", 100);
+		healFrameCount = common_vars.framesBetweenHealing;
 		MoveUnit(1, "(men)", P7, "walker turf", "walker1");
 		Order("(men)", P7, "walker1", Move, "walker2");
-	}
+	} else { healFrameCount--;}
+
 
 
 	// ── Temple destroyed: defeat before final wave, victory during bonus round ──
@@ -270,13 +277,13 @@ function afterTriggerExec() {
 		if (common_vars.finalWaveReached == 1) {
 			foreach(player : EUDLoopPlayer("Human")) {
 				setcurpl(player);
-				DisplayText("\x13\x07Victory!\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
+				DisplayText("\x13\x07Victory!\r\n\x13\x06EUD Revamp by Kupie. Ver: Test2\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
 				Victory();
 			}
 		} else {
 			foreach(player : EUDLoopPlayer("Human")) {
 				setcurpl(player);
-				DisplayText("\x13\x07Game Over\r\n\x13\x06EUD Revamp by Kupie. Test version 1\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
+				DisplayText("\x13\x07Game Over\r\n\x13\x06EUD Revamp by Kupie. Ver: Test2\r\n\x13\x062high   @useast - 2014\r\n\r\n\r\n\r\n");
 				Defeat();
 			}
 		}
@@ -285,7 +292,7 @@ function afterTriggerExec() {
 	// ── Easy Mode Enabler ──
 	// State 0 → 1: show prompt, warp Duran back. Not enabled yet.
 	// State 1 → 2: confirmed, enable easy mode, show confirmation.
-	if (Bring(P1, Exactly, 1, "Infested Duran", "EasyModeEnableLoc")) {
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "EasyModeEnableLoc")) {
 		setcurpl(P1);
 		if (common_vars.EasyModeEnable == 0) {
 			DisplayText("\x1FEnable Adjusted HP Mode? This will make enemy spawn HP adjusted to how many active players there are.");
@@ -304,7 +311,7 @@ function afterTriggerExec() {
 	
 	// ── Debug shiz, only happens if 1 player ──
 	if (
-		Command(Force1, Exactly, 0, "Protoss Flag Beacon") &&
+		Command(Force1, Exactly, 0, "Protoss Beacon") &&
 		Bring(P1, Exactly, 1, "Infested Duran", "DebugGiveShiz") &&
 		(debugTriggered == 0)
 	) {
