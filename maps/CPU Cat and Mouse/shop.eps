@@ -37,7 +37,7 @@ const shopCosts   = list(2, 1, 2, 2, 1, 1, 1, 2, 1, 3, 2);  // Civilian cost per
 const shopAmounts = list(1, 3, 1, 1, 1, 1, 1, 1, 2, 1, 1);  // Units created per purchase
 
 function afterTriggerExec() {
-
+	var savedCp = getcurpl();
 	// ── Unit purchases (all require probe ownership) ───────────────────────
 	// Classic: "Mices Bring(CP,Civil,<loc>,>=cost) + Command(CP,Probe,>=1) Preserve"
 	// Loop over each mice player, then each shop item
@@ -46,6 +46,12 @@ function afterTriggerExec() {
 			foreach(i : py_range(11)) {
 				// shopCosts[i] and shopAmounts[i] are compile-time from py_range
 				if (Bring(player, AtLeast, shopCosts[i], "Terran Civilian", shopLocs[i])) {
+					var savedCp2 = getcurpl();
+					if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+						setcurpl(P1);
+						println("[DBG shop] unit purchase {} fired for Player {}", shopLocs[i], player + 1);
+						setcurpl(savedCp2);
+					}
 					CreateUnit(shopAmounts[i], shopUnits[i], "transporter", player);
 					KillUnitAt(shopCosts[i], "Terran Civilian", shopLocs[i], player);
 				}
@@ -53,20 +59,32 @@ function afterTriggerExec() {
 		}
 
 		// ── Gas purchase (requires probe) ────────────────────────────────────
-		// Classic: "Mices Bring(CP,Civil,getgas,>=1) + Command(CP,Probe,>=1)"
 		if (
 			Bring(player, AtLeast, 1, "Terran Civilian", "getgas") &&
 			Command(player, AtLeast, 1, "Protoss Probe")
 		) {
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				var savedCp2 = getcurpl();
+				setcurpl(P1);
+				println("[DBG shop] gas purchase fired for Player {}", player + 1);
+				setcurpl(savedCp2);
+			}
+
 			KillUnitAt(1, "Terran Civilian", "getgas", player);
 			SetResources(player, Add, 400, Gas);
 		}
 
 		// ── Mineral purchase (NO probe requirement) ───────────────────────────
-		// Classic: "Mices Bring(CP,Civil,getminerals,>=1)" — no Command(Probe) condition
 		if (Bring(player, AtLeast, 1, "Terran Civilian", "getminerals")) {
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				var savedCp2 = getcurpl();
+				setcurpl(P1);
+				println("[DBG shop] mineral purchase fired for Player {}", player + 1);
+				setcurpl(savedCp2);
+			}
 			KillUnitAt(1, "Terran Civilian", "getminerals", player);
 			SetResources(player, Add, 500, Ore);
 		}
 	}
+	setcurpl(savedCp);
 }

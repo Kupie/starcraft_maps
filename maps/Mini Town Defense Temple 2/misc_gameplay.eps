@@ -367,11 +367,10 @@ function afterTriggerExec() {
 		SetAllianceStatus(P12, Ally);
 	}
 	
-	// ── P9-P12 are all neutral units that should do nothing, including die ─────────────────────────────────
+	// ── P9-P11 are all neutral units that should do nothing, including die ─────────────────────────────────
 	ModifyUnitHitPoints(All, "(men)", P9, "Anywhere", 100);
 	ModifyUnitHitPoints(All, "(men)", P10, "Anywhere", 100);
 	ModifyUnitHitPoints(All, "(men)", P11, "Anywhere", 100);
-	ModifyUnitHitPoints(All, "(men)", P12, "Anywhere", 100);
 	
 	// remove flags, just cleans up flag beacons
 	// new Temple2 version doesn't use flag beacons so this is commented out

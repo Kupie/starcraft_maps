@@ -1,0 +1,13 @@
+add minimap ping for hero spawns
+make probe hold position default
+fix invincibility bug: remove invince on P12 owned probes before giving them away
+
+check stack limit
+
+mini town changes:
+make EVEN HARDER mode
+make speed reset to 1.25x at 5 seconds
+bonus round: set collission to 0 for everyone
+fix P12 leftover units
+
+cat and mouse changes:

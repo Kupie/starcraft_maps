@@ -50,21 +50,28 @@ function onPluginStart() {
 		patrolTimers[i] = 80 + i * 13;
 	}
 
-	// Set cat to ally P9/P10/P11/P12
+	// Set all to ally P10/P11/P12
+	foreach(player : EUDLoopPlayer(None)) {
+		setcurpl(player);
+		SetAllianceStatus(P9, Enemy);
+		SetAllianceStatus(P10, Ally);
+		SetAllianceStatus(P11, Ally);
+		SetAllianceStatus(P12, Ally);
+	}
+	
+	// P8 should also ally P9
 	setcurpl(P8);
 	SetAllianceStatus(P9,  Ally);
-	SetAllianceStatus(P10, Ally);
-	SetAllianceStatus(P11, Ally);
-	SetAllianceStatus(P12, Ally);
-
+	
 	// Set pauses to 200 frames
-	dwwrite(0x0058d718, 200);
+	// dwwrite(0x0058d718, 200); // DEBUG ONLY
 	
 	setcurpl(savedCp);
 }
 
 // ── Generic patrol unit handler — keeps 1 of each critter on the map ──────
 function handlePatrolUnit() {
+	common_vars.syncRand();
 	foreach(i : py_range(7)) {
 		if (Command(P9, AtMost, 0, patrolUnits[i])) {
 			var spawnIdx = f_rand() % 8;
@@ -137,6 +144,7 @@ function handleDeaths() {
 			Command(player, Exactly, 0, "Flag") &&
 			deathDelayTimer[player] == 0
 		) {
+			common_vars.P1DisplayDebug($T("[DBG misc] death triggered for a player"));
 			var savedCp = getcurpl();
 			setcurpl(player);
 			PlayWAV("sound/misc/transmission.wav");
@@ -168,6 +176,7 @@ function handleShieldBatteryRespawn() {
 			Command(player, Exactly,  0, "Protoss Probe") &&
 			Command(player, AtLeast, 1, "Protoss Shield Battery")
 		) {
+			common_vars.P1DisplayDebug($T("[DBG misc] shield battery respawn fired"));
 			KillUnitAt(1, "Flag",                    "Start",                       player);
 			CreateUnit(1, "Protoss Probe",            common_vars.afterlifeLocs[i],  player);
 			KillUnitAt(1, "Protoss Shield Battery",   common_vars.afterlifeLocs[i],  player);
@@ -186,11 +195,14 @@ function handleP12Units() {
 
 	foreach(player : EUDLoopPlayer(None, Force1)) {
 		if (Command(P12, AtLeast, 1, "Men")) {
+			SetInvincibility(Disable, "Protoss Probe", P12, "Anywhere");
+			common_vars.P1DisplayDebug($T("[DBG misc] P12 men distribution fired"));
 			GiveUnits(1, "Men",       P12, "playground",   player);
 			GiveUnits(1, "Men",       P12, "Hero Convert",  player);
-			GiveUnits(1, "(any unit)", P12, "DifficultyBox", player);
+		//	GiveUnits(1, "(any unit)", P12, "DifficultyBox", player); // shouldn't be needed mid game, ever
 		}
 		if (Command(P12, AtLeast, 1, "Buildings")) {
+			common_vars.P1DisplayDebug($T("[DBG misc] P12 buildings distribution fired"));
 			GiveUnits(1, "Buildings", P12, "playground", player);
 		}
 	}
@@ -261,6 +273,7 @@ function handleBuildPlacement() {
 	foreach(player : EUDLoopPlayer(None, Force1)) {
 		// Cocoon placement (e.g. Defiler ability, pylon remover)
 		if (Command(player, AtLeast, 1, "Cocoon")) {
+			common_vars.P1DisplayDebug($T("[DBG misc] cocoon placement fired"));
 			MoveLocation("Pylon1", "Cocoon", player, "Anywhere" );
 			KillUnitAt(All, "Protoss Pylon", "Pylon1", player   );
 			RemoveUnitAt(All, "Cocoon",      "Pylon1", player   );
@@ -268,6 +281,7 @@ function handleBuildPlacement() {
 
 		// Lurker egg → Lurker build trick
 		if (Command(player, AtLeast, 1, "Zerg Lurker Egg")) {
+			common_vars.P1DisplayDebug($T("[DBG misc] lurker egg placement fired"));
 			MoveLocation("Pylon2", "Zerg Lurker Egg",player, "Anywhere");
 			RemoveUnitAt(1, "Zerg Lurker Egg",     "Pylon2", player);
 			CreateUnit(1, "Zerg Lurker",           "Pylon2", player);
@@ -275,6 +289,7 @@ function handleBuildPlacement() {
 
 		// Zerg egg → Drone build trick (starport drone purchase)
 		if (Command(player, AtLeast, 1, "Zerg Egg")) {
+			common_vars.P1DisplayDebug($T("[DBG misc] zerg egg placement fired"));
 			MoveLocation("Pylon3", "Zerg Egg",    player, "Anywhere");
 			RemoveUnitAt(1, "Zerg Egg",                 "Pylon3",   player);
 			CreateUnit(1, "Zerg Drone",                 "Pylon3",   player);
@@ -303,6 +318,8 @@ function handleComputerVisionObserver() {
 	}
 	
 }
+
+
 function afterTriggerExec() {
 	var savedCp = getcurpl();
 	
@@ -331,6 +348,7 @@ function afterTriggerExec() {
 		common_vars.currentRound >= 4 &&
 		Command(P8, Exactly, 0, "(any unit)")
 	) {
+		common_vars.P1DisplayDebug($T("[DBG misc] VICTORY condition fired"));
 		common_vars.currentRound = 0;
 		DisplayTextAll("\x13\x07 The cats have been defeated. You WIN! Now go touch some grass");
 		foreach(player : EUDLoopPlayer(None, Force1)) {
@@ -339,13 +357,13 @@ function afterTriggerExec() {
 		}
 	}
 
-	// ── Defeat: all mice dead after round 2+ ──────────────────────────────
 	if (
 		common_vars.currentRound >= 2 &&
 		Command(Force1, Exactly, 0, "Protoss Probe") &&
 		Command(Force1, Exactly, 0, "Terran SCV") &&
 		Command(Force1, Exactly, 0, "Protoss Shield Battery")
 	) {
+		common_vars.P1DisplayDebug($T("[DBG misc] DEFEAT condition fired"));
 		common_vars.currentRound = 0;
 		DisplayTextAll("\x13\x06 All the mice are dead. You LOSE! Git gud.");
 		foreach(player : EUDLoopPlayer(None, Force1)) {
@@ -353,5 +371,29 @@ function afterTriggerExec() {
 			Defeat();
 		}
 	}
+	
+	
+	// Disable fog of war updates
+	SetMemory(0x0051CE98, SetTo, 0);
+	
+	
+	// Check for Debug being enabled
+	setcurpl(P1);
+	if (
+		(   Bring(P1, AtLeast, 1, "Terran Civilian", "P1EnableDebug") &&
+			Bring(P1, AtLeast, 1, "Terran Civilian", "P1EnableDebug2")
+		) && common_vars.P1EnableDebug.IsCleared()
+	) {
+		DoActions(common_vars.P1EnableDebug.Set());
+		DisplayText("[DBG] Debug ENABLED");
+	} else if (
+		(   Bring(P1, Exactly, 0, "Terran Civilian", "P1EnableDebug") ||
+			Bring(P1, Exactly, 0, "Terran Civilian", "P1EnableDebug2")
+		) && common_vars.P1EnableDebug.IsSet()
+	) {
+		DoActions(common_vars.P1EnableDebug.Clear());
+		DisplayText("[DBG] Debug DISABLED");
+	}
+	
 	setcurpl(savedCp);
 }

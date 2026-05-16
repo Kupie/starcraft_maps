@@ -101,6 +101,7 @@ function afterTriggerExec() {
 
 	// ── Step 1: Randomize locations, place beacons, reduce spawns ────────────
 	if (CountdownTimer(Exactly, 9) && roundStep == 1) {
+		common_vars.syncRand();
 		s1left   = f_rand() % 3776;
 		s1top    = 160 + f_rand() % (3776 - 160);
 		var s1right  = s1left + 320;

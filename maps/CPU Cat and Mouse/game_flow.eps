@@ -44,11 +44,6 @@ function onPluginStart() {
 	}
 	probeSpawned = 0;
 
-
-	// Classic: "Mices Always no-Preserve" — vision AI script for mice
-	setcurpl(P1);
-	RunAIScriptAt("+Vi7", "Anywhere");
-	setcurpl(savedCp);
 	LeaderBoardKills("(any unit)", "Most Cats Slain");
 	LeaderBoardComputerPlayers(Disable);
 	
@@ -94,6 +89,7 @@ function afterTriggerExec() {
 		Bring(Force1, AtLeast, 1, "Terran Civilian", "Easy Mode") &&
 		!Switch("SplitModeChoiceMade", Set)
 	) {
+		common_vars.P1DisplayDebug($T("[DBG flow] split ENABLED (easy mode civ)"));
 		DisplayTextAll("\x13\x02Split Spawns: ENABLED\r\n\x13\x04Each player triggers 1/7 of normal spawns.");
 		SetSwitch("ReduceSpawnsForNumPlayers", Set);
 		SetSwitch("SplitModeChoiceMade", Set);
@@ -101,12 +97,11 @@ function afterTriggerExec() {
 		DisplayTextAll("\r\n\r\n\x13\x04Choose Difficulty!\r\n\x13\x04<----- Easy (v9-like) | Hard (v10-like) ----->\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
 	}
 
-	// ── Split mode: DISABLED (Hard Mode civilian, choice not yet made) ────
-	// Classic: "Mices Bring(Mices,Civil,HardMode,>=1) + !SplitModeChoiceMade → no-Preserve"
 	if (
 		Bring(Force1, AtLeast, 1, "Terran Civilian", "Hard Mode") &&
 		!Switch("SplitModeChoiceMade", Set)
 	) {
+		common_vars.P1DisplayDebug($T("[DBG flow] split DISABLED (hard mode civ)"));
 		DisplayTextAll("\x13\x06Split Spawns: DISABLED\r\n\x13\x04Normal spawn amounts will be used.");
 		SetSwitch("ReduceSpawnsForNumPlayers", Clear);
 		SetSwitch("SplitModeChoiceMade", Set);
@@ -114,13 +109,12 @@ function afterTriggerExec() {
 		DisplayTextAll("\r\n\r\n\x13\x04Choose Difficulty!\r\n\x13\x04<----- Easy (v9-like) | Hard (v10-like) ----->\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
 	}
 
-	// ── Difficulty: EASY (split mode already decided, difficulty not chosen) ─
-	// Classic: "Mices Bring(Mices,Civil,EasyMode,>=1) + SplitModeChoiceMade → no-Preserve"
 	if (
 		Bring(Force1, AtLeast, 1, "Terran Civilian", "Easy Mode") &&
 		Switch("SplitModeChoiceMade", Set) &&
 		!Switch("DifficultyChosen", Set)
 	) {
+		common_vars.P1DisplayDebug($T("[DBG flow] difficulty EASY selected"));
 		DisplayTextAll("\x13\x04Easy Mode Selected");
 		SetResources(Force1, Add, 50, Gas);
 		SetSwitch("HardModeEnabled", Clear);
@@ -130,13 +124,12 @@ function afterTriggerExec() {
 		centerViewStart();
 	}
 
-	// ── Difficulty: HARD (split mode already decided, difficulty not chosen) ─
-	// Classic: "Mices Bring(Mices,Civil,HardMode,>=1) + SplitModeChoiceMade → no-Preserve"
 	if (
 		Bring(Force1, AtLeast, 1, "Terran Civilian", "Hard Mode") &&
 		Switch("SplitModeChoiceMade", Set) &&
 		!Switch("DifficultyChosen", Set)
 	) {
+		common_vars.P1DisplayDebug($T("[DBG flow] difficulty HARD selected"));
 		DisplayTextAll("\x13\x04Hard Mode Selected");
 		SetSwitch("HardModeEnabled", Set);
 		SetSwitch("DifficultyChosen", Set);
@@ -144,14 +137,12 @@ function afterTriggerExec() {
 		centerViewStart();
 	}
 
-	// ── Game start transition ──────────────────────────────────────────────
-	// Classic: "All players DifficultyChosen+Set, GameStarted+NotSet, EUDUnitsPlaced+Set"
-	// SetCountdownTimer(80) intentionally omitted — countDownTimer.eps resets to 60 and takes over
 	if (
 		Switch("DifficultyChosen", Set) &&
 		!Switch("GameStarted", Set) &&
 		Switch("EUDUnitsPlaced", Set)
 	) {
+		common_vars.P1DisplayDebug($T("[DBG flow] game start transition fired"));
 		SetSwitch("GameStarted", Set);
 		SetSwitch("dt counter", Set);
 		SetSwitch("Rescue", Set);
@@ -160,8 +151,6 @@ function afterTriggerExec() {
 		SetSwitch("pylon invuln", Set);
 		centerViewStart();
 
-		// Classic: "Mices GameStarted+Set no-Preserve → CreateUnit(CP, Probe, 1, Start)"
-		// One probe per connected mice player at game start
 		probeSpawned = 1;
 		foreach(i : py_range(7)) {
 			if (playerexist(common_vars.micePlayers[i])) {
@@ -170,15 +159,14 @@ function afterTriggerExec() {
 		}
 	}
 
-	// ── AntiBS ban message display ─────────────────────────────────────────
-	// Classic: "Mices Kill(Pi,Probe,Exactly 1) + Switch(Ban,Set) → DisplayTextAll, no-Preserve"
-	// Fires once per player the first time their probe kill count reaches exactly 1.
-	// Unit ID 64 = Protoss Probe (integer required — Kills() does not accept string names)
 	if (Switch("Ban", Set)) {
 		foreach(i : py_range(7)) {
 			if (!banMsgShown[i] && Kills(common_vars.micePlayers[i], Exactly, 1, 64)) {
+				common_vars.P1DisplayDebug($T("[DBG flow] AntiBS ban message fired"));
 				banMsgShown[i] = 1;
 				DisplayTextAll(bsBanMessages[i]);
+				setcurpl(common_vars.micePlayers[i]);
+				Defeat();
 			}
 		}
 	}

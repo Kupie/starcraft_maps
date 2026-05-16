@@ -34,4 +34,29 @@ const pylonLocs = list(
 	py_str("Pylon1"), py_str("Pylon2"), py_str("Pylon3"),
 	py_str("Pylon4"), py_str("Pylon5"), py_str("Pylon6"), py_str("Pylon7"),
 );
-// REMOVED: empty beforeTriggerExec() — dead code; this file is not in .edd
+
+
+const P1EnableDebug = EUDLightBool();
+
+// Pass strings using $T("...") syntax: common_vars.P1DisplayDebug($T("msg"));
+// $T() produces a compile-time TBL index that DisplayText accepts as a value.
+function P1DisplayDebug(msg) {
+	if (P1EnableDebug.IsSet()) {
+		var savedCp = getcurpl();
+		setcurpl(P1);
+		DisplayText(msg);
+		setcurpl(savedCp);
+	}
+}
+
+function syncRand() {
+	if (Switch(221, Set)) {return;}
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		MoveLocation("Pylon1", "Protoss Probe", player, "Anywhere");
+		MoveLocation("Pylon1", "Terran SCV", player, "Anywhere");
+	}
+	// Read once after all moves — last player's unit position wins
+	const left, top = getlocTL("Pylon1");  // needs $L()
+	srand(left + top * 3776 + getgametick());
+	SetSwitch(221, Set);
+}

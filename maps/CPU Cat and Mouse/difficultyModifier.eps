@@ -87,18 +87,21 @@ function afterTriggerExec() {
 	CreateUnitWithProperties(1, "Fenix (Dragoon)",           "TopLeftDragoon",  P8, UnitProperty(invincible = true));
 
 	// Give hero units to Player 12
-	GiveUnits(1, "Devouring One (Zergling)",  P8, "TopLeftLing",     P12);
-	GiveUnits(1, "Hyperion (Battlecruiser)",  P8, "TopLeftCruiser",  P12);
-	GiveUnits(1, "Protoss Corsair",           P8, "TopLeftCorsair",  P12);
-	GiveUnits(1, "Hunter Killer (Hydralisk)", P8, "TopLeftHydra",    P12);
-	GiveUnits(1, "Alan Schezar (Goliath)",    P8, "TopLeftGol",      P12);
-	GiveUnits(1, "Tassadar/Zeratul (Archon)", P8, "TopLeftBigBoss",  P12);
-	GiveUnits(1, "Jim Raynor (Marine)",       P8, "TopLeftMarine",   P12);
-	GiveUnits(1, "Gui Montag (Firebat)",      P8, "TopLeftFirebat",  P12);
-	GiveUnits(1, "Fenix (Dragoon)",           P8, "TopLeftDragoon",  P12);
+	GiveUnits(1, "Devouring One (Zergling)",  P8, "TopLeftLing",     P10);
+	GiveUnits(1, "Hyperion (Battlecruiser)",  P8, "TopLeftCruiser",  P10);
+	GiveUnits(1, "Protoss Corsair",           P8, "TopLeftCorsair",  P10);
+	GiveUnits(1, "Hunter Killer (Hydralisk)", P8, "TopLeftHydra",    P10);
+	GiveUnits(1, "Alan Schezar (Goliath)",    P8, "TopLeftGol",      P10);
+	GiveUnits(1, "Tassadar/Zeratul (Archon)", P8, "TopLeftBigBoss",  P10);
+	GiveUnits(1, "Jim Raynor (Marine)",       P8, "TopLeftMarine",   P10);
+	GiveUnits(1, "Gui Montag (Firebat)",      P8, "TopLeftFirebat",  P10);
+	GiveUnits(1, "Fenix (Dragoon)",           P8, "TopLeftDragoon",  P10);
 
 	SetInvincibility(Enable, "(any unit)", AllPlayers, "HeroSelectorArea");
 	SetSwitch("EUDUnitsPlaced", Set);
 	
+	// remove map revealers after vision is shared
+	KillUnit("Map Revealer", AllPlayers);
+
 	setcurpl(savedCp);
 }

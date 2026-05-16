@@ -34,8 +34,9 @@ function afterTriggerExec() {
 
 	foreach(player : EUDLoopPlayer("Human", Force1)) {
 		foreach(i : py_range(8)) {
-			// Player in beacon → give buildings from P10 to player
+			// Player in beacon → give buildings from P10 to player, also include P12 incase someone leaves
 			if (Bring(player, AtLeast, 1, "(men)", beaconLocs[i])) {
+				GiveUnits(All, "(buildings)", P12, buildingLocs[i], player);
 				GiveUnits(All, "(buildings)", P10, buildingLocs[i], player);
 			}
 			// Player not in beacon → give buildings back to P10

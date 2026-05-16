@@ -1,78 +1,111 @@
+import common_vars;
+
 function afterTriggerExec() {
 	var savedCp = getcurpl();
 	foreach(player : EUDLoopPlayer()) {
 		if (Kills(player, AtLeast, 1, 93)) {  // Scantid X2
-			var savedCp = getcurpl();
 			setcurpl(player);
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 2 Bonus!");
 			CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 93);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Scantid (93) -> player {} got 2 bonus civs", player + 1);
+			}
 		}
 		if (Kills(player, AtLeast, 1, 94)) {  // Kakaru X1
-			var savedCp = getcurpl();
 			setcurpl(player);
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 1 Bonus!");
 			CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 94);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Kakaru (94) -> player {} got 1 bonus civ", player + 1);
+			}
 		}
 		if (Kills(player, AtLeast, 1, 99)) {  // Samir Duran X1
-			var savedCp = getcurpl();
 			setcurpl(player);
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 1 Bonus!");
 			CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 99);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Samir Duran (99) -> player {} got 1 bonus civ", player + 1);
+			}
 		}
 		if (Kills(player, AtLeast, 1, 96)) {  // Ursadon X3
-			var savedCp = getcurpl();
 			setcurpl(player);
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 3 Bonus!");
 			CreateUnitWithProperties(3, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 96);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Ursadon (96) -> player {} got 3 bonus civs", player + 1);
+			}
 		}
 		if (Kills(player, AtLeast, 1, 95)) {  // Ragnasaur X2
-			var savedCp = getcurpl();
 			setcurpl(player);
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 2 Bonus!");
 			CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 95);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Ragnasaur (95) -> player {} got 2 bonus civs", player + 1);
+			}
 		}
 		if (Kills(player, AtLeast, 1, 89)) {  // Rhynadon X2
-			var savedCp = getcurpl();
 			setcurpl(player);
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 2 Bonus!");
 			CreateUnitWithProperties(2, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 89);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Rhynadon (89) -> player {} got 2 bonus civs", player + 1);
+			}
 		}
 		if (Kills(player, AtLeast, 1, 90)) {  // Bengalaas X1
-			var savedCp = getcurpl();
 			setcurpl(player);
 			PlayWAV("sound/misc/transmission.wav");
 			MinimapPing("Hero Convert");
 			DisplayText("Gained 1 Bonus!");
 			CreateUnitWithProperties(1, "Terran Civilian", "getbonus", player, UnitProperty(invincible = true));
 			SetKills(player, Subtract, 1, 90);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Bengalaas (90) -> player {} got 1 bonus civ", player + 1);
+			}
 		}
-		if (Kills(player, AtLeast, 1, 39)) {  // Ultralisk
-			SetResources(player, Add, 2, Gas);		
+		if (Kills(player, AtLeast, 1, 39)) {  // Ultralisk (cat)
+			setcurpl(player);
+			SetResources(player, Add, 2, Gas);
 			DisplayText("Killed cat, +2 gas!");
 			SetKills(player, Subtract, 1, 39);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Ultralisk (39) -> player {} got +2 gas", player + 1);
+			}
 		}
-		if (Kills(player, AtLeast, 1, 48)) {  // Torrasque aka cat upgraded
-			SetResources(player, Add, 20, Gas);	
+		if (Kills(player, AtLeast, 1, 48)) {  // Torrasque (upgraded cat)
+			setcurpl(player);
+			SetResources(player, Add, 20, Gas);
 			DisplayText("Killed upgraded cat, +20 gas!");
 			SetKills(player, Subtract, 1, 48);
+			if (common_vars.P1EnableDebug.IsSet() && player != 0) {
+				setcurpl(P1);
+				println("[DBG reward] Torrasque (48) -> player {} got +20 gas", player + 1);
+			}
 		}
 	}
 	setcurpl(savedCp);

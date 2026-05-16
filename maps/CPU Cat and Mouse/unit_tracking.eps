@@ -37,39 +37,34 @@ function afterTriggerExec() {
 	// Purchased units created at "transporter" by shop.eps get moved to the player's home base
 	foreach(i : py_range(7)) {
 		if (Bring(common_vars.micePlayers[i], AtLeast, 1, "(any unit)", "transporter")) {
+			common_vars.P1DisplayDebug($T("[DBG track] transporter delivery fired"));
 			MoveUnit(1, "(any unit)", common_vars.micePlayers[i], "transporter", common_vars.nexusLocs[i]);
 		}
 	}
 
 	// ── P8 Scourge stacking from Observers ───────────────────────────────
-	// Classic: "Player 8 Command(CP,Observer,>=N) + Command(CP,Scourge,==0) Preserve → CreateUnit(5,Scourge)"
-	// With N observers and 0 scourge, ALL N triggers fire in one classic frame → N×5 scourge created.
-	// EPScript evaluates conditions sequentially, so we capture the zero-check BEFORE creating
-	// anything so all iterations still fire correctly within the same beforeTriggerExec call.
 	var scourgeIsZero = 0;
 	if (Command(P8, Exactly, 0, "Zerg Scourge")) {
 		scourgeIsZero = 1;
 	}
 	if (scourgeIsZero) {
 		foreach(n : py_range(1, 11)) {
-			// n is compile-time from py_range — valid as AtLeast count argument
 			if (Command(P8, AtLeast, n, "Protoss Observer")) {
+				common_vars.P1DisplayDebug($T("[DBG track] scourge stack CreateUnit fired"));
 				CreateUnit(5, "Zerg Scourge", "spawn of sauron", P8);
 			}
 		}
 	}
 
 	// ── P8 Infested Terran stacking from Yggdrasills ─────────────────────
-	// Classic: "Player 8 Command(CP,Yggdrasill,>=N) + Command(CP,IT,==0) Preserve → CreateUnit(5,IT,bbModeN)"
-	// Same pre-capture pattern as scourge above
 	var itIsZero = 0;
 	if (Command(P8, Exactly, 0, "Infested Terran")) {
 		itIsZero = 1;
 	}
 	if (itIsZero) {
 		foreach(n : py_range(1, 11)) {
-			// n-1 is compile-time — bbModeLocs[n-1] is valid (indices 0..9)
 			if (Command(P8, AtLeast, n, "Yggdrasill (Overlord)")) {
+				common_vars.P1DisplayDebug($T("[DBG track] infested terran stack CreateUnit fired"));
 				CreateUnit(5, "Infested Terran", bbModeLocs[n - 1], P8);
 			}
 		}
