@@ -66,6 +66,7 @@ function keepP8OutOfTopBox() {
 	MoveUnit(All, "Magellan (Science Vessel)", P8, "noair", "Start");
 	MoveUnit(All, "Yggdrasill (Overlord)", P8, "noair", "Start");
 
+
 }
 function afterTriggerExec() {
 	var savedCp = getcurpl();
@@ -170,7 +171,13 @@ function afterTriggerExec() {
 			}
 		}
 	}
-	keepP8OutOfTopBox();
+	if (Switch("GameStarted", Set)) {
+		keepP8OutOfTopBox();
+		
+		// clean up top box area from P12 too, incase of leavers
+		RemoveUnitAt(All, "(any unit)", "P12CleanupTop", P12);
+	}
+	
 	
 	setcurpl(savedCp);
 }

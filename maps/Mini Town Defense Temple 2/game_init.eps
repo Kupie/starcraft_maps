@@ -16,7 +16,6 @@ var introTimer = 256;
 var townAttackWarnShown = 0;
 
 function onPluginStart() {
-	
 	// set game speed to 1.25x by default (30 fps)
 	dwwrite(0x5124F0, 33);
 	 
@@ -191,6 +190,7 @@ function afterTriggerExec() {
 			printAllAt(7, "\x13\x12- Zerg heroes share the same attack upgrade");
 			printAllAt(8, "\x13\x12- Upgrades/Recruit available at every upgrade building");
 			printAllAt(9, "\x13\x12- Default game speed is set to 1.25x");
+			KillUnit("Map Revealer", AllPlayers);
 		//	PlayWAVAll("sound/misc/transmission.wav");
 		}
 	}
@@ -237,23 +237,26 @@ function afterTriggerExec() {
 		KillUnit("(men)", P12);
 	}
 	
-	var mtxmAddr = dwread(0x5993C4);
-	var mapWidth = 96;
-	var x = 9;
-	var y = 11;
-	var tileID = 110;
+	//var mtxmAddr = dwread(0x5993C4);
+	//var mapWidth = 96;
+	//var x = 9;
+	//var y = 11;
+	//var tileID = 110;
 	// then access tile at (x, y):
-	wwrite(mtxmAddr + (y * mapWidth + x) * 2, tileID);
+	//wwrite(mtxmAddr + (y * mapWidth + x) * 2, tileID);
 
 	// ── Every-frame cloak clear on P9 Dark Templar ──────────────────────────
 	// Engine re-applies cloak each frame for permanently cloaked units,
 	// so we must clear these bits every frame.
-	// we clear RequiresDetection and Cloaked so the unit is selectable, then use a placed "sprite only" since I can't figure out making the unit look normal yet
+	// we clear RequiresDetection and Cloaked so the unit is selectable + visible
 	// dtStatusFlagAddr is set in onPluginStart when the unit is found.
 	if (dtStatusFlagAddr >= 1) {
 		SetMemoryX(dtStatusFlagAddr, SetTo, 0, 0x00000300);	// clears bits 0x100, 0x200, 0x800
 		
 	}
+	
+	// Disable fog of war updates, to be used BEFORE KillUnit("Map Revealer", AllPlayers);
+	SetMemory(0x0051CE98, SetTo, 0);
 	
 	setcurpl(cp);
 }

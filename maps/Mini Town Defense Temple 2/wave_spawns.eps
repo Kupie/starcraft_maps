@@ -1,8 +1,9 @@
 // wave_spawns.eps
 // Row-driven Player 8 boss wave spawner.
 //
-// Replaces boss_attacks.eps. Spawn data lives in wave_spawns.csv and is
-// generated into wave_spawns_array.eps by generate_wave_spawns_array_eps.py.
+// Replaces boss_attacks.eps. Spawn data lives in wave_spawns.csv /
+// wave_spawns_veryhard.csv and is generated into wave_spawns_array.eps
+// by generate_wave_spawns_array_eps.py.
 //
 // No gas/resources are used for wave progression.
 // Flow:
@@ -10,6 +11,9 @@
 //   2. Spawn each CSV row after that row's WaveDelayMS.
 //   3. After each CreateUnit batch, issue one patrol order from Location 1 to Temple.
 //   4. When all rows are spawned and P8 has no men left in _area, reset countdown to 210.
+//
+// VeryHard mode: when Switch("VeryHardDifficulty") is Set, all row/delay/count
+// lookups use the vh-prefixed arrays from wave_spawns_array.eps instead.
 import common_vars;
 import wave_spawns_array;
 
@@ -56,9 +60,17 @@ function startWave(waveNumber) {
 	currentWave = waveNumber;
 	common_vars.currentWave = waveNumber;
 	activeWave = waveNumber;
-	activeWaveRow = wave_spawns_array.waveSpawnFirstRow[waveNumber];
-	activeWaveEnd = activeWaveRow + wave_spawns_array.waveSpawnRowCount[waveNumber];
-	waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveRow];
+
+	if (Switch("VeryHardDifficulty", Set)) {
+		activeWaveRow = wave_spawns_array.vhWaveSpawnFirstRow[waveNumber];
+		activeWaveEnd = activeWaveRow + wave_spawns_array.vhWaveSpawnRowCount[waveNumber];
+		waveDelay     = wave_spawns_array.vhWaveSpawnDelayFrames[activeWaveRow];
+	} else {
+		activeWaveRow = wave_spawns_array.waveSpawnFirstRow[waveNumber];
+		activeWaveEnd = activeWaveRow + wave_spawns_array.waveSpawnRowCount[waveNumber];
+		waveDelay     = wave_spawns_array.waveSpawnDelayFrames[activeWaveRow];
+	}
+
 	waitingForClear = 1;
 	roundArmed = 0;
 	startupGrace = common_vars.waveStartupGraceInit;
@@ -138,7 +150,12 @@ function spawnCurrentRow() {
 	}
 
 	foreach(unitIndex : py_range(0, wave_spawns_array.NUM_WAVE_UNITS)) {
-		var count = wave_spawns_array.waveSpawnCounts[activeWaveRow][unitIndex];
+		var count;
+		if (Switch("VeryHardDifficulty", Set)) {
+			count = wave_spawns_array.vhWaveSpawnCounts[activeWaveRow][unitIndex];
+		} else {
+			count = wave_spawns_array.waveSpawnCounts[activeWaveRow][unitIndex];
+		}
 		if (count > 0) {
 			CreateUnit(count, wave_spawns_array.waveSpawnUnitIndex[unitIndex], "Location 1", P8);
 			if (common_vars.EasyModeEnable == 2) {
@@ -153,13 +170,22 @@ function spawnCurrentRow() {
 	if (activeWaveRow >= activeWaveEnd) {
 		if (activeWave == wave_spawns_array.NUM_WAVES) {
 			// Endless bonus round: loop the final wave forever.
-			waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveEnd - 1];
-			activeWaveRow = wave_spawns_array.waveSpawnFirstRow[activeWave];
+			if (Switch("VeryHardDifficulty", Set)) {
+				waveDelay     = wave_spawns_array.vhWaveSpawnDelayFrames[activeWaveEnd - 1];
+				activeWaveRow = wave_spawns_array.vhWaveSpawnFirstRow[activeWave];
+			} else {
+				waveDelay     = wave_spawns_array.waveSpawnDelayFrames[activeWaveEnd - 1];
+				activeWaveRow = wave_spawns_array.waveSpawnFirstRow[activeWave];
+			}
 		} else {
 			finishWaveRows();
 		}
 	} else {
-		waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveRow];
+		if (Switch("VeryHardDifficulty", Set)) {
+			waveDelay = wave_spawns_array.vhWaveSpawnDelayFrames[activeWaveRow];
+		} else {
+			waveDelay = wave_spawns_array.waveSpawnDelayFrames[activeWaveRow];
+		}
 	}
 }
 

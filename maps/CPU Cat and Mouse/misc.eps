@@ -373,7 +373,7 @@ function afterTriggerExec() {
 	}
 	
 	
-	// Disable fog of war updates
+	// Disable fog of war updates, to be used BEFORE KillUnit("Map Revealer", AllPlayers);
 	SetMemory(0x0051CE98, SetTo, 0);
 	
 	

@@ -71,6 +71,8 @@ function afterTriggerExec() {
 
 		DisplayTextAll("\x13\x07Difficulty set to Normal (What \"Edited More HP\" version has (Default))");
 		MoveUnit(1, "Infested Duran", P1, "P1DuranArea", "BanArea");
+		RemoveUnitAt(All,217,"to training",AllPlayers);
+		SetSwitch("VeryHardDifficulty", Clear);
 	}
 	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "HardHPHeroesDifficulty")) {
 		f_dwwrite(0x662428, 320000); // Devouring One
@@ -87,6 +89,8 @@ function afterTriggerExec() {
 
 		DisplayTextAll("\x13\x07Difficulty set to Hard (What this map was before \"Edited More HP\" version)");
 		MoveUnit(1, "Infested Duran", P1, "P1DuranArea", "BanArea");
+		RemoveUnitAt(All,217,"to training",AllPlayers);
+		SetSwitch("VeryHardDifficulty", Clear);
 	}
 	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "EasyHPHeroesDifficulty")) {
 		f_dwwrite(0x662428, 601600); // Devouring One
@@ -103,6 +107,41 @@ function afterTriggerExec() {
 		
 		DisplayTextAll("\x13\x07Difficulty set to EASY (Even more HP than \"Edited More HP\" version)");
 		MoveUnit(1, "Infested Duran", P1, "P1DuranArea", "BanArea");
+		RemoveUnitAt(All,217,"to training",AllPlayers);
+		SetSwitch("VeryHardDifficulty", Clear);
+	}
+	
+	if (Bring(AllPlayers, Exactly, 1, "Infested Duran", "VeryHardDifficulty")) {
+		f_dwwrite(0x662428, 256000); // Devouring One
+		f_dwwrite(0x662424, 256000); // Hunter Killer
+		f_dwwrite(0x66241C, 256000); // Zerg Kerri
+		f_dwwrite(0x662410, 256000); // Torrasque
+		f_dwwrite(0x662378, 307200); // Gui Montag
+		f_dwwrite(0x6623A0, 256000); // Raynor (Marine)
+		f_dwwrite(0x662390, 256000); // Sarah Kerrigan (Ghost)
+		f_dwwrite(0x662478, 256000); // Dark Templar (Hero)
+		f_dwwrite(0x662484, 256000); // Fenix Zealot
+		f_dwwrite(0x662488, 256000); // Fenix Dragoon
+		f_dwwrite(0x662480, 307200); // Archon Hero
+		DisplayTextAll("\x13\x07Difficulty set to VERY HARD. Same as 'v0.992' of this map!");
+		DisplayTextAll("\x13\x07You now have EVEN less HP");
+		DisplayTextAll("\x13\x07Enemy waves are MORE DIFFICULT");
+		MoveUnit(1, "Infested Duran", P1, "P1DuranArea", "BanArea");
+		
+		// Make a wall like v0.992 had. Except we gonna use emitters!
+		CreateUnit(1, $U(217), "EmitterWall1", P7);
+		CreateUnit(1, $U(217), "EmitterWall2", P7);
+		CreateUnit(1, $U(217), "EmitterWall3", P7);
+		CreateUnit(1, $U(217), "EmitterWall4", P7);
+		CreateUnit(1, $U(217), "EmitterWall5", P7);
+		CreateUnit(1, $U(217), "EmitterWall6", P7);
+		CreateUnit(1, $U(217), "EmitterWall7", P7);
+		CreateUnit(1, $U(217), "EmitterWall8", P7);
+		CreateUnit(1, $U(217), "EmitterWall9", P7);
+		//CreateUnit(1, $U(217), "EmitterWall10", P7);
+		SetInvincibility(Enable, $U(217), P7, "Anywhere");
+		SetSwitch("VeryHardDifficulty", Set);
+
 	}
 	//updateScrollText();
 	setcurpl(cp);
