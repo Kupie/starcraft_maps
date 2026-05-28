@@ -11,14 +11,14 @@
 //   16384 = cheat n
 //   8192  = "black sheep wall" (full vision toggle)
 //   4096  = "stackshit" (building stacking toggle)
-//   2048  = cheat k
-//   1024  = cheat j
-//   512   = cheat i
+//   2048  = speed 1.5x/1.5
+//   1024  = speed 1.25x/1.25
+//   512   = speed 1x/speed normal
 //   256   = "whats mine is mine"  (+500 minerals)
 //   128   = "breathe deep"        (+500 gas)
-//   64    = cheat f
-//   32    = cheat e
-//   16    = cheat d
+//   64    = "there is no cow level"
+//   32    = "game over man"
+//   16    = "show me the money"
 //   8     = "the gathering"      (infinite energy toggle)
 //   4     = "food for thought"   (supply used zeroing toggle)
 //   2     = "power overwhelming" (god mode toggle)
@@ -42,8 +42,21 @@ var cheatFoodActive   = 0;	// "food for thought" toggle   (0=off, 1=on)
 var cheatEnergyActive = 0;	// "the gathering" toggle      (0=off, 1=on)
 var cheatStackActive  = 0;	// "stackshit" toggle           (0=off, 1=on)
 var cheatVisionActive = 0;  // black sheep wall
+var cheatCwalActive = 0;    // operation cwal
 const visionShare = list("+Vi0","+Vi1","+Vi2","+Vi3","+Vi4","+Vi5","+Vi6","+Vi7");
 const visionShareDisable = list("-Vi0","-Vi1","-Vi2","-Vi3","-Vi4","-Vi5","-Vi6","-Vi7");
+
+function onPluginStart() {
+	// Set pauses to 200
+	bwrite(0x58D718, 200);  // P1
+	bwrite(0x58D719, 200);  // P2
+	bwrite(0x58D71A, 200);  // P3
+	bwrite(0x58D71B, 200);  // P4
+	bwrite(0x58D71C, 200);  // P5
+	bwrite(0x58D71D, 200);  // P6
+	bwrite(0x58D71E, 200);  // P7
+	bwrite(0x58D71F, 200);  // P8
+}
 
 function afterTriggerExec() {
 	const cp = getcurpl();
@@ -65,9 +78,420 @@ function afterTriggerExec() {
 				flagCheck = flagCheck - 32768;
 			}
 			if (flagCheck >= 16384) {
-				eprintAll("\x04cheat n detected");
-				flagCheck = flagCheck - 16384;
-			}
+					// ── "operation cwal" toggle
+					if (cheatCwalActive == 0) {
+						cheatCwalActive = 1;
+						eprintAll("\x04Operation CWAL Enabled. Zack-level patience, eh?");
+						SetMemory(0x660428, Subtract, 336); // units:Build Time  index:0    from 360 To 24
+						SetMemory(0x660428, Subtract, 47579136); // units:Build Time  index:1    from 750 To 24
+						SetMemory(0x66042C, Subtract, 426); // units:Build Time  index:2    from 450 To 24
+						SetMemory(0x66042C, Subtract, 37748736); // units:Build Time  index:3    from 600 To 24
+						SetMemory(0x660430, Subtract, 47579136); // units:Build Time  index:5    from 750 To 24
+						SetMemory(0x660434, Subtract, 18087936); // units:Build Time  index:7    from 300 To 24
+						SetMemory(0x660438, Subtract, 876); // units:Build Time  index:8    from 900 To 24
+						SetMemory(0x660438, Subtract, 77070336); // units:Build Time  index:9    from 1200 To 24
+						SetMemory(0x66043C, Subtract, 47579136); // units:Build Time  index:11    from 750 To 24
+						SetMemory(0x660440, Subtract, 1976); // units:Build Time  index:12    from 2000 To 24
+						SetMemory(0x660444, Subtract, 1476); // units:Build Time  index:14    from 1500 To 24
+						SetMemory(0x66044C, Subtract, 57409536); // units:Build Time  index:19    from 900 To 24
+						SetMemory(0x660450, Subtract, 116391936); // units:Build Time  index:21    from 1800 To 24
+						SetMemory(0x660454, Subtract, 2376); // units:Build Time  index:22    from 2400 To 24
+						SetMemory(0x660454, Subtract, 96731136); // units:Build Time  index:23    from 1500 To 24
+						SetMemory(0x660458, Subtract, 96731136); // units:Build Time  index:25    from 1500 To 24
+						SetMemory(0x66045C, Subtract, 312999936); // units:Build Time  index:27    from 4800 To 24
+						SetMemory(0x660460, Subtract, 2376); // units:Build Time  index:28    from 2400 To 24
+						SetMemory(0x660460, Subtract, 312999936); // units:Build Time  index:29    from 4800 To 24
+						SetMemory(0x660464, Subtract, 726); // units:Build Time  index:30    from 750 To 24
+						SetMemory(0x660468, Subtract, 336); // units:Build Time  index:32    from 360 To 24
+						SetMemory(0x66046C, Subtract, 426); // units:Build Time  index:34    from 450 To 24
+						SetMemory(0x660470, Subtract, 25952256); // units:Build Time  index:37    from 420 To 24
+						SetMemory(0x660474, Subtract, 396); // units:Build Time  index:38    from 420 To 24
+						SetMemory(0x660474, Subtract, 57409536); // units:Build Time  index:39    from 900 To 24
+						SetMemory(0x660478, Subtract, 18087936); // units:Build Time  index:41    from 300 To 24
+						SetMemory(0x66047C, Subtract, 576); // units:Build Time  index:42    from 600 To 24
+						SetMemory(0x66047C, Subtract, 37748736); // units:Build Time  index:43    from 600 To 24
+						SetMemory(0x660480, Subtract, 576); // units:Build Time  index:44    from 600 To 24
+						SetMemory(0x660480, Subtract, 47579136); // units:Build Time  index:45    from 750 To 24
+						SetMemory(0x660484, Subtract, 726); // units:Build Time  index:46    from 750 To 24
+						SetMemory(0x660484, Subtract, 27918336); // units:Build Time  index:47    from 450 To 24
+						SetMemory(0x66048C, Subtract, 576); // units:Build Time  index:50    from 600 To 24
+						SetMemory(0x66049C, Subtract, 726); // units:Build Time  index:58    from 750 To 24
+						SetMemory(0x6604A0, Subtract, 576); // units:Build Time  index:60    from 600 To 24
+						SetMemory(0x6604A0, Subtract, 47579136); // units:Build Time  index:61    from 750 To 24
+						SetMemory(0x6604A4, Subtract, 576); // units:Build Time  index:62    from 600 To 24
+						SetMemory(0x6604A4, Subtract, 18087936); // units:Build Time  index:63    from 300 To 24
+						SetMemory(0x6604A8, Subtract, 276); // units:Build Time  index:64    from 300 To 24
+						SetMemory(0x6604A8, Subtract, 37748736); // units:Build Time  index:65    from 600 To 24
+						SetMemory(0x6604AC, Subtract, 726); // units:Build Time  index:66    from 750 To 24
+						SetMemory(0x6604AC, Subtract, 47579136); // units:Build Time  index:67    from 750 To 24
+						SetMemory(0x6604B0, Subtract, 276); // units:Build Time  index:68    from 300 To 24
+						SetMemory(0x6604B0, Subtract, 57409536); // units:Build Time  index:69    from 900 To 24
+						SetMemory(0x6604B4, Subtract, 1176); // units:Build Time  index:70    from 1200 To 24
+						SetMemory(0x6604B4, Subtract, 155713536); // units:Build Time  index:71    from 2400 To 24
+						SetMemory(0x6604B8, Subtract, 2076); // units:Build Time  index:72    from 2100 To 24
+						SetMemory(0x6604B8, Subtract, 18087936); // units:Build Time  index:73    from 300 To 24
+						SetMemory(0x6604CC, Subtract, 67239936); // units:Build Time  index:83    from 1050 To 24
+						SetMemory(0x6604D0, Subtract, 576); // units:Build Time  index:84    from 600 To 24
+						SetMemory(0x6604D0, Subtract, 5308416); // units:Build Time  index:85    from 105 To 24
+						SetMemory(0x6604F4, Subtract, 37748736); // units:Build Time  index:103    from 600 To 24
+						SetMemory(0x6604F8, Subtract, 155713536); // units:Build Time  index:105    from 2400 To 24
+						SetMemory(0x6604FC, Subtract, 1776); // units:Build Time  index:106    from 1800 To 24
+						SetMemory(0x6604FC, Subtract, 37748736); // units:Build Time  index:107    from 600 To 24
+						SetMemory(0x660500, Subtract, 1176); // units:Build Time  index:108    from 1200 To 24
+						SetMemory(0x660500, Subtract, 37748736); // units:Build Time  index:109    from 600 To 24
+						SetMemory(0x660504, Subtract, 576); // units:Build Time  index:110    from 600 To 24
+						SetMemory(0x660504, Subtract, 77070336); // units:Build Time  index:111    from 1200 To 24
+						SetMemory(0x660508, Subtract, 1176); // units:Build Time  index:112    from 1200 To 24
+						SetMemory(0x660508, Subtract, 77070336); // units:Build Time  index:113    from 1200 To 24
+						SetMemory(0x66050C, Subtract, 1026); // units:Build Time  index:114    from 1050 To 24
+						SetMemory(0x66050C, Subtract, 37748736); // units:Build Time  index:115    from 600 To 24
+						SetMemory(0x660510, Subtract, 876); // units:Build Time  index:116    from 900 To 24
+						SetMemory(0x660510, Subtract, 37748736); // units:Build Time  index:117    from 600 To 24
+						SetMemory(0x660514, Subtract, 576); // units:Build Time  index:118    from 600 To 24
+						SetMemory(0x660518, Subtract, 576); // units:Build Time  index:120    from 600 To 24
+						SetMemory(0x66051C, Subtract, 876); // units:Build Time  index:122    from 900 To 24
+						SetMemory(0x66051C, Subtract, 77070336); // units:Build Time  index:123    from 1200 To 24
+						SetMemory(0x660520, Subtract, 426); // units:Build Time  index:124    from 450 To 24
+						SetMemory(0x660520, Subtract, 27918336); // units:Build Time  index:125    from 450 To 24
+						SetMemory(0x660524, Subtract, 4776); // units:Build Time  index:126    from 4800 To 24
+						SetMemory(0x660524, Subtract, 57409536); // units:Build Time  index:127    from 900 To 24
+						SetMemory(0x66052C, Subtract, 1776); // units:Build Time  index:130    from 1800 To 24
+						SetMemory(0x66052C, Subtract, 116391936); // units:Build Time  index:131    from 1800 To 24
+						SetMemory(0x660530, Subtract, 1476); // units:Build Time  index:132    from 1500 To 24
+						SetMemory(0x660530, Subtract, 116391936); // units:Build Time  index:133    from 1800 To 24
+						SetMemory(0x660534, Subtract, 576); // units:Build Time  index:134    from 600 To 24
+						SetMemory(0x660534, Subtract, 37748736); // units:Build Time  index:135    from 600 To 24
+						SetMemory(0x660538, Subtract, 876); // units:Build Time  index:136    from 900 To 24
+						SetMemory(0x660538, Subtract, 116391936); // units:Build Time  index:137    from 1800 To 24
+						SetMemory(0x66053C, Subtract, 876); // units:Build Time  index:138    from 900 To 24
+						SetMemory(0x66053C, Subtract, 37748736); // units:Build Time  index:139    from 600 To 24
+						SetMemory(0x660540, Subtract, 1176); // units:Build Time  index:140    from 1200 To 24
+						SetMemory(0x660540, Subtract, 116391936); // units:Build Time  index:141    from 1800 To 24
+						SetMemory(0x660544, Subtract, 1176); // units:Build Time  index:142    from 1200 To 24
+						SetMemory(0x660544, Subtract, 18087936); // units:Build Time  index:143    from 300 To 24
+						SetMemory(0x660548, Subtract, 276); // units:Build Time  index:144    from 300 To 24
+						SetMemory(0x66054C, Subtract, 276); // units:Build Time  index:146    from 300 To 24
+						SetMemory(0x660550, Subtract, 37748736); // units:Build Time  index:149    from 600 To 24
+						SetMemory(0x66055C, Subtract, 1776); // units:Build Time  index:154    from 1800 To 24
+						SetMemory(0x66055C, Subtract, 77070336); // units:Build Time  index:155    from 1200 To 24
+						SetMemory(0x660560, Subtract, 426); // units:Build Time  index:156    from 450 To 24
+						SetMemory(0x660560, Subtract, 37748736); // units:Build Time  index:157    from 600 To 24
+						SetMemory(0x660564, Subtract, 27918336); // units:Build Time  index:159    from 450 To 24
+						SetMemory(0x660568, Subtract, 876); // units:Build Time  index:160    from 900 To 24
+						SetMemory(0x66056C, Subtract, 726); // units:Build Time  index:162    from 750 To 24
+						SetMemory(0x66056C, Subtract, 57409536); // units:Build Time  index:163    from 900 To 24
+						SetMemory(0x660570, Subtract, 876); // units:Build Time  index:164    from 900 To 24
+						SetMemory(0x660570, Subtract, 57409536); // units:Build Time  index:165    from 900 To 24
+						SetMemory(0x660574, Subtract, 576); // units:Build Time  index:166    from 600 To 24
+						SetMemory(0x660574, Subtract, 67239936); // units:Build Time  index:167    from 1050 To 24
+						SetMemory(0x660578, Subtract, 57409536); // units:Build Time  index:169    from 900 To 24
+						SetMemory(0x66057C, Subtract, 876); // units:Build Time  index:170    from 900 To 24
+						SetMemory(0x66057C, Subtract, 27918336); // units:Build Time  index:171    from 450 To 24
+						SetMemory(0x660580, Subtract, 426); // units:Build Time  index:172    from 450 To 24
+						SetMemory(0x655B80, Subtract, 4000); // upgrades:Research Time Base  index:0    from 4000 To 0
+						SetMemory(0x655B80, Subtract, 262144000); // upgrades:Research Time Base  index:1    from 4000 To 0
+						SetMemory(0x655B84, Subtract, 4000); // upgrades:Research Time Base  index:2    from 4000 To 0
+						SetMemory(0x655B84, Subtract, 262144000); // upgrades:Research Time Base  index:3    from 4000 To 0
+						SetMemory(0x655B88, Subtract, 4000); // upgrades:Research Time Base  index:4    from 4000 To 0
+						SetMemory(0x655B88, Subtract, 262144000); // upgrades:Research Time Base  index:5    from 4000 To 0
+						SetMemory(0x655B8C, Subtract, 4000); // upgrades:Research Time Base  index:6    from 4000 To 0
+						SetMemory(0x655B8C, Subtract, 262144000); // upgrades:Research Time Base  index:7    from 4000 To 0
+						SetMemory(0x655B90, Subtract, 4000); // upgrades:Research Time Base  index:8    from 4000 To 0
+						SetMemory(0x655B90, Subtract, 262144000); // upgrades:Research Time Base  index:9    from 4000 To 0
+						SetMemory(0x655B94, Subtract, 4000); // upgrades:Research Time Base  index:10    from 4000 To 0
+						SetMemory(0x655B94, Subtract, 262144000); // upgrades:Research Time Base  index:11    from 4000 To 0
+						SetMemory(0x655B98, Subtract, 4000); // upgrades:Research Time Base  index:12    from 4000 To 0
+						SetMemory(0x655B98, Subtract, 262144000); // upgrades:Research Time Base  index:13    from 4000 To 0
+						SetMemory(0x655B9C, Subtract, 4000); // upgrades:Research Time Base  index:14    from 4000 To 0
+						SetMemory(0x655B9C, Subtract, 262144000); // upgrades:Research Time Base  index:15    from 4000 To 0
+						SetMemory(0x655BA0, Subtract, 1500); // upgrades:Research Time Base  index:16    from 1500 To 0
+						SetMemory(0x655BA0, Subtract, 98304000); // upgrades:Research Time Base  index:17    from 1500 To 0
+						SetMemory(0x655BA4, Subtract, 2500); // upgrades:Research Time Base  index:18    from 2500 To 0
+						SetMemory(0x655BA4, Subtract, 163840000); // upgrades:Research Time Base  index:19    from 2500 To 0
+						SetMemory(0x655BA8, Subtract, 2500); // upgrades:Research Time Base  index:20    from 2500 To 0
+						SetMemory(0x655BA8, Subtract, 163840000); // upgrades:Research Time Base  index:21    from 2500 To 0
+						SetMemory(0x655BAC, Subtract, 2500); // upgrades:Research Time Base  index:22    from 2500 To 0
+						SetMemory(0x655BAC, Subtract, 163840000); // upgrades:Research Time Base  index:23    from 2500 To 0
+						SetMemory(0x655BB0, Subtract, 2400); // upgrades:Research Time Base  index:24    from 2400 To 0
+						SetMemory(0x655BB0, Subtract, 131072000); // upgrades:Research Time Base  index:25    from 2000 To 0
+						SetMemory(0x655BB4, Subtract, 2000); // upgrades:Research Time Base  index:26    from 2000 To 0
+						SetMemory(0x655BB4, Subtract, 98304000); // upgrades:Research Time Base  index:27    from 1500 To 0
+						SetMemory(0x655BB8, Subtract, 1500); // upgrades:Research Time Base  index:28    from 1500 To 0
+						SetMemory(0x655BB8, Subtract, 98304000); // upgrades:Research Time Base  index:29    from 1500 To 0
+						SetMemory(0x655BBC, Subtract, 1500); // upgrades:Research Time Base  index:30    from 1500 To 0
+						SetMemory(0x655BBC, Subtract, 163840000); // upgrades:Research Time Base  index:31    from 2500 To 0
+						SetMemory(0x655BC0, Subtract, 2500); // upgrades:Research Time Base  index:32    from 2500 To 0
+						SetMemory(0x655BC0, Subtract, 163840000); // upgrades:Research Time Base  index:33    from 2500 To 0
+						SetMemory(0x655BC4, Subtract, 2000); // upgrades:Research Time Base  index:34    from 2000 To 0
+						SetMemory(0x655BC4, Subtract, 163840000); // upgrades:Research Time Base  index:35    from 2500 To 0
+						SetMemory(0x655BC8, Subtract, 2500); // upgrades:Research Time Base  index:36    from 2500 To 0
+						SetMemory(0x655BC8, Subtract, 163840000); // upgrades:Research Time Base  index:37    from 2500 To 0
+						SetMemory(0x655BCC, Subtract, 2000); // upgrades:Research Time Base  index:38    from 2000 To 0
+						SetMemory(0x655BCC, Subtract, 131072000); // upgrades:Research Time Base  index:39    from 2000 To 0
+						SetMemory(0x655BD0, Subtract, 2500); // upgrades:Research Time Base  index:40    from 2500 To 0
+						SetMemory(0x655BD0, Subtract, 163840000); // upgrades:Research Time Base  index:41    from 2500 To 0
+						SetMemory(0x655BD4, Subtract, 2500); // upgrades:Research Time Base  index:42    from 2500 To 0
+						SetMemory(0x655BD4, Subtract, 98304000); // upgrades:Research Time Base  index:43    from 1500 To 0
+						SetMemory(0x655BD8, Subtract, 2500); // upgrades:Research Time Base  index:44    from 2500 To 0
+						SetMemory(0x655BDC, Subtract, 163840000); // upgrades:Research Time Base  index:47    from 2500 To 0
+						SetMemory(0x655BE0, Subtract, 163840000); // upgrades:Research Time Base  index:49    from 2500 To 0
+						SetMemory(0x655BE4, Subtract, 163840000); // upgrades:Research Time Base  index:51    from 2500 To 0
+						SetMemory(0x655BE8, Subtract, 2000); // upgrades:Research Time Base  index:52    from 2000 To 0
+						SetMemory(0x655BE8, Subtract, 131072000); // upgrades:Research Time Base  index:53    from 2000 To 0
+						SetMemory(0x655BEC, Subtract, 2000); // upgrades:Research Time Base  index:54    from 2000 To 0
+						SetMemory(0x655940, Subtract, 480); // upgrades:Research Time Factor  index:0    from 480 To 0
+						SetMemory(0x655940, Subtract, 31457280); // upgrades:Research Time Factor  index:1    from 480 To 0
+						SetMemory(0x655944, Subtract, 480); // upgrades:Research Time Factor  index:2    from 480 To 0
+						SetMemory(0x655944, Subtract, 31457280); // upgrades:Research Time Factor  index:3    from 480 To 0
+						SetMemory(0x655948, Subtract, 480); // upgrades:Research Time Factor  index:4    from 480 To 0
+						SetMemory(0x655948, Subtract, 31457280); // upgrades:Research Time Factor  index:5    from 480 To 0
+						SetMemory(0x65594C, Subtract, 480); // upgrades:Research Time Factor  index:6    from 480 To 0
+						SetMemory(0x65594C, Subtract, 31457280); // upgrades:Research Time Factor  index:7    from 480 To 0
+						SetMemory(0x655950, Subtract, 480); // upgrades:Research Time Factor  index:8    from 480 To 0
+						SetMemory(0x655950, Subtract, 31457280); // upgrades:Research Time Factor  index:9    from 480 To 0
+						SetMemory(0x655954, Subtract, 480); // upgrades:Research Time Factor  index:10    from 480 To 0
+						SetMemory(0x655954, Subtract, 31457280); // upgrades:Research Time Factor  index:11    from 480 To 0
+						SetMemory(0x655958, Subtract, 480); // upgrades:Research Time Factor  index:12    from 480 To 0
+						SetMemory(0x655958, Subtract, 31457280); // upgrades:Research Time Factor  index:13    from 480 To 0
+						SetMemory(0x65595C, Subtract, 480); // upgrades:Research Time Factor  index:14    from 480 To 0
+						SetMemory(0x65595C, Subtract, 31457280); // upgrades:Research Time Factor  index:15    from 480 To 0
+						SetMemory(0x6563D8, Subtract, 1200); // techdata:Resarch Time  index:0    from 1200 To 0
+						SetMemory(0x6563D8, Subtract, 98304000); // techdata:Resarch Time  index:1    from 1500 To 0
+						SetMemory(0x6563DC, Subtract, 1800); // techdata:Resarch Time  index:2    from 1800 To 0
+						SetMemory(0x6563DC, Subtract, 78643200); // techdata:Resarch Time  index:3    from 1200 To 0
+						SetMemory(0x6563E0, Subtract, 78643200); // techdata:Resarch Time  index:5    from 1200 To 0
+						SetMemory(0x6563E4, Subtract, 1500); // techdata:Resarch Time  index:6    from 1500 To 0
+						SetMemory(0x6563E4, Subtract, 78643200); // techdata:Resarch Time  index:7    from 1200 To 0
+						SetMemory(0x6563E8, Subtract, 1800); // techdata:Resarch Time  index:8    from 1800 To 0
+						SetMemory(0x6563E8, Subtract, 98304000); // techdata:Resarch Time  index:9    from 1500 To 0
+						SetMemory(0x6563EC, Subtract, 1200); // techdata:Resarch Time  index:10    from 1200 To 0
+						SetMemory(0x6563EC, Subtract, 78643200); // techdata:Resarch Time  index:11    from 1200 To 0
+						SetMemory(0x6563F0, Subtract, 1200); // techdata:Resarch Time  index:12    from 1200 To 0
+						SetMemory(0x6563F0, Subtract, 78643200); // techdata:Resarch Time  index:13    from 1200 To 0
+						SetMemory(0x6563F4, Subtract, 1200); // techdata:Resarch Time  index:14    from 1200 To 0
+						SetMemory(0x6563F4, Subtract, 98304000); // techdata:Resarch Time  index:15    from 1500 To 0
+						SetMemory(0x6563F8, Subtract, 1500); // techdata:Resarch Time  index:16    from 1500 To 0
+						SetMemory(0x6563F8, Subtract, 78643200); // techdata:Resarch Time  index:17    from 1200 To 0
+						SetMemory(0x6563FC, Subtract, 1200); // techdata:Resarch Time  index:18    from 1200 To 0
+						SetMemory(0x6563FC, Subtract, 117964800); // techdata:Resarch Time  index:19    from 1800 To 0
+						SetMemory(0x656400, Subtract, 1200); // techdata:Resarch Time  index:20    from 1200 To 0
+						SetMemory(0x656400, Subtract, 117964800); // techdata:Resarch Time  index:21    from 1800 To 0
+						SetMemory(0x656404, Subtract, 1500); // techdata:Resarch Time  index:22    from 1500 To 0
+						SetMemory(0x656408, Subtract, 1200); // techdata:Resarch Time  index:24    from 1200 To 0
+						SetMemory(0x656408, Subtract, 78643200); // techdata:Resarch Time  index:25    from 1200 To 0
+						SetMemory(0x65640C, Subtract, 117964800); // techdata:Resarch Time  index:27    from 1800 To 0
+						SetMemory(0x656410, Subtract, 117964800); // techdata:Resarch Time  index:29    from 1800 To 0
+						SetMemory(0x656414, Subtract, 1800); // techdata:Resarch Time  index:30    from 1800 To 0
+						SetMemory(0x656414, Subtract, 98304000); // techdata:Resarch Time  index:31    from 1500 To 0
+						SetMemory(0x656418, Subtract, 1800); // techdata:Resarch Time  index:32    from 1800 To 0
+					} else {
+						cheatCwalActive = 0;
+						eprintAll("\x04CWAL Disabled. Zack has to wait again");
+						SetMemory(0x660428, Add, 336); // units:Build Time  index:0    from 360 To 24
+						SetMemory(0x660428, Add, 47579136); // units:Build Time  index:1    from 750 To 24
+						SetMemory(0x66042C, Add, 426); // units:Build Time  index:2    from 450 To 24
+						SetMemory(0x66042C, Add, 37748736); // units:Build Time  index:3    from 600 To 24
+						SetMemory(0x660430, Add, 47579136); // units:Build Time  index:5    from 750 To 24
+						SetMemory(0x660434, Add, 18087936); // units:Build Time  index:7    from 300 To 24
+						SetMemory(0x660438, Add, 876); // units:Build Time  index:8    from 900 To 24
+						SetMemory(0x660438, Add, 77070336); // units:Build Time  index:9    from 1200 To 24
+						SetMemory(0x66043C, Add, 47579136); // units:Build Time  index:11    from 750 To 24
+						SetMemory(0x660440, Add, 1976); // units:Build Time  index:12    from 2000 To 24
+						SetMemory(0x660444, Add, 1476); // units:Build Time  index:14    from 1500 To 24
+						SetMemory(0x66044C, Add, 57409536); // units:Build Time  index:19    from 900 To 24
+						SetMemory(0x660450, Add, 116391936); // units:Build Time  index:21    from 1800 To 24
+						SetMemory(0x660454, Add, 2376); // units:Build Time  index:22    from 2400 To 24
+						SetMemory(0x660454, Add, 96731136); // units:Build Time  index:23    from 1500 To 24
+						SetMemory(0x660458, Add, 96731136); // units:Build Time  index:25    from 1500 To 24
+						SetMemory(0x66045C, Add, 312999936); // units:Build Time  index:27    from 4800 To 24
+						SetMemory(0x660460, Add, 2376); // units:Build Time  index:28    from 2400 To 24
+						SetMemory(0x660460, Add, 312999936); // units:Build Time  index:29    from 4800 To 24
+						SetMemory(0x660464, Add, 726); // units:Build Time  index:30    from 750 To 24
+						SetMemory(0x660468, Add, 336); // units:Build Time  index:32    from 360 To 24
+						SetMemory(0x66046C, Add, 426); // units:Build Time  index:34    from 450 To 24
+						SetMemory(0x660470, Add, 25952256); // units:Build Time  index:37    from 420 To 24
+						SetMemory(0x660474, Add, 396); // units:Build Time  index:38    from 420 To 24
+						SetMemory(0x660474, Add, 57409536); // units:Build Time  index:39    from 900 To 24
+						SetMemory(0x660478, Add, 18087936); // units:Build Time  index:41    from 300 To 24
+						SetMemory(0x66047C, Add, 576); // units:Build Time  index:42    from 600 To 24
+						SetMemory(0x66047C, Add, 37748736); // units:Build Time  index:43    from 600 To 24
+						SetMemory(0x660480, Add, 576); // units:Build Time  index:44    from 600 To 24
+						SetMemory(0x660480, Add, 47579136); // units:Build Time  index:45    from 750 To 24
+						SetMemory(0x660484, Add, 726); // units:Build Time  index:46    from 750 To 24
+						SetMemory(0x660484, Add, 27918336); // units:Build Time  index:47    from 450 To 24
+						SetMemory(0x66048C, Add, 576); // units:Build Time  index:50    from 600 To 24
+						SetMemory(0x66049C, Add, 726); // units:Build Time  index:58    from 750 To 24
+						SetMemory(0x6604A0, Add, 576); // units:Build Time  index:60    from 600 To 24
+						SetMemory(0x6604A0, Add, 47579136); // units:Build Time  index:61    from 750 To 24
+						SetMemory(0x6604A4, Add, 576); // units:Build Time  index:62    from 600 To 24
+						SetMemory(0x6604A4, Add, 18087936); // units:Build Time  index:63    from 300 To 24
+						SetMemory(0x6604A8, Add, 276); // units:Build Time  index:64    from 300 To 24
+						SetMemory(0x6604A8, Add, 37748736); // units:Build Time  index:65    from 600 To 24
+						SetMemory(0x6604AC, Add, 726); // units:Build Time  index:66    from 750 To 24
+						SetMemory(0x6604AC, Add, 47579136); // units:Build Time  index:67    from 750 To 24
+						SetMemory(0x6604B0, Add, 276); // units:Build Time  index:68    from 300 To 24
+						SetMemory(0x6604B0, Add, 57409536); // units:Build Time  index:69    from 900 To 24
+						SetMemory(0x6604B4, Add, 1176); // units:Build Time  index:70    from 1200 To 24
+						SetMemory(0x6604B4, Add, 155713536); // units:Build Time  index:71    from 2400 To 24
+						SetMemory(0x6604B8, Add, 2076); // units:Build Time  index:72    from 2100 To 24
+						SetMemory(0x6604B8, Add, 18087936); // units:Build Time  index:73    from 300 To 24
+						SetMemory(0x6604CC, Add, 67239936); // units:Build Time  index:83    from 1050 To 24
+						SetMemory(0x6604D0, Add, 576); // units:Build Time  index:84    from 600 To 24
+						SetMemory(0x6604D0, Add, 5308416); // units:Build Time  index:85    from 105 To 24
+						SetMemory(0x6604F4, Add, 37748736); // units:Build Time  index:103    from 600 To 24
+						SetMemory(0x6604F8, Add, 155713536); // units:Build Time  index:105    from 2400 To 24
+						SetMemory(0x6604FC, Add, 1776); // units:Build Time  index:106    from 1800 To 24
+						SetMemory(0x6604FC, Add, 37748736); // units:Build Time  index:107    from 600 To 24
+						SetMemory(0x660500, Add, 1176); // units:Build Time  index:108    from 1200 To 24
+						SetMemory(0x660500, Add, 37748736); // units:Build Time  index:109    from 600 To 24
+						SetMemory(0x660504, Add, 576); // units:Build Time  index:110    from 600 To 24
+						SetMemory(0x660504, Add, 77070336); // units:Build Time  index:111    from 1200 To 24
+						SetMemory(0x660508, Add, 1176); // units:Build Time  index:112    from 1200 To 24
+						SetMemory(0x660508, Add, 77070336); // units:Build Time  index:113    from 1200 To 24
+						SetMemory(0x66050C, Add, 1026); // units:Build Time  index:114    from 1050 To 24
+						SetMemory(0x66050C, Add, 37748736); // units:Build Time  index:115    from 600 To 24
+						SetMemory(0x660510, Add, 876); // units:Build Time  index:116    from 900 To 24
+						SetMemory(0x660510, Add, 37748736); // units:Build Time  index:117    from 600 To 24
+						SetMemory(0x660514, Add, 576); // units:Build Time  index:118    from 600 To 24
+						SetMemory(0x660518, Add, 576); // units:Build Time  index:120    from 600 To 24
+						SetMemory(0x66051C, Add, 876); // units:Build Time  index:122    from 900 To 24
+						SetMemory(0x66051C, Add, 77070336); // units:Build Time  index:123    from 1200 To 24
+						SetMemory(0x660520, Add, 426); // units:Build Time  index:124    from 450 To 24
+						SetMemory(0x660520, Add, 27918336); // units:Build Time  index:125    from 450 To 24
+						SetMemory(0x660524, Add, 4776); // units:Build Time  index:126    from 4800 To 24
+						SetMemory(0x660524, Add, 57409536); // units:Build Time  index:127    from 900 To 24
+						SetMemory(0x66052C, Add, 1776); // units:Build Time  index:130    from 1800 To 24
+						SetMemory(0x66052C, Add, 116391936); // units:Build Time  index:131    from 1800 To 24
+						SetMemory(0x660530, Add, 1476); // units:Build Time  index:132    from 1500 To 24
+						SetMemory(0x660530, Add, 116391936); // units:Build Time  index:133    from 1800 To 24
+						SetMemory(0x660534, Add, 576); // units:Build Time  index:134    from 600 To 24
+						SetMemory(0x660534, Add, 37748736); // units:Build Time  index:135    from 600 To 24
+						SetMemory(0x660538, Add, 876); // units:Build Time  index:136    from 900 To 24
+						SetMemory(0x660538, Add, 116391936); // units:Build Time  index:137    from 1800 To 24
+						SetMemory(0x66053C, Add, 876); // units:Build Time  index:138    from 900 To 24
+						SetMemory(0x66053C, Add, 37748736); // units:Build Time  index:139    from 600 To 24
+						SetMemory(0x660540, Add, 1176); // units:Build Time  index:140    from 1200 To 24
+						SetMemory(0x660540, Add, 116391936); // units:Build Time  index:141    from 1800 To 24
+						SetMemory(0x660544, Add, 1176); // units:Build Time  index:142    from 1200 To 24
+						SetMemory(0x660544, Add, 18087936); // units:Build Time  index:143    from 300 To 24
+						SetMemory(0x660548, Add, 276); // units:Build Time  index:144    from 300 To 24
+						SetMemory(0x66054C, Add, 276); // units:Build Time  index:146    from 300 To 24
+						SetMemory(0x660550, Add, 37748736); // units:Build Time  index:149    from 600 To 24
+						SetMemory(0x66055C, Add, 1776); // units:Build Time  index:154    from 1800 To 24
+						SetMemory(0x66055C, Add, 77070336); // units:Build Time  index:155    from 1200 To 24
+						SetMemory(0x660560, Add, 426); // units:Build Time  index:156    from 450 To 24
+						SetMemory(0x660560, Add, 37748736); // units:Build Time  index:157    from 600 To 24
+						SetMemory(0x660564, Add, 27918336); // units:Build Time  index:159    from 450 To 24
+						SetMemory(0x660568, Add, 876); // units:Build Time  index:160    from 900 To 24
+						SetMemory(0x66056C, Add, 726); // units:Build Time  index:162    from 750 To 24
+						SetMemory(0x66056C, Add, 57409536); // units:Build Time  index:163    from 900 To 24
+						SetMemory(0x660570, Add, 876); // units:Build Time  index:164    from 900 To 24
+						SetMemory(0x660570, Add, 57409536); // units:Build Time  index:165    from 900 To 24
+						SetMemory(0x660574, Add, 576); // units:Build Time  index:166    from 600 To 24
+						SetMemory(0x660574, Add, 67239936); // units:Build Time  index:167    from 1050 To 24
+						SetMemory(0x660578, Add, 57409536); // units:Build Time  index:169    from 900 To 24
+						SetMemory(0x66057C, Add, 876); // units:Build Time  index:170    from 900 To 24
+						SetMemory(0x66057C, Add, 27918336); // units:Build Time  index:171    from 450 To 24
+						SetMemory(0x660580, Add, 426); // units:Build Time  index:172    from 450 To 24
+						SetMemory(0x655B80, Add, 4000); // upgrades:Research Time Base  index:0    from 4000 To 0
+						SetMemory(0x655B80, Add, 262144000); // upgrades:Research Time Base  index:1    from 4000 To 0
+						SetMemory(0x655B84, Add, 4000); // upgrades:Research Time Base  index:2    from 4000 To 0
+						SetMemory(0x655B84, Add, 262144000); // upgrades:Research Time Base  index:3    from 4000 To 0
+						SetMemory(0x655B88, Add, 4000); // upgrades:Research Time Base  index:4    from 4000 To 0
+						SetMemory(0x655B88, Add, 262144000); // upgrades:Research Time Base  index:5    from 4000 To 0
+						SetMemory(0x655B8C, Add, 4000); // upgrades:Research Time Base  index:6    from 4000 To 0
+						SetMemory(0x655B8C, Add, 262144000); // upgrades:Research Time Base  index:7    from 4000 To 0
+						SetMemory(0x655B90, Add, 4000); // upgrades:Research Time Base  index:8    from 4000 To 0
+						SetMemory(0x655B90, Add, 262144000); // upgrades:Research Time Base  index:9    from 4000 To 0
+						SetMemory(0x655B94, Add, 4000); // upgrades:Research Time Base  index:10    from 4000 To 0
+						SetMemory(0x655B94, Add, 262144000); // upgrades:Research Time Base  index:11    from 4000 To 0
+						SetMemory(0x655B98, Add, 4000); // upgrades:Research Time Base  index:12    from 4000 To 0
+						SetMemory(0x655B98, Add, 262144000); // upgrades:Research Time Base  index:13    from 4000 To 0
+						SetMemory(0x655B9C, Add, 4000); // upgrades:Research Time Base  index:14    from 4000 To 0
+						SetMemory(0x655B9C, Add, 262144000); // upgrades:Research Time Base  index:15    from 4000 To 0
+						SetMemory(0x655BA0, Add, 1500); // upgrades:Research Time Base  index:16    from 1500 To 0
+						SetMemory(0x655BA0, Add, 98304000); // upgrades:Research Time Base  index:17    from 1500 To 0
+						SetMemory(0x655BA4, Add, 2500); // upgrades:Research Time Base  index:18    from 2500 To 0
+						SetMemory(0x655BA4, Add, 163840000); // upgrades:Research Time Base  index:19    from 2500 To 0
+						SetMemory(0x655BA8, Add, 2500); // upgrades:Research Time Base  index:20    from 2500 To 0
+						SetMemory(0x655BA8, Add, 163840000); // upgrades:Research Time Base  index:21    from 2500 To 0
+						SetMemory(0x655BAC, Add, 2500); // upgrades:Research Time Base  index:22    from 2500 To 0
+						SetMemory(0x655BAC, Add, 163840000); // upgrades:Research Time Base  index:23    from 2500 To 0
+						SetMemory(0x655BB0, Add, 2400); // upgrades:Research Time Base  index:24    from 2400 To 0
+						SetMemory(0x655BB0, Add, 131072000); // upgrades:Research Time Base  index:25    from 2000 To 0
+						SetMemory(0x655BB4, Add, 2000); // upgrades:Research Time Base  index:26    from 2000 To 0
+						SetMemory(0x655BB4, Add, 98304000); // upgrades:Research Time Base  index:27    from 1500 To 0
+						SetMemory(0x655BB8, Add, 1500); // upgrades:Research Time Base  index:28    from 1500 To 0
+						SetMemory(0x655BB8, Add, 98304000); // upgrades:Research Time Base  index:29    from 1500 To 0
+						SetMemory(0x655BBC, Add, 1500); // upgrades:Research Time Base  index:30    from 1500 To 0
+						SetMemory(0x655BBC, Add, 163840000); // upgrades:Research Time Base  index:31    from 2500 To 0
+						SetMemory(0x655BC0, Add, 2500); // upgrades:Research Time Base  index:32    from 2500 To 0
+						SetMemory(0x655BC0, Add, 163840000); // upgrades:Research Time Base  index:33    from 2500 To 0
+						SetMemory(0x655BC4, Add, 2000); // upgrades:Research Time Base  index:34    from 2000 To 0
+						SetMemory(0x655BC4, Add, 163840000); // upgrades:Research Time Base  index:35    from 2500 To 0
+						SetMemory(0x655BC8, Add, 2500); // upgrades:Research Time Base  index:36    from 2500 To 0
+						SetMemory(0x655BC8, Add, 163840000); // upgrades:Research Time Base  index:37    from 2500 To 0
+						SetMemory(0x655BCC, Add, 2000); // upgrades:Research Time Base  index:38    from 2000 To 0
+						SetMemory(0x655BCC, Add, 131072000); // upgrades:Research Time Base  index:39    from 2000 To 0
+						SetMemory(0x655BD0, Add, 2500); // upgrades:Research Time Base  index:40    from 2500 To 0
+						SetMemory(0x655BD0, Add, 163840000); // upgrades:Research Time Base  index:41    from 2500 To 0
+						SetMemory(0x655BD4, Add, 2500); // upgrades:Research Time Base  index:42    from 2500 To 0
+						SetMemory(0x655BD4, Add, 98304000); // upgrades:Research Time Base  index:43    from 1500 To 0
+						SetMemory(0x655BD8, Add, 2500); // upgrades:Research Time Base  index:44    from 2500 To 0
+						SetMemory(0x655BDC, Add, 163840000); // upgrades:Research Time Base  index:47    from 2500 To 0
+						SetMemory(0x655BE0, Add, 163840000); // upgrades:Research Time Base  index:49    from 2500 To 0
+						SetMemory(0x655BE4, Add, 163840000); // upgrades:Research Time Base  index:51    from 2500 To 0
+						SetMemory(0x655BE8, Add, 2000); // upgrades:Research Time Base  index:52    from 2000 To 0
+						SetMemory(0x655BE8, Add, 131072000); // upgrades:Research Time Base  index:53    from 2000 To 0
+						SetMemory(0x655BEC, Add, 2000); // upgrades:Research Time Base  index:54    from 2000 To 0
+						SetMemory(0x655940, Add, 480); // upgrades:Research Time Factor  index:0    from 480 To 0
+						SetMemory(0x655940, Add, 31457280); // upgrades:Research Time Factor  index:1    from 480 To 0
+						SetMemory(0x655944, Add, 480); // upgrades:Research Time Factor  index:2    from 480 To 0
+						SetMemory(0x655944, Add, 31457280); // upgrades:Research Time Factor  index:3    from 480 To 0
+						SetMemory(0x655948, Add, 480); // upgrades:Research Time Factor  index:4    from 480 To 0
+						SetMemory(0x655948, Add, 31457280); // upgrades:Research Time Factor  index:5    from 480 To 0
+						SetMemory(0x65594C, Add, 480); // upgrades:Research Time Factor  index:6    from 480 To 0
+						SetMemory(0x65594C, Add, 31457280); // upgrades:Research Time Factor  index:7    from 480 To 0
+						SetMemory(0x655950, Add, 480); // upgrades:Research Time Factor  index:8    from 480 To 0
+						SetMemory(0x655950, Add, 31457280); // upgrades:Research Time Factor  index:9    from 480 To 0
+						SetMemory(0x655954, Add, 480); // upgrades:Research Time Factor  index:10    from 480 To 0
+						SetMemory(0x655954, Add, 31457280); // upgrades:Research Time Factor  index:11    from 480 To 0
+						SetMemory(0x655958, Add, 480); // upgrades:Research Time Factor  index:12    from 480 To 0
+						SetMemory(0x655958, Add, 31457280); // upgrades:Research Time Factor  index:13    from 480 To 0
+						SetMemory(0x65595C, Add, 480); // upgrades:Research Time Factor  index:14    from 480 To 0
+						SetMemory(0x65595C, Add, 31457280); // upgrades:Research Time Factor  index:15    from 480 To 0
+						SetMemory(0x6563D8, Add, 1200); // techdata:Resarch Time  index:0    from 1200 To 0
+						SetMemory(0x6563D8, Add, 98304000); // techdata:Resarch Time  index:1    from 1500 To 0
+						SetMemory(0x6563DC, Add, 1800); // techdata:Resarch Time  index:2    from 1800 To 0
+						SetMemory(0x6563DC, Add, 78643200); // techdata:Resarch Time  index:3    from 1200 To 0
+						SetMemory(0x6563E0, Add, 78643200); // techdata:Resarch Time  index:5    from 1200 To 0
+						SetMemory(0x6563E4, Add, 1500); // techdata:Resarch Time  index:6    from 1500 To 0
+						SetMemory(0x6563E4, Add, 78643200); // techdata:Resarch Time  index:7    from 1200 To 0
+						SetMemory(0x6563E8, Add, 1800); // techdata:Resarch Time  index:8    from 1800 To 0
+						SetMemory(0x6563E8, Add, 98304000); // techdata:Resarch Time  index:9    from 1500 To 0
+						SetMemory(0x6563EC, Add, 1200); // techdata:Resarch Time  index:10    from 1200 To 0
+						SetMemory(0x6563EC, Add, 78643200); // techdata:Resarch Time  index:11    from 1200 To 0
+						SetMemory(0x6563F0, Add, 1200); // techdata:Resarch Time  index:12    from 1200 To 0
+						SetMemory(0x6563F0, Add, 78643200); // techdata:Resarch Time  index:13    from 1200 To 0
+						SetMemory(0x6563F4, Add, 1200); // techdata:Resarch Time  index:14    from 1200 To 0
+						SetMemory(0x6563F4, Add, 98304000); // techdata:Resarch Time  index:15    from 1500 To 0
+						SetMemory(0x6563F8, Add, 1500); // techdata:Resarch Time  index:16    from 1500 To 0
+						SetMemory(0x6563F8, Add, 78643200); // techdata:Resarch Time  index:17    from 1200 To 0
+						SetMemory(0x6563FC, Add, 1200); // techdata:Resarch Time  index:18    from 1200 To 0
+						SetMemory(0x6563FC, Add, 117964800); // techdata:Resarch Time  index:19    from 1800 To 0
+						SetMemory(0x656400, Add, 1200); // techdata:Resarch Time  index:20    from 1200 To 0
+						SetMemory(0x656400, Add, 117964800); // techdata:Resarch Time  index:21    from 1800 To 0
+						SetMemory(0x656404, Add, 1500); // techdata:Resarch Time  index:22    from 1500 To 0
+						SetMemory(0x656408, Add, 1200); // techdata:Resarch Time  index:24    from 1200 To 0
+						SetMemory(0x656408, Add, 78643200); // techdata:Resarch Time  index:25    from 1200 To 0
+						SetMemory(0x65640C, Add, 117964800); // techdata:Resarch Time  index:27    from 1800 To 0
+						SetMemory(0x656410, Add, 117964800); // techdata:Resarch Time  index:29    from 1800 To 0
+						SetMemory(0x656414, Add, 1800); // techdata:Resarch Time  index:30    from 1800 To 0
+						SetMemory(0x656414, Add, 98304000); // techdata:Resarch Time  index:31    from 1500 To 0
+						SetMemory(0x656418, Add, 1800); // techdata:Resarch Time  index:32    from 1800 To 0
+					}
+					flagCheck = flagCheck - 16384;
+				}
 			if (flagCheck >= 8192) {
 					// ── "black sheep wall" vision toggle ──────────────────────────────────
 					// Uses +Vi0..+Vi7 / -Vi0..-Vi7 AI scripts to add/remove vision sharing.
@@ -102,6 +526,8 @@ function afterTriggerExec() {
 							}
 						}
 					}
+					// Force fast fog of war update after cheat change
+					SetMemory(0x0051CE98, SetTo, 1);
 					flagCheck = flagCheck - 8192;
 				}
 			if (flagCheck >= 4096) {
@@ -296,7 +722,7 @@ function afterTriggerExec() {
 				if (cheatFoodActive == 0) {
 					cheatFoodActive = 1;
 					eprintAll("\x04Cheat ENABLED. Supply? Never Heard of It.");
-					foreach(p2 : EUDLoopPlayer("Human")) {
+					foreach(p2 : EUDLoopPlayer(None)) {
 						dwwrite(0x582144 + p2 * 4, dwread(0x582144 + p2 * 4) + 1998);
 						dwwrite(0x5821D4 + p2 * 4, dwread(0x5821D4 + p2 * 4) + 1998);
 						dwwrite(0x582264 + p2 * 4, dwread(0x582264 + p2 * 4) + 1998);
@@ -304,7 +730,7 @@ function afterTriggerExec() {
 				} else {
 					cheatFoodActive = 0;
 					eprintAll("\x04Cheat DISABLED. Ethiopian Diet is back!");
-					foreach(p2 : EUDLoopPlayer("Human")) {
+					foreach(p2 : EUDLoopPlayer(None)) {
 						dwwrite(0x582144 + p2 * 4, dwread(0x582144 + p2 * 4) - 1998);
 						dwwrite(0x5821D4 + p2 * 4, dwread(0x5821D4 + p2 * 4) - 1998);
 						dwwrite(0x582264 + p2 * 4, dwread(0x582264 + p2 * 4) - 1998);
@@ -342,10 +768,10 @@ function afterTriggerExec() {
 	}
 
 	// ── Per-frame: supply max ─────────────────────────────────────────────
-	// Writes max supply every frame while active so nothing can reduce it.
+	// Overwrites the "200" max supply limit every frame while active, letting it go up to 999 instead
 	// BW stores supply doubled: 400 = 200 displayed, 1998 = 999 displayed.
 	if (cheatFoodActive == 1) {
-		foreach(player : EUDLoopPlayer("Human")) {
+		foreach(player : EUDLoopPlayer(None)) {
 			dwwrite(0x5821A4 + player * 4, 1998);	// Zerg 
 			dwwrite(0x582234 + player * 4, 1998);	// Terran 
 			dwwrite(0x5822C4 + player * 4, 1998);	// Protoss 

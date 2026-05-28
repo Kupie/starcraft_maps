@@ -18,6 +18,8 @@ map_files = [f for f in map_files if "_modded" not in f and "_HT_Cheats" not in 
 
 print(f"Found {len(map_files)} map(s) to process")
 
+failures = []
+
 for map_path in sorted(map_files):
 	map_name = os.path.basename(map_path)
 	stem     = os.path.splitext(map_name)[0]
@@ -55,7 +57,16 @@ for map_path in sorted(map_files):
 		print(result.stdout[-1000:])
 		print(result.stderr[-500:])
 		print()
+		failures.append(map_path)
 
 	os.remove(temp_eds)
 
-print("All done.")
+print("=" * 60)
+if failures:
+	print(f"DONE WITH ERRORS — {len(failures)} map(s) failed:")
+	for f in failures:
+		print(f"  FAILED: {f}")
+else:
+	print(f"All done. {len(map_files)} map(s) processed successfully.")
+print("=" * 60)
+input("Press Enter to exit...")

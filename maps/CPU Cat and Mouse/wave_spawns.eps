@@ -177,7 +177,7 @@ function afterTriggerExec() {
 		}
 		dbstr_print(beaconString, "2 = Ban\0");
 		SetCountdownTimer(SetTo, 60);
-		spawnTimeCounter = 16;
+		spawnTimeCounter = common_vars.delayBetweenSpawns;
 		roundStep = 3;
 	}
 
@@ -223,6 +223,7 @@ function afterTriggerExec() {
 			}
 			currentSpawnIndex += 1;
 			spawnTimeCounter = common_vars.delayBetweenSpawns;
+			common_vars.aiNudgeTimer = 1;
 		}
 	}
 

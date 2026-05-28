@@ -82,13 +82,34 @@ function afterTriggerExec() {
 		// ── Enter training selection area ─────────────────────────────────
 		if (
 			Bring(player, AtLeast, 1, "(men)", "to training") &&
-			Bring(P8, Exactly, 0, "(men)", "_area")
+			Bring(P8, Exactly, 0, "(men)", "_area") &&
+			CountdownTimer(AtLeast, 5)
 		) {
 			MoveUnit(All, "(men)", player, "to training", "Location 32");
 			setcurpl(player);
 			if (common_vars.centerViewEnabled[player]) {CenterView("_Trainingpick"); }
 			MinimapPing("_Trainingpick");
-			DisplayText("\x13\x05Select A Monster To Train Against.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+			DisplayTextAt(3,"\x13\x05Select A Monster To Train Against.");
+		} else if (
+			Bring(player, AtLeast, 1, "(men)", "to training") &&
+			Bring(P8, Exactly, 0, "(men)", "_area") &&
+			CountdownTimer(AtLeast, 2)
+		) {
+			MoveUnit(All, "(men)", player, "to training", "_healing");
+			setcurpl(player);
+			if (common_vars.centerViewEnabled[player]) {CenterView("_Trainingpick"); }
+			MinimapPing("_Trainingpick");
+			DisplayTextAt(3,"\x13\x05Don't abandon the town to train! Who do you think you are, Goku?");
+		} else if (
+			Bring(player, AtLeast, 1, "(men)", "to training") &&
+			Bring(P8, Exactly, 0, "(men)", "_area") &&
+			CountdownTimer(Exactly, 1)
+		) {
+			MoveUnit(All, "(men)", player, "to training", "Location 32");
+			setcurpl(player);
+			if (common_vars.centerViewEnabled[player]) {CenterView("_Trainingpick"); }
+			MinimapPing("_Trainingpick");
+			DisplayTextAt(3,"\x13\x05Aha, naughty trick!");
 		}
 
 		// ── Select training room ──────────────────────────────────────────
@@ -101,7 +122,7 @@ function afterTriggerExec() {
 				setcurpl(player);
 				if (common_vars.centerViewEnabled[player]) {CenterView(trainDestLocs[i]); }
 				MinimapPing(trainDestLocs[i]);
-				DisplayText(trainMessages[i]);
+				DisplayTextAt(3,trainMessages[i]);
 			}
 			if (
 				Bring(player, AtLeast, 1, "(men)", trainEntryLocs[i]) &&
@@ -111,7 +132,7 @@ function afterTriggerExec() {
 				setcurpl(player);
 			//	CenterView(trainDestLocs[i]);
 				MinimapPing(trainDestLocs[i]);
-				DisplayText(trainMessages[i]);
+				DisplayTextAt(3,trainMessages[i]);
 			}
 		}
 
@@ -121,7 +142,7 @@ function afterTriggerExec() {
 				MoveUnit(All, "(men)", player, exitLocs[i], "_healing");
 				setcurpl(player);
 				if (common_vars.centerViewEnabled[player]) {CenterView("_healing"); }
-				DisplayText("\x13\x05You Have Exited The Training Center.\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+				DisplayTextAt(3,"\x13\x05You Have Exited The Training Center.");
 			}
 		}
 

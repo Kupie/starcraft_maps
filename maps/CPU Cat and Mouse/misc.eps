@@ -33,13 +33,13 @@ const banLocs = list(
 );
 
 const banMessages = list(
-	$T("\x06Player 1 has been banned!"),
-	$T("\x06Player 2 has been banned!"),
-	$T("\x06Player 3 has been banned!"),
-	$T("\x06Player 4 has been banned!"),
-	$T("\x06Player 5 has been banned!"),
-	$T("\x06Player 6 has been banned!"),
-	$T("\x06Player 7 has been banned!"),
+	"\x06Player 1 has been banned!",
+	"\x06Player 2 has been banned!",
+	"\x06Player 3 has been banned!",
+	"\x06Player 4 has been banned!",
+	"\x06Player 5 has been banned!",
+	"\x06Player 6 has been banned!",
+	"\x06Player 7 has been banned!",
 );
 
 
@@ -69,14 +69,14 @@ function onPluginStart() {
 	setcurpl(savedCp);
 }
 
-// ── Generic patrol unit handler — keeps 1 of each critter on the map ──────
+// ── Generic patrol unit handler — keeps 1 of each critter on the map every minute ──────
 function handlePatrolUnit() {
 	common_vars.syncRand();
 	foreach(i : py_range(7)) {
 		if (Command(P9, AtMost, 0, patrolUnits[i])) {
 			var spawnIdx = f_rand() % 8;
 			foreach(j : py_range(8)) {
-				if (spawnIdx == j) {
+				if (spawnIdx == j && (CountdownTimer(Exactly, 55))) {
 					CreateUnit(1, patrolUnits[i], patrolLocs[j], P8);
 					GiveUnits(1, patrolUnits[i], P8, patrolLocs[j], P9);
 				}
@@ -113,7 +113,7 @@ function handleBans() {
 				Bring(Force1, AtLeast, 2, "Terran Civilian", banLocs[i]) &&
 				Switch("GameStarted", Set)
 			) {
-				DisplayTextAll(banMessages[i]);
+				printAllAt(10, banMessages[i]);
 				PlayWAVAll("sound/misc/transmission.wav");
 				Defeat();
 			}
@@ -123,11 +123,11 @@ function handleBans() {
 }
 
 // ── AI nudge: periodically order cat AI to attack ─────────────────────────
-var aiNudgeTimer = common_vars.aiNudgeTimerSeconds * 2381 / 100;
+
 function nudgeAIToAttack() {
-	aiNudgeTimer--;
-	if (aiNudgeTimer == 0) {
-		aiNudgeTimer = common_vars.aiNudgeTimerSeconds * 2381 / 100;
+	common_vars.aiNudgeTimer--;
+	if (common_vars.aiNudgeTimer == 0) {
+		common_vars.aiNudgeTimer = common_vars.aiNudgeTimerSeconds * 2381 / 100;
 		var savedCp = getcurpl();
 		setcurpl(P8);
 		RunAIScriptAt("SuiR", "playground");
@@ -183,6 +183,66 @@ function handleShieldBatteryRespawn() {
 		}
 	}
 }
+
+function handleCannonCountAndLimit() {
+	foreach(player : EUDLoopPlayer(None, Force1)) {
+		var savedCp = getcurpl();
+		var count = 0;
+		
+		foreach(n : py_range(1, 222)) {
+			if (Command(player, AtLeast, n, "Protoss Photon Cannon")) {
+				count = n;
+			}
+		}
+		setcurpl(player);
+		
+		if (count >= 221) {
+			common_vars.P1DisplayDebug($T("[DBG misc] cannon max limit respawn fired"));
+			KillUnitAt(1, "Protoss Photon Cannon", "Anywhere", player);
+			SetResources(player, Add, 20, Ore);
+			PlayWAV("sound/misc/transmission.wav");
+			DisplayTextAt(10, "\x06- Only 220 Cannons allowed!");
+			count -= 1;
+		}
+		printAt(0, "\x12\x1ECannons: {} / 220", count);
+		setcurpl(savedCp);
+	}
+}
+
+// ── Game speed setting ──────────────────────────────────────────
+function checkGameSpeedChanger() {
+	if (Bring(P1, Exactly, 1, "Terran Civilian", "Speed 1x")) {
+		dwwrite(0x5124F0, 42);
+		DisplayTextAll("");
+		printAllAt(10, "\x13\x04Speed set to Regular");
+		MoveUnit(1, "Terran Civilian", P1, "Speed 1x", "SpeedArea");
+	}
+	if (Bring(P1, Exactly, 1, "Terran Civilian", "Speed 1.25x")) {
+		dwwrite(0x5124F0, 33);
+		DisplayTextAll("");
+		printAllAt(10, "\x13\x04Speed set to 1.25x. Also closest to 30fps!");
+		MoveUnit(1, "Terran Civilian", P1, "Speed 1.25x", "SpeedArea");
+	}
+	if (Bring(P1, Exactly, 1, "Terran Civilian", "Speed 1.5x")) {
+		dwwrite(0x5124F0, 28);
+		DisplayTextAll("");
+		printAllAt(10, "\x13\x04Speed set to 1.5x");
+		MoveUnit(1, "Terran Civilian", P1, "Speed 1.5x", "SpeedArea");
+	}
+
+	
+	
+	//speeds: fastest: 42;
+	//speeds: 1x:   36
+	//speeds: 1.25: 33 // also 30fps
+	//speeds: 1.5:  28
+	//speeds: 1.75: 24
+	//speeds: 2:    21
+	
+	
+	
+}
+
 
 // ── P12 unit distribution ─────────────────────────────────────────────────
 // Classic: "Mices Command(P12,Men,>=1) Preserve → GiveUnits P12→CP at playground/HeroConvert/DifficultyBox"
@@ -350,7 +410,7 @@ function afterTriggerExec() {
 	) {
 		common_vars.P1DisplayDebug($T("[DBG misc] VICTORY condition fired"));
 		common_vars.currentRound = 0;
-		DisplayTextAll("\x13\x07 The cats have been defeated. You WIN! Now go touch some grass");
+		printAllAt(10, "\x13\x07 The cats have been defeated. You WIN! Now go touch some grass");
 		foreach(player : EUDLoopPlayer(None, Force1)) {
 			setcurpl(player);
 			Victory();
@@ -365,7 +425,12 @@ function afterTriggerExec() {
 	) {
 		common_vars.P1DisplayDebug($T("[DBG misc] DEFEAT condition fired"));
 		common_vars.currentRound = 0;
-		DisplayTextAll("\x13\x06 All the mice are dead. You LOSE! Git gud.");
+		DisplayTextAll("");
+		DisplayTextAll("");
+		DisplayTextAll("");
+		printAllAt(8, "\x13\x06 All the mice are dead. You LOSE! Git gud.");
+		printAllAt(9, "\x13\x06 All the mice are dead. You LOSE! Git gud.");
+		printAllAt(10, "\x13\x06 All the mice are dead. You LOSE! Git gud.");
 		foreach(player : EUDLoopPlayer(None, Force1)) {
 			setcurpl(player);
 			Defeat();
@@ -394,6 +459,9 @@ function afterTriggerExec() {
 		DoActions(common_vars.P1EnableDebug.Clear());
 		DisplayText("[DBG] Debug DISABLED");
 	}
+	
+	handleCannonCountAndLimit();
+	checkGameSpeedChanger();
 	
 	setcurpl(savedCp);
 }

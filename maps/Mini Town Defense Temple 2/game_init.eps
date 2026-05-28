@@ -208,15 +208,23 @@ function afterTriggerExec() {
 	
 			if (Command(player, AtLeast, 1, "Gui Montag (Firebat)") ||
 				Command(player, AtLeast, 1, "Tassadar/Zeratul (Archon)")) {
-				DisplayText("\x13\x03Our Town Is Under Attack!\r\n\r\n\x13\x03\x06Sorry No Splash Units Allowed During Town Attack!\r\n\r\n\r\n\r\n\r\n");
+				DisplayTextAt(3,"\x13\x03Our Town Is Under Attack!");
+				DisplayTextAt(2,"\x13\x06No Splash Units Allowed During Town Attack!");
 			} else {
-				DisplayText("\x13\x03Our Town Is Under Attack!\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
+				DisplayTextAt(3,"\x13\x03Our Town Is Under Attack!");
 			}
 	
 			MoveUnit(All, "(men)", player, "_Alltraining", "_healing");
 			MoveUnit(All, "(men)", player, "_Trainingpick", "_healing");
 		}
 	}
+	
+	// Warp away from training if timer is between 2 and 5, too
+	if (CountdownTimer(AtLeast, 2) && CountdownTimer(AtMost, 5) && townAttackWarnShown == 1) {
+		MoveUnit(All, "(men)", Force1, "_Alltraining", "_healing");
+		MoveUnit(All, "(men)", Force1, "_Trainingpick", "_healing");
+	}
+	
 
 	// ── TSUx re-run at countdown 200 ───────────────────────────────────────
 	if (CountdownTimer(Exactly, 200)) {

@@ -8,7 +8,7 @@ function afterTriggerExec() {
 	if (Switch("EasyModeEnabled", Set)) { 
 		common_vars.realTimeSecondsPerRound += 5 ; // Add some seconds for "easy" mode
 				
-		common_vars.delayBetweenSpawns = 80; // Up the delay between spawns a tiny bit
+	//	common_vars.delayBetweenSpawns = 80; // Up the delay between spawns a tiny bit
 		
 		SetMemory(0x6C9FA0, Add, 256); // Give probe a slight speed boost, 1280 -> 1536
 		
@@ -65,12 +65,12 @@ function afterTriggerExec() {
 	
 		// Set outer geysers to have a bit more gas than default 55
 		ModifyUnitResourceAmount(All,P12,"playground",75);
-		ModifyUnitResourceAmount(All,P12,"HigherGeysers",50000);
+		ModifyUnitResourceAmount(All,P12,"HigherGeysers",1000);
 		
 
 	} else {
 		ModifyUnitResourceAmount(All,P12,"playground",55);
-		ModifyUnitResourceAmount(All,P12,"HigherGeysers",50000);
+		ModifyUnitResourceAmount(All,P12,"HigherGeysers",1000);
 	}
 
 

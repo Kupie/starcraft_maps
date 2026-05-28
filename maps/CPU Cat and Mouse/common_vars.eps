@@ -3,19 +3,22 @@
 
 var currentRound = 0;
 
-var delayBetweenSpawns = 64;  // BUGFIX: was EUDVariable(64) — var already creates EUDVariable
+var delayBetweenSpawns = 100;  // In frames, big delay is needed sometimes 
 
 var realTimeSecondsPerRound = 45;  // Seconds per round at "fastest" speed
 
 var hardRoll = 0;  // Set by wave_spawns.eps at step 1; read by wave_spawns_notifications.eps
 
-const tempInvulFrameAmount = 1428;  // 23.81 frames per real-life second
+const tempInvulFrameAmount = 2428;  // 23.81 frames per real-life second
 
 var roundPylonsBecomeVulnerable = 70;  // Round where pylons stop being invincible
 
 const micePlayers = list(P1, P2, P3, P4, P5, P6, P7);
 
 const aiNudgeTimerSeconds = 3;  // How often (seconds) to nudge AI to attack
+
+var aiNudgeTimer = aiNudgeTimerSeconds * 2381 / 100;
+
 
 // ── Shared per-player location name arrays ────────────────────────────────
 // Used by unit_tracking.eps (MoveLocation) and misc.eps (shield battery respawn)
